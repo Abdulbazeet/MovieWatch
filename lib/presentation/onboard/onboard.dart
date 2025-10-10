@@ -1,8 +1,8 @@
-
-
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
 class OnBoard extends StatefulWidget {
@@ -20,7 +20,6 @@ class _OnBoardState extends State<OnBoard> with TickerProviderStateMixin {
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
   List<int> _visibleGenreIndexes = [];
-
 
   final List<String> _posters = [
     'assets/movie1.jpg',
@@ -62,7 +61,7 @@ class _OnBoardState extends State<OnBoard> with TickerProviderStateMixin {
     super.initState();
 
     // Initialize animation controllers
-_fadeController = AnimationController(
+    _fadeController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1000),
     );
@@ -72,24 +71,20 @@ _fadeController = AnimationController(
       duration: const Duration(milliseconds: 1200),
     );
 
+    _fadeAnimation = CurvedAnimation(
+      parent: _fadeController,
+      curve: Curves.easeInOutCubic,
+    );
 
-_fadeAnimation = CurvedAnimation(
-  parent: _fadeController,
-  curve: Curves.easeInOutCubic,
-);
-
-_slideAnimation = Tween<Offset>(
-  begin: const Offset(0, 0.4),
-  end: Offset.zero,
-).animate(CurvedAnimation(
-  parent: _slideController,
-  curve: Curves.easeOutExpo,
-));
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0, 0.4), end: Offset.zero).animate(
+          CurvedAnimation(parent: _slideController, curve: Curves.easeOutExpo),
+        );
 
     // auto scroll every 50ms
     _timer = Timer.periodic(const Duration(milliseconds: 50), (timer) {
       if (_scrollController.hasClients) {
-        double nextOffset = _scrollController.offset + _scrollSpeed * 0.05;
+        double nextOffset = _scrollController.offset + _scrollSpeed * 0.3;
 
         if (nextOffset >= _scrollController.position.maxScrollExtent) {
           _scrollController.jumpTo(0);
@@ -215,57 +210,6 @@ _slideAnimation = Tween<Offset>(
                           textAlign: TextAlign.center,
                         ),
                         SizedBox(height: 3.h),
-                        // Wrap(
-                        //   alignment: WrapAlignment.center,
-                        //   spacing: 2.w,
-                        //   runSpacing: 1.5.h,
-                        //   children: _genres.map((genre) {
-                        //     final isSelected = _selectedGenres.contains(genre);
-
-                        //     return GestureDetector(
-                        //       onTap: () {
-                        //         setState(() {
-                        //           if (isSelected) {
-                        //             _selectedGenres.remove(genre);
-                        //           } else {
-                        //             _selectedGenres.add(genre);
-                        //           }
-                        //         });
-                        //       },
-                        //       child: AnimatedContainer(
-                        //         duration: const Duration(milliseconds: 250),
-                        //         padding: EdgeInsets.symmetric(
-                        //           horizontal: 4.w,
-                        //           vertical: 1.5.h,
-                        //         ),
-                        //         decoration: BoxDecoration(
-                        //           color: isSelected
-                        //               ? Theme.of(context).colorScheme.primary
-                        //               : Colors.black54,
-                        //           borderRadius: BorderRadius.circular(30),
-                        //           border: Border.all(
-                        //             color: isSelected
-                        //                 ? Theme.of(context).colorScheme.primary
-                        //                 : Colors.white24,
-                        //             width: 1.5,
-                        //           ),
-                        //         ),
-                        //         child: Text(
-                        //           genre,
-                        //           style: TextStyle(
-                        //             color: isSelected
-                        //                 ? Colors.white
-                        //                 : Colors.white70,
-                        //             fontSize: 12.sp,
-                        //             fontWeight: isSelected
-                        //                 ? FontWeight.bold
-                        //                 : FontWeight.normal,
-                        //           ),
-                        //         ),
-                        //       ),
-                        //     );
-                        //   }).toList(),
-                        // ),
 
                         Wrap(
                           alignment: WrapAlignment.center,
@@ -338,7 +282,6 @@ _slideAnimation = Tween<Offset>(
                             );
                           }).toList(),
                         ),
-
                       ],
                     ),
                   ),
@@ -373,7 +316,7 @@ _slideAnimation = Tween<Offset>(
                 children: [
                   AnimatedSwitcher(
                     duration: const Duration(milliseconds: 800),
-                  transitionBuilder: (child, animation) {
+                    transitionBuilder: (child, animation) {
                       return FadeTransition(
                         opacity: animation,
                         child: SlideTransition(
@@ -394,7 +337,7 @@ _slideAnimation = Tween<Offset>(
 
                     child: !_next
                         ? Text(
-                            'Tell us your favourite genre',
+                            'Follow up on your favourite movies or TV Series',
                             key: const ValueKey('tell_us'),
                             style: Theme.of(context).textTheme.headlineSmall
                                 ?.copyWith(
@@ -407,7 +350,7 @@ _slideAnimation = Tween<Offset>(
                   ),
                   SizedBox(height: 2.h),
                   ElevatedButton(
-                  onPressed: () async {
+                    onPressed: () async {
                       if (_next) {
                         if (_selectedGenres.isEmpty) {
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -416,7 +359,14 @@ _slideAnimation = Tween<Offset>(
                             ),
                           );
                         } else {
-                          // Navigate to next screen
+                          SharedPreferences sp =
+                              await SharedPreferences.getInstance();
+                          await sp.setStringList(
+                            'selectedGenre',
+                            _selectedGenres.toList(),
+                          );
+
+                          context.go('/sign-in');
                         }
                       } else {
                         setState(() {
@@ -442,9 +392,8 @@ _slideAnimation = Tween<Offset>(
                       }
                     },
 
-
                     style: ElevatedButton.styleFrom(
-                      fixedSize: Size(90.w, 6.h),
+                      fixedSize: Size(90.sw, 6.sh),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
