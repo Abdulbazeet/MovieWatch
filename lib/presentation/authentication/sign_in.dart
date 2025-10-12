@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
 class SignIn extends StatefulWidget {
@@ -42,7 +43,10 @@ class _SignInState extends State<SignIn> {
                     // ),
                     InkWell(
                       //  borderRadius: BorderRadius.circular(3.sw),
-                      onTap: () {
+                      onTap: () async {
+                        SharedPreferences sp =
+                            await SharedPreferences.getInstance();
+                        sp.setBool('skipOnboard', true);
                         context.go('/home');
                       },
                       child: Text(

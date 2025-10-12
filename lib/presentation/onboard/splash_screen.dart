@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movie_watch/presentation/authentication/auth_provider/auth_provider.dart';
 import 'package:movie_watch/presentation/home/home.dart';
 import 'package:movie_watch/presentation/onboard/onboard.dart';
+import 'package:movie_watch/utils/sharedDB.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -12,13 +13,27 @@ class SplashScreen extends ConsumerStatefulWidget {
 }
 
 class _SplashScreenState extends ConsumerState<SplashScreen> {
+  bool skipOnBOard = false;
+  void loadPreference() async {
+    var skip = await SharedDB.skipONboard();
+    setState(() {
+      skipOnBOard = skip;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadPreference();
+  }
+
   @override
   Widget build(BuildContext context) {
     final userState = ref.watch(authStaterovider);
 
     return userState.when(
       data: (user) {
-        if (user != null) {
+        if (user != null || skipOnBOard == true) {
           return Home();
         }
         return OnBoard();

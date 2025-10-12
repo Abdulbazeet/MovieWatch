@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
 class SignUp extends StatefulWidget {
@@ -30,7 +31,10 @@ class _SignUpState extends State<SignUp> {
                     Spacer(),
 
                     InkWell(
-                      onTap: () {
+                      onTap: () async {
+                        SharedPreferences sp =
+                            await SharedPreferences.getInstance();
+                        sp.setBool('skipOnboard', true);
                         context.go('/home');
                       },
                       child: Text(
@@ -94,7 +98,6 @@ class _SignUpState extends State<SignUp> {
                     enabledBorder: OutlineInputBorder(
                       /// borderSide: BorderSide(color: Colors.grey),
                       borderRadius: BorderRadius.circular(3.sw),
-                      
                     ), // errorBorder: OutlineInputBorder(
                     //   /// borderSide: BorderSide(color: Colors.grey),
                     //   borderRadius: BorderRadius.circular(3.sw),
