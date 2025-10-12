@@ -3,17 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sizer/sizer.dart';
 
-class SignUp extends StatefulWidget {
-  const SignUp({super.key});
+class SignIn extends StatefulWidget {
+  const SignIn({super.key});
 
   @override
-  State<SignUp> createState() => _SignUpState();
+  State<SignIn> createState() => _SignInState();
 }
 
-class _SignUpState extends State<SignUp> {
+class _SignInState extends State<SignIn> {
   final _email = TextEditingController();
   final _password = TextEditingController();
   bool _visible = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,8 +30,21 @@ class _SignUpState extends State<SignUp> {
                   children: [
                     Spacer(),
 
+                    // TextButton(
+                    //   style: TextButton.styleFrom(
+                    //    // padding: EdgeInsets.zero
+                    //    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    //   ),
+                    //   onPressed: () {},
+
+                    //   chi
+                    // ld:
+                    // ),
                     InkWell(
-                      onTap: () {},
+                      //  borderRadius: BorderRadius.circular(3.sw),
+                      onTap: () {
+                        context.go('/home');
+                      },
                       child: Text(
                         'Skip',
                         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
@@ -38,10 +52,17 @@ class _SignUpState extends State<SignUp> {
                         ),
                       ),
                     ),
+                    // Material(
+                    //   borderRadius: BorderRadius.circular(3.sw),
+                    //   child: InkWell(onTap: () {},
+                    //   child: Text('Skip', style: Theme.of(context).textTheme.bodyMedium,),
+                    //   ),
+
+                    // ),
                   ],
                 ),
                 SizedBox(height: 3.sh),
-                Text('Sign up', style: Theme.of(context).textTheme.bodyLarge),
+                Text('Sign in', style: Theme.of(context).textTheme.bodyLarge),
                 SizedBox(height: 3.sh),
                 TextField(
                   controller: _email,
@@ -74,6 +95,11 @@ class _SignUpState extends State<SignUp> {
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(),
                     ),
                   ),
+                  // onChanged: (value) {
+                  //   if (!value.contains('@')) {
+                  //    // return 'invalid mail';
+                  //   }
+                  // },
                 ),
                 SizedBox(height: 3.sh),
                 TextField(
@@ -118,24 +144,7 @@ class _SignUpState extends State<SignUp> {
                     ),
                   ),
                 ),
-                SizedBox(height: 3.sh),
-                Row(
-                  children: [
-                    Spacer(),
 
-                    InkWell(
-                      //  borderRadius: BorderRadius.circular(3.sw),
-                      onTap: () {},
-                      child: Text(
-                        'Forgot password ?',
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
                 SizedBox(height: 3.sh),
                 ElevatedButton(
                   onPressed: () {},
@@ -146,26 +155,7 @@ class _SignUpState extends State<SignUp> {
                     ),
                   ),
 
-                  child: Text('Sign up'),
-                ),
-                SizedBox(height: 3.sh),
-                RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text:
-                            'By clicking the “sign up” button, you accept the terms of the ',
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                      TextSpan(
-                        text: 'Privacy Policy',
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.onSurface,
-                        ),
-                      ),
-                    ],
-                  ),
+                  child: Text('Sign in'),
                 ),
                 SizedBox(height: 3.sh),
                 Row(
@@ -232,17 +222,17 @@ class _SignUpState extends State<SignUp> {
                     ),
                   ],
                 ),
-                SizedBox(height: 31.sh),
+                SizedBox(height: 40.sh),
                 Center(
                   child: RichText(
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: 'ALready have an account ',
+                          text: 'Don\'t have an account? ',
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                         TextSpan(
-                          text: 'Sign in',
+                          text: 'Sign up',
                           style: Theme.of(context).textTheme.bodyMedium!
                               .copyWith(
                                 fontWeight: FontWeight.bold,
@@ -250,7 +240,7 @@ class _SignUpState extends State<SignUp> {
                               ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
-                              context.go('/sign-in');
+                              context.go('/sign-up');
                             },
                         ),
                       ],

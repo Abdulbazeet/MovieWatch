@@ -3,18 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sizer/sizer.dart';
 
-class SignIn extends StatefulWidget {
-  const SignIn({super.key});
+class SignUp extends StatefulWidget {
+  const SignUp({super.key});
 
   @override
-  State<SignIn> createState() => _SignInState();
+  State<SignUp> createState() => _SignUpState();
 }
 
-class _SignInState extends State<SignIn> {
+class _SignUpState extends State<SignUp> {
   final _email = TextEditingController();
   final _password = TextEditingController();
   bool _visible = true;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,19 +29,10 @@ class _SignInState extends State<SignIn> {
                   children: [
                     Spacer(),
 
-                    // TextButton(
-                    //   style: TextButton.styleFrom(
-                    //    // padding: EdgeInsets.zero
-                    //    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    //   ),
-                    //   onPressed: () {},
-
-                    //   chi
-                    // ld:
-                    // ),
                     InkWell(
-                      //  borderRadius: BorderRadius.circular(3.sw),
-                      onTap: () {},
+                      onTap: () {
+                        context.go('/home');
+                      },
                       child: Text(
                         'Skip',
                         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
@@ -50,17 +40,10 @@ class _SignInState extends State<SignIn> {
                         ),
                       ),
                     ),
-                    // Material(
-                    //   borderRadius: BorderRadius.circular(3.sw),
-                    //   child: InkWell(onTap: () {},
-                    //   child: Text('Skip', style: Theme.of(context).textTheme.bodyMedium,),
-                    //   ),
-
-                    // ),
                   ],
                 ),
                 SizedBox(height: 3.sh),
-                Text('Sign in', style: Theme.of(context).textTheme.bodyLarge),
+                Text('Sign up', style: Theme.of(context).textTheme.bodyLarge),
                 SizedBox(height: 3.sh),
                 TextField(
                   controller: _email,
@@ -93,11 +76,6 @@ class _SignInState extends State<SignIn> {
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(),
                     ),
                   ),
-                  // onChanged: (value) {
-                  //   if (!value.contains('@')) {
-                  //    // return 'invalid mail';
-                  //   }
-                  // },
                 ),
                 SizedBox(height: 3.sh),
                 TextField(
@@ -116,6 +94,7 @@ class _SignInState extends State<SignIn> {
                     enabledBorder: OutlineInputBorder(
                       /// borderSide: BorderSide(color: Colors.grey),
                       borderRadius: BorderRadius.circular(3.sw),
+                      
                     ), // errorBorder: OutlineInputBorder(
                     //   /// borderSide: BorderSide(color: Colors.grey),
                     //   borderRadius: BorderRadius.circular(3.sw),
@@ -142,7 +121,24 @@ class _SignInState extends State<SignIn> {
                     ),
                   ),
                 ),
-               
+                SizedBox(height: 3.sh),
+                Row(
+                  children: [
+                    Spacer(),
+
+                    InkWell(
+                      //  borderRadius: BorderRadius.circular(3.sw),
+                      onTap: () {},
+                      child: Text(
+                        'Forgot password ?',
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
                 SizedBox(height: 3.sh),
                 ElevatedButton(
                   onPressed: () {},
@@ -153,7 +149,26 @@ class _SignInState extends State<SignIn> {
                     ),
                   ),
 
-                  child: Text('Sign in'),
+                  child: Text('Sign up'),
+                ),
+                SizedBox(height: 3.sh),
+                RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text:
+                            'By clicking the “sign up” button, you accept the terms of the ',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      TextSpan(
+                        text: 'Privacy Policy',
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 SizedBox(height: 3.sh),
                 Row(
@@ -220,17 +235,17 @@ class _SignInState extends State<SignIn> {
                     ),
                   ],
                 ),
-                SizedBox(height: 40.sh),
+                SizedBox(height: 31.sh),
                 Center(
                   child: RichText(
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: 'Don\'t have an account? ',
+                          text: 'ALready have an account ',
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                         TextSpan(
-                          text: 'Sign up',
+                          text: 'Sign in',
                           style: Theme.of(context).textTheme.bodyMedium!
                               .copyWith(
                                 fontWeight: FontWeight.bold,
@@ -238,7 +253,7 @@ class _SignInState extends State<SignIn> {
                               ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
-                              context.go('/sign-up');
+                              context.go('/sign-in');
                             },
                         ),
                       ],

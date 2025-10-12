@@ -286,25 +286,7 @@ class _OnBoardState extends State<OnBoard> with TickerProviderStateMixin {
                     ),
                   ),
                 ),
-              ),
-
-            // Skip button
-            Positioned(
-              top: 0,
-              right: 0,
-              child: TextButton(
-                onPressed: () {
-                  // Navigate to main app
-                },
-                child: Text(
-                  'Skip',
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ),
+              ),           
 
             // Bottom section with animated text
             Positioned(
