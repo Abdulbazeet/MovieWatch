@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movie_watch/presentation/authentication/auth_provider/auth_provider.dart';
-import 'package:movie_watch/presentation/home/home.dart';
+import 'package:movie_watch/presentation/bottombar/bottom_bar.dart';
 import 'package:movie_watch/presentation/onboard/onboard.dart';
 import 'package:movie_watch/utils/sharedDB.dart';
 
@@ -34,7 +34,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     return userState.when(
       data: (user) {
         if (user != null || skipOnBOard == true) {
-          return Home();
+          return Bottombar();
         }
         return OnBoard();
       },

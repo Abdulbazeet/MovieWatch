@@ -22,13 +22,13 @@ class _OnBoardState extends State<OnBoard> with TickerProviderStateMixin {
   List<int> _visibleGenreIndexes = [];
 
   final List<String> _posters = [
-    'assets/movie1.jpg',
-    'assets/movie2.jpg',
-    'assets/movie3.jpg',
-    'assets/movie4.jpg',
-    'assets/movie5.jpg',
-    'assets/movie6.jpg',
-    'assets/movie7.jpg',
+    'assets/images/movie1.jpg',
+    'assets/images/movie2.jpg',
+    'assets/images/movie3.jpg',
+    'assets/images/movie4.jpg',
+    'assets/images/movie5.jpg',
+    'assets/images/movie6.jpg',
+    'assets/images/movie7.jpg',
   ];
 
   final List<String> _genres = [
@@ -286,7 +286,7 @@ class _OnBoardState extends State<OnBoard> with TickerProviderStateMixin {
                     ),
                   ),
                 ),
-              ),           
+              ),
 
             // Bottom section with animated text
             Positioned(
@@ -374,12 +374,7 @@ class _OnBoardState extends State<OnBoard> with TickerProviderStateMixin {
                       }
                     },
 
-                    style: ElevatedButton.styleFrom(
-                      fixedSize: Size(90.sw, 6.sh),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
+                   
                     child: Text(
                       _next ? 'Get Started' : 'Next',
                       style: TextStyle(

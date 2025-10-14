@@ -36,8 +36,11 @@ class AppTheme {
           fontSize: 14.sp,
           fontWeight: FontWeight.w600,
         ),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+        fixedSize: Size(90.sw, 6.sh),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(3.sw),
+        ),
+        // padding: EdgeInsets.symmetric(vertical: 3.sh, horizontal: 4.sw),
       ),
     ),
   );

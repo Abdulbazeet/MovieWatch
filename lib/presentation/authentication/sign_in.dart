@@ -32,6 +32,7 @@ class _SignInState extends State<SignIn> {
                     Spacer(),
 
                     // TextButton(
+
                     //   style: TextButton.styleFrom(
                     //    // padding: EdgeInsets.zero
                     //    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -152,12 +153,7 @@ class _SignInState extends State<SignIn> {
                 SizedBox(height: 3.sh),
                 ElevatedButton(
                   onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    fixedSize: Size(90.sw, 6.sh),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
+                  
 
                   child: Text('Sign in'),
                 ),
@@ -187,7 +183,7 @@ class _SignInState extends State<SignIn> {
                           ).colorScheme.surface,
                         ),
                         onPressed: () {},
-                        child: Image.asset('assets/facebook (1).png'),
+                        child: Image.asset('assets/icons/facebook (1).png'),
                       ),
                     ),
 
@@ -204,7 +200,7 @@ class _SignInState extends State<SignIn> {
                           ).colorScheme.surface,
                         ),
                         onPressed: () {},
-                        child: Image.asset('assets/gmail.png'),
+                        child: Image.asset('assets/icons/gmail.png'),
                       ),
                     ),
                     SizedBox(width: 6.sw),
@@ -221,7 +217,7 @@ class _SignInState extends State<SignIn> {
                           ).colorScheme.surface,
                         ),
                         onPressed: () {},
-                        child: Image.asset('assets/apple-logo.png'),
+                        child: Image.asset('assets/icons/apple-logo.png'),
                       ),
                     ),
                   ],
