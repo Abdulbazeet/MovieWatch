@@ -8,8 +8,9 @@ class AppTheme {
     colorScheme: ColorScheme.light(
       brightness: Brightness.light,
       primary: Color(0xFFEB2F3D),
-      surface: Colors.white60,
+      surface: Colors.grey[400]!,
       onSurface: Colors.black,
+      secondary: Colors.white,
     ),
     textTheme: TextTheme(
       bodyLarge: GoogleFonts.poppins(
@@ -51,6 +52,7 @@ class AppTheme {
       primary: Color(0xFFEB2F3D),
       surface: Colors.black54,
       onSurface: Colors.white,
+      secondary: Colors.black,
     ),
     textTheme: TextTheme(
       bodyLarge: GoogleFonts.poppins(

@@ -35,7 +35,7 @@ class _SignUpState extends State<SignUp> {
                         SharedPreferences sp =
                             await SharedPreferences.getInstance();
                         sp.setBool('skipOnboard', true);
-                        context.go('/home');
+                        context.go('/bottom-bar');
                       },
                       child: Text(
                         'Skip',
@@ -143,12 +143,7 @@ class _SignUpState extends State<SignUp> {
                   ],
                 ),
                 SizedBox(height: 3.sh),
-                ElevatedButton(
-                  onPressed: () {},
-                  
-
-                  child: Text('Sign up'),
-                ),
+                ElevatedButton(onPressed: () {}, child: Text('Sign up')),
                 SizedBox(height: 3.sh),
                 RichText(
                   text: TextSpan(

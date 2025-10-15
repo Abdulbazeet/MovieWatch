@@ -48,7 +48,7 @@ class _SignInState extends State<SignIn> {
                         SharedPreferences sp =
                             await SharedPreferences.getInstance();
                         sp.setBool('skipOnboard', true);
-                        context.go('/home');
+                        context.go('/bottom-bar');
                       },
                       child: Text(
                         'Skip',

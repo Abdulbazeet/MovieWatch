@@ -52,7 +52,7 @@ class _BottombarState extends State<Bottombar> {
                       height: 3.h,
                       width: 3.h,
                       color: isSelected
-                          ? Theme.of(context).colorScheme.surface
+                          ? Theme.of(context).colorScheme.secondary
                           : Theme.of(context).colorScheme.onSurface,
                     ),
                     SizedBox(width: 0.5.h),
@@ -60,7 +60,7 @@ class _BottombarState extends State<Bottombar> {
                       title,
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                         color: isSelected
-                            ? Theme.of(context).colorScheme.surface
+                            ? Theme.of(context).colorScheme.secondary
                             : Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
@@ -98,7 +98,7 @@ class _BottombarState extends State<Bottombar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      backgroundColor:Theme.of(context).colorScheme.surface,
       body: _body[_index],
       bottomNavigationBar: Container(
         height: 8.5.sh,
@@ -114,7 +114,7 @@ class _BottombarState extends State<Bottombar> {
             : EdgeInsets.symmetric(horizontal: 6.sw),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(3.sw),
-          color: Theme.of(context).colorScheme.surface,
+          color: Theme.of(context).colorScheme.secondary,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
