@@ -20,12 +20,12 @@ class AppTheme {
       ),
       bodyMedium: GoogleFonts.poppins(
         fontSize: 14.sp,
-        color: Colors.black54,
+        color: Colors.black,
         fontWeight: FontWeight.w500,
       ),
       bodySmall: GoogleFonts.poppins(
         fontSize: 12.sp,
-        color: Colors.black45,
+        color: Colors.black,
         fontWeight: FontWeight.w400,
       ),
     ),
@@ -62,12 +62,12 @@ class AppTheme {
       ),
       bodyMedium: GoogleFonts.poppins(
         fontSize: 14.sp,
-        color: Colors.white54,
+        color: Colors.white,
         fontWeight: FontWeight.w500,
       ),
       bodySmall: GoogleFonts.poppins(
         fontSize: 12.sp,
-        color: Colors.white38,
+        color: Colors.white,
         fontWeight: FontWeight.w400,
       ),
     ),

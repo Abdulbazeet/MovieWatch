@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:go_router/go_router.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
@@ -55,10 +57,18 @@ class _OnBoardState extends State<OnBoard> with TickerProviderStateMixin {
   final double _scrollSpeed = 25;
   bool _next = false;
   final Set<String> _selectedGenres = {};
+  bool isOnline = true;
 
   @override
   void initState() {
     super.initState();
+    Connectivity().onConnectivityChanged.listen((event) async {
+      final hasInternet = await InternetConnectionChecker().hasConnection;
+      setState(() {
+        isOnline = hasInternet;
+      });
+    });
+    print(isOnline);
 
     // Initialize animation controllers
     _fadeController = AnimationController(
@@ -113,7 +123,7 @@ class _OnBoardState extends State<OnBoard> with TickerProviderStateMixin {
       ),
       mainAxisSpacing: 12,
       crossAxisSpacing: 12,
-      itemCount: 100,
+      itemCount: 200,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 32),
       itemBuilder: (context, index) {
         final imagePath = _posters[index % _posters.length];
@@ -333,50 +343,58 @@ class _OnBoardState extends State<OnBoard> with TickerProviderStateMixin {
                   SizedBox(height: 2.h),
                   ElevatedButton(
                     onPressed: () async {
-                      if (_next) {
-                        if (_selectedGenres.isEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Please select at least one genre'),
-                            ),
-                          );
-                        } else {
-                          SharedPreferences sp =
-                              await SharedPreferences.getInstance();
-                          await sp.setStringList(
-                            'selectedGenre',
-                            _selectedGenres.toList(),
-                          );
+                      // if (_next) {
+                      //   if (_selectedGenres.isEmpty) {
+                      //     ScaffoldMessenger.of(context).showSnackBar(
+                      //       const SnackBar(
+                      //         content: Text('Please select at least one genre'),
+                      //       ),
+                      //     );
+                      //   } else if (!isOnline) {
+                      //     ScaffoldMessenger.of(context).showSnackBar(
+                      //       const SnackBar(
+                      //         content: Text(
+                      //           'No internet connection. Please check your connection and try again.',
+                      //         ),
+                      //       ),
+                      //     );
+                      //   } else {
+                      //     SharedPreferences sp =
+                      //         await SharedPreferences.getInstance();
+                      //     await sp.setStringList(
+                      //       'selectedGenre',
+                      //       _selectedGenres.toList(),
+                      //     );
 
-                          context.go('/sign-in');
-                        }
-                      } else {
-                        setState(() {
-                          _next = true;
-                        });
+                      //     context.go('/sign-in');
+                      //   }
+                      // } else {
+                      //   setState(() {
+                      //     _next = true;
+                      //   });
 
-                        // Wait for bottom text exit
-                        await Future.delayed(const Duration(milliseconds: 800));
+                      //   // Wait for bottom text exit
+                      //   await Future.delayed(const Duration(milliseconds: 800));
 
-                        // Play entry animations
-                        _fadeController.forward();
-                        _slideController.forward();
+                      //   // Play entry animations
+                      //   _fadeController.forward();
+                      //   _slideController.forward();
 
-                        // Staggered reveal for genres
-                        for (int i = 0; i < _genres.length; i++) {
-                          await Future.delayed(
-                            const Duration(milliseconds: 50),
-                          );
-                          setState(() {
-                            _visibleGenreIndexes.add(i);
-                          });
-                        }
-                      }
+                      //   // Staggered reveal for genres
+                      //   for (int i = 0; i < _genres.length; i++) {
+                      //     await Future.delayed(
+                      //       const Duration(milliseconds: 50),
+                      //     );
+                      //     setState(() {
+                      //       _visibleGenreIndexes.add(i);
+                      //     });
+                      //   }
+                      // }
+                      context.go('/sign-in');
                     },
 
-                   
                     child: Text(
-                      _next ? 'Get Started' : 'Next',
+                      'Next',
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.bold,
@@ -384,34 +402,34 @@ class _OnBoardState extends State<OnBoard> with TickerProviderStateMixin {
                     ),
                   ),
                   SizedBox(height: 2.h),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      AnimatedContainer(
-                        duration: const Duration(milliseconds: 400),
-                        width: 10.w,
-                        height: 4,
-                        decoration: BoxDecoration(
-                          color: !_next
-                              ? Theme.of(context).colorScheme.primary
-                              : Colors.grey,
-                          borderRadius: BorderRadius.circular(2),
-                        ),
-                      ),
-                      SizedBox(width: 2.w),
-                      AnimatedContainer(
-                        duration: const Duration(milliseconds: 400),
-                        width: 10.w,
-                        height: 4,
-                        decoration: BoxDecoration(
-                          color: _next
-                              ? Theme.of(context).colorScheme.primary
-                              : Colors.grey,
-                          borderRadius: BorderRadius.circular(2),
-                        ),
-                      ),
-                    ],
-                  ),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.center,
+                  //   children: [
+                  //     AnimatedContainer(
+                  //       duration: const Duration(milliseconds: 400),
+                  //       width: 10.w,
+                  //       height: 4,
+                  //       decoration: BoxDecoration(
+                  //         color: !_next
+                  //             ? Theme.of(context).colorScheme.primary
+                  //             : Colors.grey,
+                  //         borderRadius: BorderRadius.circular(2),
+                  //       ),
+                  //     ),
+                  //     SizedBox(width: 2.w),
+                  //     AnimatedContainer(
+                  //       duration: const Duration(milliseconds: 400),
+                  //       width: 10.w,
+                  //       height: 4,
+                  //       decoration: BoxDecoration(
+                  //         color: _next
+                  //             ? Theme.of(context).colorScheme.primary
+                  //             : Colors.grey,
+                  //         borderRadius: BorderRadius.circular(2),
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
                 ],
               ),
             ),

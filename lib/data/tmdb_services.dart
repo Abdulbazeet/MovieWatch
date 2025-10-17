@@ -10,7 +10,7 @@ class TmdbServices {
   final header =
       'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiMjczZjAwODhkZWFhZWJiNTM2ZDYwZDk3ZGUyNjJlNyIsIm5iZiI6MTc1OTczNzk4NC4yNjQ5OTk5LCJzdWIiOiI2OGUzNzg4MGNkMzcyYTRjZGRjMjI4ZTYiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.kPDBwcifpbou680XP1fFktUaFj-Z3ZmlkmPMUKcvqJ0';
 
-  Future<List<Movies>> fetchPopularMovies() async {
+  Future<List<Movie>> fetchPopularMovies() async {
     try {
       const url = 'https://api.themoviedb.org/3/movie/popular?language=en-US';
 
@@ -22,11 +22,8 @@ class TmdbServices {
         },
       );
       if (response.statusCode == 200) {
-        List<Movies> movies = [];
-
-        var m = Movies.fromJson(jsonDecode(response.body));
-        movies.add(m);
-        return movies;
+        List data = jsonDecode(response.body)['results'];
+        return data.map((e) => Movie.fromJson(e)).toList();
       } else {
         throw Exception('Error is ${response.body}');
       }
@@ -53,6 +50,54 @@ class TmdbServices {
           genres.add(Genre.fromMap(genre));
         }
         return genres;
+      } else {
+        throw Exception('Error is ${response.body}');
+      }
+    } catch (e) {
+      print(e);
+      throw Exception('Error fetching genres: $e');
+    }
+  }
+
+  Future<List<Movie>> fetchTrendingMovies() async {
+    try {
+      const url =
+          'https://api.themoviedb.org/3/trending/all/week?language=en-US';
+
+      http.Response response = await http.get(
+        Uri.parse(url),
+        headers: <String, String>{
+          'accept': 'application/json',
+          'Authorization': 'Bearer $header',
+        },
+      );
+      if (response.statusCode == 200) {
+        List data = jsonDecode(response.body)['results'];
+        return data.map((e) => Movie.fromJson(e)).toList();
+      } else {
+        throw Exception('Error is ${response.body}');
+      }
+    } catch (e) {
+      print(e);
+      throw Exception('Error fetching genres: $e');
+    }
+  }
+
+  Future<List<Movie>> fetchLatestMovies() async {
+    try {
+      const url =
+          'https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1';
+
+      http.Response response = await http.get(
+        Uri.parse(url),
+        headers: <String, String>{
+          'accept': 'application/json',
+          'Authorization': 'Bearer $header',
+        },
+      );
+      if (response.statusCode == 200) {
+        List data = jsonDecode(response.body)['results'];
+        return data.map((e) => Movie.fromJson(e)).toList();
       } else {
         throw Exception('Error is ${response.body}');
       }
