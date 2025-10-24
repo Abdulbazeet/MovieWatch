@@ -53,6 +53,8 @@ dependencies:
   cached_network_image: ^3.4.1
   connectivity_plus: ^7.0.0
   internet_connection_checker: ^1.0.0+1
+  carousel_slider: ^5.1.1
+  palette_generator_master: ^1.0.1
 
 dev_dependencies:
   flutter_test:

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:movie_watch/presentation/home/home.dart';
+import 'package:movie_watch/presentation/movies_screen/movies_screen.dart';
 import 'package:movie_watch/presentation/profile/profile.dart';
 import 'package:movie_watch/presentation/search/search.dart';
+import 'package:movie_watch/presentation/tab_bar/tab_bar.dart';
 import 'package:movie_watch/presentation/watchlist/watchlist.dart';
 import 'package:sizer/sizer.dart';
 
@@ -93,39 +94,49 @@ class _BottombarState extends State<Bottombar> {
     );
   }
 
-  final List<Widget> _body = [Home(), Search(), Watchlist(), Profile()];
+  final List<Widget> _body = [TabScreen(), Search(), Watchlist(), Profile()];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:Theme.of(context).colorScheme.surface,
-      body: _body[_index],
-      bottomNavigationBar: Container(
-        height: 8.5.sh,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      body: Stack(
+        children: [
+          Positioned.fill(child: _body[_index]),
+          Positioned(
+            right: 6.sw,
+            left: 6.sw,
+            bottom: 6.sh,
 
-        margin: EdgeInsets.symmetric(
-          horizontal: 4.w,
-          vertical: 2.h,
-        ).copyWith(bottom: 4.sh),
-        padding: _index == 0
-            ? EdgeInsets.symmetric(horizontal: 6.sw).copyWith(left: 1.h)
-            : _index == 3
-            ? EdgeInsets.symmetric(horizontal: 6.sw).copyWith(right: 1.h)
-            : EdgeInsets.symmetric(horizontal: 6.sw),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(3.sw),
-          color: Theme.of(context).colorScheme.secondary,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            _bottomItems(image: 'home', title: 'Home', index: 0),
-            _bottomItems(image: 'search', title: 'Search', index: 1),
+            child: Container(
+              height: 8.5.sh,
 
-            _bottomItems(image: 'bookmark (1)', title: 'Watchlist', index: 2),
-            _bottomItems(image: 'user', title: 'Profile', index: 3),
-          ],
-        ),
+              padding: _index == 0
+                  ? EdgeInsets.symmetric(horizontal: 6.sw).copyWith(left: 1.h)
+                  : _index == 3
+                  ? EdgeInsets.symmetric(horizontal: 6.sw).copyWith(right: 1.h)
+                  : EdgeInsets.symmetric(horizontal: 6.sw),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(3.sw),
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _bottomItems(image: 'home', title: 'Home', index: 0),
+                  _bottomItems(image: 'search', title: 'Search', index: 1),
+
+                  _bottomItems(
+                    image: 'bookmark (1)',
+                    title: 'Watchlist',
+                    index: 2,
+                  ),
+                  _bottomItems(image: 'user', title: 'Profile', index: 3),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

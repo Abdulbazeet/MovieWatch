@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-class Genre {
+class Genres {
   final int id;
   final String name;
-  Genre({
+  Genres({
     required this.id,
     required this.name,
   });
@@ -16,8 +16,8 @@ class Genre {
     };
   }
 
-  factory Genre.fromMap(Map<String, dynamic> map) {
-    return Genre(
+  factory Genres.fromMap(Map<String, dynamic> map) {
+    return Genres(
       id: map['id'] as int,
       name: map['name'] as String,
     );
@@ -25,5 +25,5 @@ class Genre {
 
   String toJson() => json.encode(toMap());
 
-  factory Genre.fromJson(String source) => Genre.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Genres.fromJson(String source) => Genres.fromMap(json.decode(source) as Map<String, dynamic>);
 }
