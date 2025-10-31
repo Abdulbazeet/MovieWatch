@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:movie_watch/config/movie_type.dart';
 import 'package:movie_watch/models/movies.dart';
 import 'package:movie_watch/presentation/authentication/sign_in.dart';
 import 'package:movie_watch/presentation/authentication/sign_up.dart';
@@ -10,6 +11,7 @@ import 'package:movie_watch/presentation/onboard/onboard.dart';
 import 'package:movie_watch/presentation/onboard/splash_screen.dart';
 import 'package:movie_watch/presentation/profile/profile.dart';
 import 'package:movie_watch/presentation/search/search.dart';
+import 'package:movie_watch/presentation/show_all/show_all.dart';
 import 'package:movie_watch/presentation/tab_bar/tab_bar.dart';
 import 'package:movie_watch/presentation/watchlist/watchlist.dart';
 
@@ -56,6 +58,16 @@ class AppRoutes {
       GoRoute(
         path: '/tab-screen',
         builder: (context, state) => const TabScreen(),
+      ),
+      GoRoute(
+        path: '/show-all',
+        builder: (context, state) {
+          final extras = state.extra as Map<String, dynamic>;
+
+          final title = extras['title'] as String;
+          final movieType = extras['movieType'] as MovieType;
+          return ShowAll(title: title, movieType: movieType);
+        },
       ),
     ],
   );

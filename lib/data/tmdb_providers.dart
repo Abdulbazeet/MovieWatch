@@ -16,6 +16,7 @@ final popularMoviesProvider = FutureProvider<List<Movie>>((ref) {
 // movies genre
 final movieGenreProvider = FutureProvider((ref) {
   final services = ref.watch(tmdbserviceProvider);
+  ref.keepAlive();
 
   return services.fetchMovieGenre();
 });
@@ -23,6 +24,7 @@ final movieGenreProvider = FutureProvider((ref) {
 // trendig movies
 final trendingMoviesProvider = FutureProvider<List<Movie>>((ref) {
   final services = ref.watch(tmdbserviceProvider);
+  ref.keepAlive();
 
   return services.fetchTrendingMovies();
 });
@@ -32,6 +34,7 @@ final movieDetailsProvider = FutureProvider.family<MovieDetails, int>((
   movieId,
 ) {
   final services = ref.watch(tmdbserviceProvider);
+  ref.keepAlive();
 
   return services.fetchMovieDetails(movieId);
 });
@@ -41,15 +44,21 @@ final movieCastProvider = FutureProvider.family<Cast, int>((ref, movieId) {
 });
 final nowPlayingProvider = FutureProvider<List<Movie>>((ref) {
   final service = ref.watch(tmdbserviceProvider);
+  ref.keepAlive();
+
   return service.fetchNowPlaying();
 });
 final upComingMovies = FutureProvider((ref) {
   final service = ref.watch(tmdbserviceProvider);
+  ref.keepAlive();
+
   return service.fetchUpcomingMovies();
 });
 
 final topRatedMovies = FutureProvider((ref) {
   final service = ref.watch(tmdbserviceProvider);
+  ref.keepAlive();
+
   return service.fetchTopRated();
 });
 
@@ -73,4 +82,24 @@ final airingTodayProvider = FutureProvider((ref) {
   final services = ref.watch(tmdbserviceProvider);
 
   return services.fetchAiringToday();
+});
+final newSeriesPovider = FutureProvider((ref) {
+  final services = ref.watch(tmdbserviceProvider);
+
+  return services.fetchNewSeries();
+});
+final trendingSeriesPovider = FutureProvider((ref) {
+  final services = ref.watch(tmdbserviceProvider);
+
+  return services.fetchTrendingSeries();
+});
+final upcomingSeriesPovider = FutureProvider((ref) {
+  final services = ref.watch(tmdbserviceProvider);
+
+  return services.fetchUpcomingSeries();
+});
+final topRatedSeriesPovider = FutureProvider((ref) {
+  final services = ref.watch(tmdbserviceProvider);
+
+  return services.fetchTopRatedSeries();
 });

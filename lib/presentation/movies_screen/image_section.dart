@@ -182,7 +182,10 @@ class ImageSection extends ConsumerWidget {
                                     ),
                                   ),
                                   SizedBox(height: 1.h),
+                                  SizedBox(height: 1.h),
                                   Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
                                       Text(
                                         data[index].releaseDate!.substring(
@@ -198,9 +201,7 @@ class ImageSection extends ConsumerWidget {
                                               ).colorScheme.secondary,
                                             ),
                                       ),
-
                                       SizedBox(width: 1.w),
-
                                       Text(
                                         '|',
                                         style: TextStyle(
@@ -210,67 +211,56 @@ class ImageSection extends ConsumerWidget {
                                         ),
                                       ),
                                       SizedBox(width: 1.w),
-                                      genreId.when(
-                                        data: (genres) {
-                                          final movieGenres = data[index]
-                                              .genreIds
-                                              .map((id) {
-                                                final matched = genres
-                                                    .firstWhere(
-                                                      (g) => g.id == id,
-                                                      orElse: () => Genres(
-                                                        id: 0,
-                                                        name: '',
-                                                      ),
-                                                    );
-                                                return matched.name;
-                                              })
-                                              .where((name) => name.isNotEmpty)
-                                              .toList();
-
-                                          return Wrap(
-                                            spacing: 5,
-                                            crossAxisAlignment:
-                                                WrapCrossAlignment.center,
-                                            children: [
-                                              for (
-                                                int i = 0;
-                                                i < movieGenres.length;
-                                                i++
-                                              ) ...[
-                                                Text(
-                                                  movieGenres[i],
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodySmall
-                                                      ?.copyWith(
-                                                        color: Theme.of(
-                                                          context,
-                                                        ).colorScheme.secondary,
-                                                      ),
-                                                ),
-                                                if (i < movieGenres.length - 1)
-                                                  Text(
-                                                    '|',
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .bodyMedium
-                                                        ?.copyWith(
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .colorScheme
-                                                                  .secondary,
+                                      Expanded(
+                                        child: genreId.when(
+                                          data: (genres) {
+                                            final movieGenres = data[index]
+                                                .genreIds
+                                                .map(
+                                                  (id) => genres
+                                                      .firstWhere(
+                                                        (g) => g.id == id,
+                                                        orElse: () => Genres(
+                                                          id: 0,
+                                                          name: '',
                                                         ),
+                                                      )
+                                                      .name,
+                                                )
+                                                .where(
+                                                  (name) => name.isNotEmpty,
+                                                )
+                                                .toList();
+
+                                            final genreText = movieGenres.join(
+                                              ' • ',
+                                            );
+
+                                            return Text(
+                                              genreText,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodySmall
+                                                  ?.copyWith(
+                                                    color: Theme.of(
+                                                      context,
+                                                    ).colorScheme.secondary,
                                                   ),
-                                              ],
-                                            ],
-                                          );
-                                        },
-                                        error: (e, _) => Text('Error: $e'),
-                                        loading: () => const SizedBox.shrink(),
+                                              overflow: TextOverflow
+                                                  .ellipsis,
+                                              maxLines:
+                                                  1, 
+                                            );
+                                          },
+                                          error: (e, _) =>
+                                              Text('Error loading genres'),
+                                          loading: () =>
+                                              const SizedBox.shrink(),
+                                        ),
                                       ),
                                     ],
                                   ),
+
                                   SizedBox(height: 1.h),
 
                                   Row(

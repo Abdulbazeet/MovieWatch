@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:intl/intl.dart';
 import 'package:movie_watch/config/tmdb_config.dart';
 import 'package:movie_watch/models/movies.dart';
 import 'package:shimmer/shimmer.dart';
@@ -56,11 +57,14 @@ class MovieSection extends ConsumerWidget {
               child: SizedBox(
                 height: 30.sh,
                 child: ListView.builder(
+                
                   scrollDirection: Axis.horizontal,
-                  physics: const BouncingScrollPhysics(),
                   itemCount: list.length,
                   itemBuilder: (context, index) {
                     final movie = list[index];
+                    final date = DateTime.parse(movie.releaseDate!);
+
+                    final formatedDate = DateFormat('MMM d, yyyy').format(date);
                     return Container(
                       width: 35.sw,
                       margin: EdgeInsets.only(right: 3.sw),
@@ -110,38 +114,12 @@ class MovieSection extends ConsumerWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                           SizedBox(height: 1.h),
-                          Row(
-                            children: [
-                              Text(
-                                movie.releaseDate?.substring(0, 4) ?? '',
-                                style: Theme.of(context).textTheme.bodySmall
-                                    ?.copyWith(fontWeight: FontWeight.w600),
-                              ),
-                              const Spacer(),
-                              Icon(
-                                Icons.visibility,
-                                size: 15.sp,
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
-                              SizedBox(width: 2.sw),
-                              Icon(
-                                Icons.star,
-                                color: Colors.amber,
-                                size: 15.sp,
-                              ),
-                              SizedBox(width: 2.sw),
-                              Text(
-                                movie.voteAverage.toStringAsFixed(1),
-                                style: Theme.of(context).textTheme.bodySmall
-                                    ?.copyWith(
-                                      fontWeight: FontWeight.w600,
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.onSurface,
-                                    ),
-                              ),
-                            ],
+                          Text(
+                            formatedDate,
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(fontWeight: FontWeight.w600),
                           ),
+                          const Spacer(),
                         ],
                       ),
                     );

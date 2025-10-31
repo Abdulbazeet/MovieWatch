@@ -50,8 +50,8 @@ class _BottombarState extends State<Bottombar> {
                   children: [
                     Image.asset(
                       'assets/icons/$image.png',
-                      height: 3.h,
-                      width: 3.h,
+                      height: 17.sp,
+                      width:17.sp,
                       color: isSelected
                           ? Theme.of(context).colorScheme.secondary
                           : Theme.of(context).colorScheme.onSurface,
@@ -59,7 +59,7 @@ class _BottombarState extends State<Bottombar> {
                     SizedBox(width: 0.5.h),
                     Text(
                       title,
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
                         color: isSelected
                             ? Theme.of(context).colorScheme.secondary
                             : Theme.of(context).colorScheme.onSurface,
@@ -77,14 +77,14 @@ class _BottombarState extends State<Bottombar> {
                 children: [
                   Image.asset(
                     'assets/icons/$image.png',
-                    height: 3.h,
-                    width: 3.h,
+                   height: 17.sp,
+                    width: 17.sp,
                     color: Theme.of(context).colorScheme.onSurface,
                   ),
                   SizedBox(height: 0.5.h),
                   Text(
                     title,
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    style: Theme.of(context).textTheme.bodySmall!.copyWith(
                       color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
@@ -104,8 +104,8 @@ class _BottombarState extends State<Bottombar> {
         children: [
           Positioned.fill(child: _body[_index]),
           Positioned(
-            right: 6.sw,
-            left: 6.sw,
+            right: 9.sw,
+            left: 9.sw,
             bottom: 6.sh,
 
             child: Container(

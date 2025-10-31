@@ -15,20 +15,6 @@ class TabScreen extends ConsumerStatefulWidget {
 
 class _TabScreenState extends ConsumerState<TabScreen>
     with SingleTickerProviderStateMixin {
-  // final _tabController = TabController(length: 2, vsync: this);
-  Color? dominantColor;
-  _getPaletteColor(NetworkImage _image) async {
-    final paletteGenerator = await PaletteGeneratorMaster.fromImageProvider(
-      _image,
-      maximumColorCount: 16,
-      colorSpace: ColorSpace.lab,
-      generateHarmony: true,
-    );
-    setState(() {
-      dominantColor = paletteGenerator.dominantColor?.color ?? Colors.grey;
-    });
-  }
-
   late TabController _tabController;
   @override
   void initState() {
@@ -46,6 +32,8 @@ class _TabScreenState extends ConsumerState<TabScreen>
             TabBar(
               controller: _tabController,
               dividerColor: Colors.transparent,
+              
+              physics: NeverScrollableScrollPhysics(),
               tabs: [
                 Tab(
                   child: Text(

@@ -1,19 +1,12 @@
 import 'dart:async';
 
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod/misc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:movie_watch/common/widgets/movie_section.dart';
-import 'package:movie_watch/config/tmdb_config.dart';
+import 'package:movie_watch/config/movie_type.dart';
 import 'package:movie_watch/data/tmdb_providers.dart';
-import 'package:movie_watch/models/genre.dart';
 import 'package:movie_watch/presentation/movies_screen/image_section.dart';
-import 'package:palette_generator_master/palette_generator_master.dart';
-import 'package:riverpod/riverpod.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:sizer/sizer.dart';
 
 class MovieScreen extends ConsumerStatefulWidget {
@@ -23,14 +16,17 @@ class MovieScreen extends ConsumerStatefulWidget {
   ConsumerState<MovieScreen> createState() => _MovieScreenState();
 }
 
-class _MovieScreenState extends ConsumerState<MovieScreen> {
+class _MovieScreenState extends ConsumerState<MovieScreen>
+    with AutomaticKeepAliveClientMixin {
   String dropdownvalue = 'One';
   Timer? timer;
   int _currentPage = 0;
   final controller = PageController(viewportFraction: 1);
+  MovieType movieType = MovieType.movie;
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final populaMovies = ref.watch(popularMoviesProvider);
     final genreId = ref.watch(movieGenreProvider);
     final trendingMovies = ref.watch(trendingMoviesProvider);
@@ -57,7 +53,12 @@ class _MovieScreenState extends ConsumerState<MovieScreen> {
             MovieSection(
               movies: nowPlayingMovies,
               title: 'Now Playing',
-              onShowAll: () {},
+              onShowAll: () {
+                context.push(
+                  '/show-all',
+                  extra: {'title': 'Now Playing', 'movieType': movieType},
+                );
+              },
             ),
 
             /**
@@ -103,4 +104,7 @@ class _MovieScreenState extends ConsumerState<MovieScreen> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
