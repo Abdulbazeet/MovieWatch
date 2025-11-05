@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:go_router/go_router.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sizer/sizer.dart';
 
 class OnBoard extends StatefulWidget {
   const OnBoard({super.key});
@@ -300,9 +300,9 @@ class _OnBoardState extends State<OnBoard> with TickerProviderStateMixin {
 
             // Bottom section with animated text
             Positioned(
-              bottom: 5.h,
-              right: 5.w,
-              left: 5.w,
+              bottom: 20.h,
+              right: 20.w,
+              left: 20.w,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -329,9 +329,9 @@ class _OnBoardState extends State<OnBoard> with TickerProviderStateMixin {
 
                     child: !_next
                         ? Text(
-                            'Follow up on your favourite movies or TV Series',
+                            'Follow up on your favourite movies \nor TV Series',
                             key: const ValueKey('tell_us'),
-                            style: Theme.of(context).textTheme.headlineSmall
+                            style: Theme.of(context).textTheme.bodyLarge
                                 ?.copyWith(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -340,56 +340,9 @@ class _OnBoardState extends State<OnBoard> with TickerProviderStateMixin {
                           )
                         : const SizedBox.shrink(key: ValueKey('empty')),
                   ),
-                  SizedBox(height: 2.h),
+                  SizedBox(height: 10.h),
                   ElevatedButton(
                     onPressed: () async {
-                      // if (_next) {
-                      //   if (_selectedGenres.isEmpty) {
-                      //     ScaffoldMessenger.of(context).showSnackBar(
-                      //       const SnackBar(
-                      //         content: Text('Please select at least one genre'),
-                      //       ),
-                      //     );
-                      //   } else if (!isOnline) {
-                      //     ScaffoldMessenger.of(context).showSnackBar(
-                      //       const SnackBar(
-                      //         content: Text(
-                      //           'No internet connection. Please check your connection and try again.',
-                      //         ),
-                      //       ),
-                      //     );
-                      //   } else {
-                      //     SharedPreferences sp =
-                      //         await SharedPreferences.getInstance();
-                      //     await sp.setStringList(
-                      //       'selectedGenre',
-                      //       _selectedGenres.toList(),
-                      //     );
-
-                      //     context.go('/sign-in');
-                      //   }
-                      // } else {
-                      //   setState(() {
-                      //     _next = true;
-                      //   });
-
-                      //   // Wait for bottom text exit
-                      //   await Future.delayed(const Duration(milliseconds: 800));
-
-                      //   // Play entry animations
-                      //   _fadeController.forward();
-                      //   _slideController.forward();
-
-                      //   // Staggered reveal for genres
-                      //   for (int i = 0; i < _genres.length; i++) {
-                      //     await Future.delayed(
-                      //       const Duration(milliseconds: 50),
-                      //     );
-                      //     setState(() {
-                      //       _visibleGenreIndexes.add(i);
-                      //     });
-                      //   }
-                      // }
                       context.go('/sign-in');
                     },
 
@@ -402,34 +355,6 @@ class _OnBoardState extends State<OnBoard> with TickerProviderStateMixin {
                     ),
                   ),
                   SizedBox(height: 2.h),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.center,
-                  //   children: [
-                  //     AnimatedContainer(
-                  //       duration: const Duration(milliseconds: 400),
-                  //       width: 10.w,
-                  //       height: 4,
-                  //       decoration: BoxDecoration(
-                  //         color: !_next
-                  //             ? Theme.of(context).colorScheme.primary
-                  //             : Colors.grey,
-                  //         borderRadius: BorderRadius.circular(2),
-                  //       ),
-                  //     ),
-                  //     SizedBox(width: 2.w),
-                  //     AnimatedContainer(
-                  //       duration: const Duration(milliseconds: 400),
-                  //       width: 10.w,
-                  //       height: 4,
-                  //       decoration: BoxDecoration(
-                  //         color: _next
-                  //             ? Theme.of(context).colorScheme.primary
-                  //             : Colors.grey,
-                  //         borderRadius: BorderRadius.circular(2),
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
                 ],
               ),
             ),

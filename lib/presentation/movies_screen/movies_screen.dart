@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:movie_watch/common/widgets/movie_section.dart';
 import 'package:movie_watch/config/movie_type.dart';
 import 'package:movie_watch/data/tmdb_providers.dart';
 import 'package:movie_watch/presentation/movies_screen/image_section.dart';
-import 'package:sizer/sizer.dart';
 
 class MovieScreen extends ConsumerStatefulWidget {
   const MovieScreen({super.key});
@@ -22,7 +22,7 @@ class _MovieScreenState extends ConsumerState<MovieScreen>
   Timer? timer;
   int _currentPage = 0;
   final controller = PageController(viewportFraction: 1);
-  MovieType movieType = MovieType.movie;
+  TableType tableType = TableType.movies;
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +56,11 @@ class _MovieScreenState extends ConsumerState<MovieScreen>
               onShowAll: () {
                 context.push(
                   '/show-all',
-                  extra: {'title': 'Now Playing', 'movieType': movieType},
+                  extra: {
+                    'title': 'Now Playing',
+                    'tableType': tableType,
+                    "movieType": MovieType.nowPlaying,
+                  },
                 );
               },
             ),
@@ -67,7 +71,16 @@ class _MovieScreenState extends ConsumerState<MovieScreen>
             MovieSection(
               movies: populaMovies,
               title: 'Popular',
-              onShowAll: () {},
+              onShowAll: () {
+                context.push(
+                  '/show-all',
+                  extra: {
+                    'title': 'Popular',
+                    'tableType': tableType,
+                    "movieType": MovieType.popular,
+                  },
+                );
+              },
             ),
             /**
              * Trending row
@@ -75,7 +88,16 @@ class _MovieScreenState extends ConsumerState<MovieScreen>
             MovieSection(
               movies: trendingMovies,
               title: 'Trending',
-              onShowAll: () {},
+              onShowAll: () {
+                context.push(
+                  '/show-all',
+                  extra: {
+                    'title': 'Trending',
+                    'tableType': tableType,
+                    "movieType": MovieType.trending,
+                  },
+                );
+              },
             ),
 
             /***
@@ -84,7 +106,16 @@ class _MovieScreenState extends ConsumerState<MovieScreen>
             MovieSection(
               movies: upcomingMovies,
               title: 'Upcoming',
-              onShowAll: () {},
+              onShowAll: () {
+                context.push(
+                  '/show-all',
+                  extra: {
+                    'title': 'Upcoming',
+                    'tableType': tableType,
+                    "movieType": MovieType.upcoming,
+                  },
+                );
+              },
             ),
             /**
              * Top rated row
@@ -92,13 +123,22 @@ class _MovieScreenState extends ConsumerState<MovieScreen>
             MovieSection(
               movies: topRated,
               title: 'Top Rated',
-              onShowAll: () {},
+              onShowAll: () {
+                context.push(
+                  '/show-all',
+                  extra: {
+                    'title': 'Top Rated',
+                    'tableType': tableType,
+                    "movieType": MovieType.topRated,
+                  },
+                );
+              },
             ),
 
             /**
              * spacer
              */
-            SliverToBoxAdapter(child: SizedBox(height: 20.sh)),
+            SliverToBoxAdapter(child: SizedBox(height: 85.h)),
           ],
         ),
       ),

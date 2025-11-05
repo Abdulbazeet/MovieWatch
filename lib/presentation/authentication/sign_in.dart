@@ -1,8 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sizer/sizer.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
@@ -22,28 +22,17 @@ class _SignInState extends State<SignIn> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 4.sw),
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 2.sh),
+                SizedBox(height: 2.h),
                 Row(
                   children: [
                     Spacer(),
 
-                    // TextButton(
-
-                    //   style: TextButton.styleFrom(
-                    //    // padding: EdgeInsets.zero
-                    //    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    //   ),
-                    //   onPressed: () {},
-
-                    //   chi
-                    // ld:
-                    // ),
                     InkWell(
-                      //  borderRadius: BorderRadius.circular(3.sw),
+                      //  borderRadius: BorderRadius.circular(3.w),
                       onTap: () async {
                         SharedPreferences sp =
                             await SharedPreferences.getInstance();
@@ -57,18 +46,11 @@ class _SignInState extends State<SignIn> {
                         ),
                       ),
                     ),
-                    // Material(
-                    //   borderRadius: BorderRadius.circular(3.sw),
-                    //   child: InkWell(onTap: () {},
-                    //   child: Text('Skip', style: Theme.of(context).textTheme.bodyMedium,),
-                    //   ),
-
-                    // ),
                   ],
                 ),
-                SizedBox(height: 3.sh),
+                SizedBox(height: 20.h),
                 Text('Sign in', style: Theme.of(context).textTheme.bodyLarge),
-                SizedBox(height: 3.sh),
+                SizedBox(height: 20.h),
                 TextField(
                   controller: _email,
                   keyboardType: TextInputType.emailAddress,
@@ -79,20 +61,20 @@ class _SignInState extends State<SignIn> {
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       /// borderSide: BorderSide(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(3.sw),
+                      borderRadius: BorderRadius.circular(10.r),
                     ),
                     border: OutlineInputBorder(
                       /// borderSide: BorderSide(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(3.sw),
+                      borderRadius: BorderRadius.circular(10.r),
                     ),
                     // errorBorder: OutlineInputBorder(
                     //   /// borderSide: BorderSide(color: Colors.grey),
-                    //   borderRadius: BorderRadius.circular(3.sw),
+                    //   borderRadius: BorderRadius.circular(3.w),
 
                     // ),
                     focusedBorder: OutlineInputBorder(
                       /// borderSide: BorderSide(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(3.sw),
+                      borderRadius: BorderRadius.circular(10.r),
                     ),
 
                     hint: Text(
@@ -100,13 +82,8 @@ class _SignInState extends State<SignIn> {
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(),
                     ),
                   ),
-                  // onChanged: (value) {
-                  //   if (!value.contains('@')) {
-                  //    // return 'invalid mail';
-                  //   }
-                  // },
                 ),
-                SizedBox(height: 3.sh),
+                SizedBox(height: 20.h),
                 TextField(
                   controller: _password,
                   keyboardType: TextInputType.emailAddress,
@@ -118,19 +95,16 @@ class _SignInState extends State<SignIn> {
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       /// borderSide: BorderSide(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(3.sw),
+                      borderRadius: BorderRadius.circular(10.r),
                     ),
                     enabledBorder: OutlineInputBorder(
                       /// borderSide: BorderSide(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(3.sw),
+                      borderRadius: BorderRadius.circular(10.r),
                     ), // errorBorder: OutlineInputBorder(
-                    //   /// borderSide: BorderSide(color: Colors.grey),
-                    //   borderRadius: BorderRadius.circular(3.sw),
 
-                    // ),
                     focusedBorder: OutlineInputBorder(
                       /// borderSide: BorderSide(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(3.sw),
+                      borderRadius: BorderRadius.circular(10.r),
                     ),
 
                     hint: Text(
@@ -150,33 +124,32 @@ class _SignInState extends State<SignIn> {
                   ),
                 ),
 
-                SizedBox(height: 3.sh),
+                SizedBox(height: 20.h),
                 ElevatedButton(
                   onPressed: () {},
-                  
-
                   child: Text('Sign in'),
+                  
                 ),
-                SizedBox(height: 3.sh),
+                SizedBox(height: 20.h),
                 Row(
                   children: [
                     Expanded(child: Divider()),
-                    SizedBox(width: 2.sw),
+                    SizedBox(width: 10.w),
                     Text('Or', style: Theme.of(context).textTheme.bodyMedium),
-                    SizedBox(width: 2.sw),
+                    SizedBox(width: 10.w),
                     Expanded(child: Divider()),
                   ],
                 ),
-                SizedBox(height: 3.sh),
+                SizedBox(height: 20.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          fixedSize: Size.fromHeight(6.sh),
+                          fixedSize: Size.fromHeight(6.h),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(10.r),
                           ),
                           backgroundColor: Theme.of(
                             context,
@@ -187,13 +160,13 @@ class _SignInState extends State<SignIn> {
                       ),
                     ),
 
-                    SizedBox(width: 6.sw),
+                    SizedBox(width: 20.w),
                     Expanded(
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          fixedSize: Size.fromHeight(6.sh),
+                          fixedSize: Size.fromHeight(6.h),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(10.r),
                           ),
                           backgroundColor: Theme.of(
                             context,
@@ -203,14 +176,14 @@ class _SignInState extends State<SignIn> {
                         child: Image.asset('assets/icons/gmail.png'),
                       ),
                     ),
-                    SizedBox(width: 6.sw),
+                    SizedBox(width: 20.w),
 
                     Expanded(
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          fixedSize: Size.fromHeight(6.sh),
+                          fixedSize: Size.fromHeight(6.h),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(10.r),
                           ),
                           backgroundColor: Theme.of(
                             context,
@@ -222,14 +195,15 @@ class _SignInState extends State<SignIn> {
                     ),
                   ],
                 ),
-                SizedBox(height: 40.sh),
+                SizedBox(height: 40.h),
                 Center(
                   child: RichText(
                     text: TextSpan(
                       children: [
                         TextSpan(
                           text: 'Don\'t have an account? ',
-                          style: Theme.of(context).textTheme.bodyMedium,
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(fontWeight: FontWeight.normal),
                         ),
                         TextSpan(
                           text: 'Sign up',

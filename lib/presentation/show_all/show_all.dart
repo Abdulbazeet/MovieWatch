@@ -2,26 +2,33 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:movie_watch/config/tmdb_config.dart';
-import 'package:movie_watch/data/now_playing_notifier.dart';
+import 'package:movie_watch/data/now_playing_movie_notifier.dart';
 import 'package:movie_watch/data/tmdb_providers.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:sizer/sizer.dart';
 
 import 'package:movie_watch/config/movie_type.dart';
 
 class ShowAll extends ConsumerStatefulWidget {
   final String title;
   final MovieType movieType;
-  ShowAll({required this.title, required this.movieType});
+  final TableType tableType;
+  ShowAll({
+    required this.title,
+    required this.movieType,
+    required this.tableType,
+  });
 
   @override
   ConsumerState<ShowAll> createState() => _ShowAllState();
 }
 
 class _ShowAllState extends ConsumerState<ShowAll> {
+  bool _initialFetchDone = false;
+
   List<String> chosenGenre = [];
   List<String> chosenGenreId = [];
   String? selectedGenre;
@@ -33,28 +40,56 @@ class _ShowAllState extends ConsumerState<ShowAll> {
     // TODO: implement initState
     super.initState();
     _scrollController.addListener(() {
-      if(_scrollController.position.pixels >= _scrollController.position.maxScrollExtent -200){
-        ref.read(nowPlayingNotifierProvider(selectedGenre).notifier).loadMore(selectedGenre);
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 200) {
+        ref
+            .read(
+              movieListNotifier((
+                selectedGenre,
+                widget.movieType,
+                widget.tableType,
+              )).notifier,
+            )
+            .loadMore(selectedGenre, widget.movieType, widget.tableType);
       }
-    },);
+    });
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      // if (!_initialFetchDone) {
+      //   _initialFetchDone = true;
+      // }else{
+
+      // }
+      ref
+          .read(
+            movieListNotifier((
+              selectedGenre,
+              widget.movieType,
+              widget.tableType,
+            )).notifier,
+          )
+          .refreshUI(selectedGenre, widget.movieType, widget.tableType);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final genre = switch (widget.movieType) {
-      MovieType.movie => ref.watch(movieGenreProvider),
-      MovieType.tvshow => ref.watch(seriesGenreProvider),
-      MovieType.anime => ref.watch(seriesGenreProvider),
-      MovieType.kdrama => ref.watch(seriesGenreProvider),
+    final genre = switch (widget.tableType) {
+      TableType.movies => ref.watch(movieGenreProvider),
+      TableType.tvshows => ref.watch(seriesGenreProvider),
+      TableType.anime => ref.watch(seriesGenreProvider),
+      TableType.kdramas => ref.watch(seriesGenreProvider),
     };
-    final movie = ref.watch(nowPlayingNotifierProvider(selectedGenre));
+    final movie = ref.watch(
+      movieListNotifier((selectedGenre, widget.movieType, widget.tableType)),
+    );
+    // .refreshUI(selectedGenre, widget.movieType, widget.tableType);
     showGenre(BuildContext ocntext) {
       showModalBottomSheet(
         context: context,
         backgroundColor: Theme.of(context).colorScheme.surface,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
-            top: Radius.circular(5.sw),
+            top: Radius.circular(5.w),
           ).copyWith(),
         ),
 
@@ -62,7 +97,7 @@ class _ShowAllState extends ConsumerState<ShowAll> {
           builder: (context, genreState) => SizedBox(
             width: double.infinity,
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5.sw, vertical: 3.sh),
+              padding: EdgeInsets.symmetric(horizontal: 20.r, vertical: 20.r),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
 
@@ -76,7 +111,7 @@ class _ShowAllState extends ConsumerState<ShowAll> {
                     ),
                   ),
 
-                  SizedBox(height: 2.sh),
+                  SizedBox(height: 20.r),
 
                   Expanded(
                     child: ListView.builder(
@@ -100,14 +135,14 @@ class _ShowAllState extends ConsumerState<ShowAll> {
                             });
                           },
                           child: Container(
-                            margin: EdgeInsets.symmetric(vertical: 1.sh),
+                            margin: EdgeInsets.symmetric(vertical: 10.r),
                             padding: EdgeInsets.symmetric(
-                              vertical: 3.sw,
-                              horizontal: 2.sh,
+                              vertical: 10.r,
+                              horizontal: 10.r,
                             ),
                             decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.secondary,
-                              borderRadius: BorderRadius.circular(2.sw),
+                              // color: Theme.of(context).colorScheme.secondary,
+                              //borderRadius: BorderRadius.circular(2.w),
                             ),
                             child: Row(
                               children: [
@@ -140,27 +175,41 @@ class _ShowAllState extends ConsumerState<ShowAll> {
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadiusGeometry.all(
-                            Radius.circular(2.sw),
+                            Radius.circular(10.r),
                           ),
                         ),
                       ),
                       onPressed: () {
-                        ref
-                            .read(
-                              nowPlayingNotifierProvider(
-                                selectedGenre,
-                              ).notifier,
-                            )
-                            .refreshUI(selectedGenre);
-
-                        genreState(() {});
+                        //  genreState(() {});
+                        String? joinedId = chosenGenreId.isEmpty
+                            ? null
+                            : chosenGenreId.join(',');
 
                         setState(() {
-                          String? joinedId = chosenGenreId.isEmpty
-                              ? null
-                              : chosenGenreId.join(',');
                           selectedGenre = joinedId;
                         });
+                        ref.invalidate(
+                          movieListNotifier((
+                            selectedGenre,
+                            widget.movieType,
+                            widget.tableType,
+                          )),
+                        );
+
+                        ref
+                            .read(
+                              movieListNotifier((
+                                selectedGenre,
+                                widget.movieType,
+                                widget.tableType,
+                              )).notifier,
+                            )
+                            .refreshUI(
+                              selectedGenre,
+                              widget.movieType,
+                              widget.tableType,
+                            );
+                        print(selectedGenre);
                         context.pop();
                         // print(genreId);
                       },
@@ -204,7 +253,7 @@ class _ShowAllState extends ConsumerState<ShowAll> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 5.sw),
+          padding: EdgeInsets.symmetric(horizontal: 20.r),
           child: Column(
             children: [
               Row(
@@ -213,13 +262,14 @@ class _ShowAllState extends ConsumerState<ShowAll> {
                 children: [
                   if (chosenGenre.isEmpty)
                     Container(
+                      height: 40.h,
                       padding: EdgeInsets.symmetric(
-                        horizontal: 3.sw,
-                        vertical: 1.sh,
+                        horizontal: 10.r,
+                        vertical: 10.r,
                       ),
                       decoration: BoxDecoration(
                         color: Theme.of(context).colorScheme.primary,
-                        borderRadius: BorderRadius.circular(2.sw),
+                        borderRadius: BorderRadius.circular(10.r),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -229,7 +279,7 @@ class _ShowAllState extends ConsumerState<ShowAll> {
                             style: Theme.of(context).textTheme.bodySmall
                                 ?.copyWith(color: Colors.white),
                           ),
-                          SizedBox(width: 2.sw),
+                          SizedBox(width: 10.r),
                           GestureDetector(
                             onTap: () {
                               showGenre(context);
@@ -243,11 +293,11 @@ class _ShowAllState extends ConsumerState<ShowAll> {
                         ],
                       ),
                     ),
-                  if (chosenGenre.isEmpty) SizedBox(width: 1.5.sw),
+                  if (chosenGenre.isEmpty) SizedBox(width: 10.r),
                   if (chosenGenre.isNotEmpty)
                     Expanded(
                       child: SizedBox(
-                        height: 4.sh,
+                        height: 40.h,
 
                         child: ListView.builder(
                           shrinkWrap: true,
@@ -257,14 +307,14 @@ class _ShowAllState extends ConsumerState<ShowAll> {
                             final text = chosenGenre[index];
                             return Container(
                               padding: EdgeInsets.symmetric(
-                                horizontal: 3.sw,
-                                vertical: 1.sh,
+                                horizontal: 10.r,
+                                vertical: 10.r,
                               ),
-                              margin: EdgeInsets.symmetric(horizontal: 1.5.sw),
+                              margin: EdgeInsets.symmetric(horizontal: 10.r),
 
                               decoration: BoxDecoration(
                                 color: Theme.of(context).colorScheme.primary,
-                                borderRadius: BorderRadius.circular(2.sw),
+                                borderRadius: BorderRadius.circular(10.r),
                               ),
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
@@ -274,19 +324,43 @@ class _ShowAllState extends ConsumerState<ShowAll> {
                                     style: Theme.of(context).textTheme.bodySmall
                                         ?.copyWith(color: Colors.white),
                                   ),
-                                  SizedBox(width: 2.sw),
+                                  SizedBox(width: 2.r),
                                   GestureDetector(
                                     onTap: () {
+                                      setState(() {
+                                        final genreName = chosenGenre[index];
+                                        final genreIndex = chosenGenre.indexOf(
+                                          genreName,
+                                        );
+                                        chosenGenre.removeAt(genreIndex);
+                                        chosenGenreId.removeAt(genreIndex);
+                                        selectedGenre = chosenGenreId.isEmpty
+                                            ? null
+                                            : chosenGenreId.join(',');
+                                      });
+                                      ref.invalidate(
+                                        movieListNotifier((
+                                          selectedGenre,
+                                          widget.movieType,
+                                          widget.tableType,
+                                        )),
+                                      );
+
                                       ref
                                           .read(
-                                            nowPlayingNotifierProvider(
+                                            movieListNotifier((
                                               selectedGenre,
-                                            ).notifier,
+                                              widget.movieType,
+                                              widget.tableType,
+                                            )).notifier,
                                           )
-                                          .refreshUI(selectedGenre);
-                                      setState(() {
-                                        chosenGenre.remove(text);
-                                      });
+                                          .refreshUI(
+                                            selectedGenre,
+                                            widget.movieType,
+                                            widget.tableType,
+                                          );
+
+                                      print(selectedGenre);
                                     },
                                     child: Icon(
                                       Icons.close,
@@ -301,20 +375,20 @@ class _ShowAllState extends ConsumerState<ShowAll> {
                         ),
                       ),
                     ),
-                  SizedBox(width: 2.sw),
+                  SizedBox(width: 10.r),
                 ],
               ),
-              SizedBox(height: 2.sh),
+              SizedBox(height: 20.r),
               Expanded(
                 child: movie.when(
                   data: (data) {
                     return GridView.builder(
                       controller: _scrollController,
                       gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 35.w, // max width per tile
-                        mainAxisSpacing: 2.sh,
-                        crossAxisSpacing: 2.sw,
-                        childAspectRatio: .5,
+                        maxCrossAxisExtent: 130.w, // max width per tile
+                        mainAxisSpacing: 20.r,
+                        crossAxisSpacing: 20.r,
+                        childAspectRatio: .48,
                       ),
                       itemCount: data.length,
                       itemBuilder: (context, index) {
@@ -324,8 +398,9 @@ class _ShowAllState extends ConsumerState<ShowAll> {
                           'MMM d, yyyy',
                         ).format(showDate);
                         return Container(
-                          width: 35.sw,
-                          margin: EdgeInsets.only(right: 3.sw),
+                          width: 130.w,
+                          height: 220.h,
+                          //    margin: EdgeInsets.only(right: 10.r),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -334,8 +409,8 @@ class _ShowAllState extends ConsumerState<ShowAll> {
                                     '${TmdbConfig.img_url}w500${movie.posterPath}',
                                 imageBuilder: (context, imageProvider) =>
                                     Container(
-                                      width: 35.sw,
-                                      height: 24.sh,
+                                      width: 130.w,
+                                      height: 190.h,
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(8),
                                         image: DecorationImage(
@@ -355,8 +430,8 @@ class _ShowAllState extends ConsumerState<ShowAll> {
                                           .onSurface
                                           .withValues(alpha: .3),
                                       child: Container(
-                                        width: 35.sw,
-                                        height: 24.sh,
+                                        width: 130.w,
+                                        height: 190.h,
                                         decoration: BoxDecoration(
                                           color: Theme.of(
                                             context,
@@ -367,17 +442,30 @@ class _ShowAllState extends ConsumerState<ShowAll> {
                                         ),
                                       ),
                                     ),
-                                errorWidget: (context, _, __) =>
-                                    const Icon(Icons.broken_image),
+                                errorWidget: (context, _, __) => Container(
+                                  width: 130.w,
+                                  height: 190.h,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10.r),
+                                  ),
+                                  child: Container(
+                                    width: 130.w,
+                                    height: 190.h,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10.r),
+                                    ),
+                                    child: const Icon(Icons.broken_image),
+                                  ),
+                                ),
                               ),
-                              SizedBox(height: 1.h),
+                              SizedBox(height: 10.r),
                               Text(
                                 movie.title ?? '',
                                 style: Theme.of(context).textTheme.bodySmall
                                     ?.copyWith(fontWeight: FontWeight.bold),
                                 overflow: TextOverflow.ellipsis,
                               ),
-                              SizedBox(height: 1.h),
+                              SizedBox(height: 10.r),
                               Text(
                                 formatedDate,
                                 style: Theme.of(context).textTheme.bodySmall
@@ -398,9 +486,13 @@ class _ShowAllState extends ConsumerState<ShowAll> {
                       ),
                     );
                   },
-                  loading: () => Center(
-                    child: CircularProgressIndicator.adaptive(
-                      backgroundColor: Theme.of(context).colorScheme.primary,
+                  loading: () => SizedBox(
+                    //  height: ,
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        color: Theme.of(context).colorScheme.primary,
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                      ),
                     ),
                   ),
                 ),

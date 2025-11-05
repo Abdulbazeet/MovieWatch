@@ -85,7 +85,7 @@ class TmdbServices {
     int? voteCountGte,
     int? voteCountLte,
     String? withCompanies,
-    String? withGenres,
+    String? genreId,
     String? withKeywords,
     String? withNetworks,
     String? withOriginCountry,
@@ -123,7 +123,7 @@ class TmdbServices {
       if (voteCountGte != null) 'vote_count.gte': voteCountGte.toString(),
       if (voteCountLte != null) 'vote_count.lte': voteCountLte.toString(),
       if (withCompanies != null) 'with_companies': withCompanies,
-      if (withGenres != null) 'with_genres': withGenres,
+      if (genreId != null) 'with_genres': genreId,
       if (withKeywords != null) 'with_keywords': withKeywords,
       if (withNetworks != null) 'with_networks': withNetworks,
       if (withOriginCountry != null) 'with_origin_country': withOriginCountry,
@@ -151,12 +151,17 @@ class TmdbServices {
     return '$base?${Uri(queryParameters: params).query}';
   }
 
-  Future<List<Movie>> fetchPopularMovies() async {
+  Future<List<Movie>> fetchPopularMovies({
+    int page = 1,
+    String? genreId,
+  }) async {
     try {
       final url = buildDiscoverUrl(
         voteCount: 100,
         sortBy: 'popularity.desc',
         releaseBefore: formattedDate,
+        page: page,
+        genreId: genreId,
       );
       // 'https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&release_date.lte=$formattedDate&sort_by=popularity.desc&vote_count.gte=100';
 
@@ -207,12 +212,17 @@ class TmdbServices {
     }
   }
 
-  Future<List<Movie>> fetchTrendingMovies() async {
+  Future<List<Movie>> fetchTrendingMovies({
+    int page = 1,
+    String? genreId,
+  }) async {
     try {
       final url = buildDiscoverUrl(
         releaseAfter: releaseAfterDate,
         sortBy: 'popularity.desc',
         voteCount: 50,
+        page: page,
+        genreId: genreId,
       );
       // 'https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&release_date.lte=$formattedDate&sort_by=popularity.desc&vote_count.gte=50';
 
@@ -310,10 +320,15 @@ class TmdbServices {
     }
   }
 
-  Future<List<Movie>> fetchUpcomingMovies() async {
+  Future<List<Movie>> fetchUpcomingMovies({
+    int page = 1,
+    String? genreId,
+  }) async {
     final url = buildDiscoverUrl(
       sortBy: 'primary_release_date.des',
       releaseAfter: formattedDate,
+      page: page,
+      genreId: genreId,
     );
     // 'https://api.themoviedb.org/3/discover/movie?include_adult=true&include_video=false&language=en-US&page=1&sort_by=release_date.asc&release_date.gte=today';
 
@@ -336,11 +351,13 @@ class TmdbServices {
     }
   }
 
-  Future<List<Movie>> fetchTopRated() async {
+  Future<List<Movie>> fetchTopRated({int page = 1, String? genreId}) async {
     final url = buildDiscoverUrl(
       sortBy: 'vote_average.desc',
       voteCount: 800,
       releaseAfter: limitDate,
+      page: page,
+      genreId: genreId,
     );
 
     try {
@@ -368,11 +385,16 @@ class TmdbServices {
   ///
   ///
   ///
-  Future<List<Movie>> fetchPopularSeries() async {
+  Future<List<Movie>> fetchPopularSeries({
+    int page = 1,
+    String? genreId,
+  }) async {
     try {
       final url = buildDiscoverTvUrl(
         sortBy: 'popularity.desc',
         voteCountGte: 100,
+        page: page,
+        genreId: genreId,
       );
 
       http.Response response = await http.get(
@@ -420,12 +442,14 @@ class TmdbServices {
     }
   }
 
-  Future<List<Movie>> fetchAiringToday() async {
+  Future<List<Movie>> fetchAiringToday({int page = 1, String? genreId}) async {
     final url = buildDiscoverTvUrl(
       sortBy: 'popularity.desc',
       voteCountGte: 100,
       airDateGte: formattedDate,
       airDateLte: formattedDate,
+      page: page,
+      genreId: genreId,
     );
     'https://api.themoviedb.org/3/tv/airing_today?language=en-US&page=1';
 
@@ -448,11 +472,13 @@ class TmdbServices {
     }
   }
 
-  Future<List<Movie>> fetchNewSeries() async {
+  Future<List<Movie>> fetchNewSeries({int page = 1, String? genreId}) async {
     final url = buildDiscoverTvUrl(
       sortBy: 'first_air_date.desc',
       voteCountGte: 100,
       airDateLte: formattedDate,
+      page: page,
+      genreId: genreId,
     );
     'https://api.themoviedb.org/3/tv/airing_today?language=en-US&page=1';
 
@@ -475,13 +501,18 @@ class TmdbServices {
     }
   }
 
-  Future<List<Movie>> fetchTrendingSeries() async {
+  Future<List<Movie>> fetchTrendingSeries({
+    int page = 1,
+    String? genreId,
+  }) async {
     final url = buildDiscoverTvUrl(
       sortBy: 'popularity.desc',
       voteCountGte: 50,
       airDateGte: releaseAfterDate,
       firstAirDateGte: trendingSeriesStart,
       withStatus: '0|1|2',
+      page: page,
+      genreId: genreId,
     );
     'https://api.themoviedb.org/3/tv/airing_today?language=en-US&page=1';
 
@@ -504,11 +535,16 @@ class TmdbServices {
     }
   }
 
-  Future<List<Movie>> fetchUpcomingSeries() async {
+  Future<List<Movie>> fetchUpcomingSeries({
+    int page = 1,
+    String? genreId,
+  }) async {
     final url = buildDiscoverTvUrl(
       sortBy: 'first_air_date.asc',
 
       firstAirDateGte: formattedDate,
+      page: page,
+      genreId: genreId,
     );
     'https://api.themoviedb.org/3/tv/airing_today?language=en-US&page=1';
 
@@ -531,12 +567,17 @@ class TmdbServices {
     }
   }
 
-  Future<List<Movie>> fetchTopRatedSeries() async {
+  Future<List<Movie>> fetchTopRatedSeries({
+    int page = 1,
+    String? genreId,
+  }) async {
     final url = buildDiscoverTvUrl(
       sortBy: 'vote_average.desc',
       voteCountGte: 800,
       airDateGte: seriesLimit,
       voteAverageGte: 7.0,
+      page: page,
+      genreId: genreId,
     );
     'https://api.themoviedb.org/3/tv/airing_today?language=en-US&page=1';
 

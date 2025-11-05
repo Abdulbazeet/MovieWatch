@@ -4,9 +4,9 @@ import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:sizer/sizer.dart';
 
 import 'package:movie_watch/config/tmdb_config.dart';
 import 'package:movie_watch/models/genre.dart';
@@ -29,7 +29,7 @@ class ImageSection extends ConsumerWidget {
         data: (data) {
           return SizedBox(
             width: double.infinity,
-            height: 30.sh,
+            height: 220.h,
 
             child: Stack(
               children: [
@@ -37,93 +37,103 @@ class ImageSection extends ConsumerWidget {
                   options: CarouselOptions(
                     autoPlay: true,
                     enableInfiniteScroll: true,
-                    height: 30.sh,
+                    height: 220.h,
                     viewportFraction: .80,
                   ),
                   itemCount: data.length,
+
                   itemBuilder: (context, index, realIndex) {
                     return Stack(
                       children: [
-                        GestureDetector(
-                          onTap: onPressesd,
-                          child: Hero(
-                            tag: data[index].id,
-                            transitionOnUserGestures: true,
-                            flightShuttleBuilder:
-                                (
-                                  flightContext,
-                                  animation,
-                                  direction,
-                                  fromContext,
-                                  toContext,
-                                ) {
-                                  return FadeTransition(
-                                    opacity: animation.drive(
-                                      Tween(begin: 0.6, end: 1.0).chain(
-                                        CurveTween(curve: Curves.easeInOut),
-                                      ),
-                                    ),
-                                    child: ScaleTransition(
-                                      scale: animation.drive(
-                                        Tween(begin: 0.95, end: 1.0).chain(
+                        Container(
+                          margin: EdgeInsets.only(right: 20.r),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.r),
+                          ),
+                          child: GestureDetector(
+                            onTap: onPressesd,
+                            child: Hero(
+                              tag: data[index].id,
+                              transitionOnUserGestures: true,
+                              flightShuttleBuilder:
+                                  (
+                                    flightContext,
+                                    animation,
+                                    direction,
+                                    fromContext,
+                                    toContext,
+                                  ) {
+                                    return FadeTransition(
+                                      opacity: animation.drive(
+                                        Tween(begin: 0.6, end: 1.0).chain(
                                           CurveTween(curve: Curves.easeInOut),
                                         ),
                                       ),
-                                      child: toContext.widget,
-                                    ),
-                                  );
-                                },
-                            child: CachedNetworkImage(
-                              imageUrl:
-                                  '${TmdbConfig.img_url}w780${data[index].backdropPath}',
-                              width: double.infinity,
-                              height: double.infinity,
-                              fit: BoxFit.cover,
-
-                              placeholder: (context, url) => Shimmer.fromColors(
-                                baseColor: Theme.of(
-                                  context,
-                                ).colorScheme.onSurface.withValues(alpha: .5),
-                                highlightColor: Theme.of(
-                                  context,
-                                ).colorScheme.onSurface.withValues(alpha: .3),
-                                child: Container(
-                                  width: double.infinity,
-                                  height: double.infinity,
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.surfaceVariant,
-                                ),
-                              ),
-
-                              errorWidget: (context, error, stackTrace) =>
-                                  CachedNetworkImage(
-                                    imageUrl:
-                                        '${TmdbConfig.img_url}w500${data[index].posterPath}',
-                                    width: double.infinity,
-                                    height: double.infinity,
-                                    fit: BoxFit.cover,
-                                    placeholder: (context, url) =>
-                                        Shimmer.fromColors(
-                                          baseColor: Theme.of(context)
-                                              .colorScheme
-                                              .onSurface
-                                              .withValues(alpha: .5),
-                                          highlightColor: Theme.of(context)
-                                              .colorScheme
-                                              .onSurface
-                                              .withValues(alpha: .3),
-                                          child: Container(
-                                            width: double.infinity,
-                                            height: double.infinity,
-                                            color: Theme.of(
-                                              context,
-                                            ).colorScheme.surfaceVariant,
+                                      child: ScaleTransition(
+                                        scale: animation.drive(
+                                          Tween(begin: 0.95, end: 1.0).chain(
+                                            CurveTween(curve: Curves.easeInOut),
                                           ),
                                         ),
-                                    errorWidget: (context, _, __) =>
-                                        const Icon(Icons.broken_image),
-                                  ),
+                                        child: toContext.widget,
+                                      ),
+                                    );
+                                  },
+                              child: CachedNetworkImage(
+                                imageUrl:
+                                    '${TmdbConfig.img_url}w780${data[index].backdropPath}',
+                                width: double.infinity,
+                                height: double.infinity,
+                                fit: BoxFit.cover,
+
+                                placeholder: (context, url) =>
+                                    Shimmer.fromColors(
+                                      baseColor: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface
+                                          .withValues(alpha: .5),
+                                      highlightColor: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface
+                                          .withValues(alpha: .3),
+                                      child: Container(
+                                        width: double.infinity,
+                                        height: double.infinity,
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.surfaceVariant,
+                                      ),
+                                    ),
+
+                                errorWidget: (context, error, stackTrace) =>
+                                    CachedNetworkImage(
+                                      imageUrl:
+                                          '${TmdbConfig.img_url}w500${data[index].posterPath}',
+                                      width: double.infinity,
+                                      height: double.infinity,
+                                      fit: BoxFit.cover,
+                                      placeholder: (context, url) =>
+                                          Shimmer.fromColors(
+                                            baseColor: Theme.of(context)
+                                                .colorScheme
+                                                .onSurface
+                                                .withValues(alpha: .5),
+                                            highlightColor: Theme.of(context)
+                                                .colorScheme
+                                                .onSurface
+                                                .withValues(alpha: .3),
+                                            child: Container(
+                                              width: double.infinity,
+                                              height: double.infinity,
+                                              color: Theme.of(
+                                                context,
+                                              ).colorScheme.surfaceVariant,
+                                            ),
+                                          ),
+                                      errorWidget: (context, _, __) =>
+                                          const Icon(Icons.broken_image),
+                                    ),
+                              ),
                             ),
                           ),
                         ),
@@ -151,10 +161,10 @@ class ImageSection extends ConsumerWidget {
                         Positioned(
                           right: 0,
                           left: 0,
-                          bottom: 2.sh,
+                          bottom: 2.h,
                           child: IgnorePointer(
                             child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 5.sw),
+                              padding: EdgeInsets.symmetric(horizontal: 10.r),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisSize: MainAxisSize.min,
@@ -165,12 +175,6 @@ class ImageSection extends ConsumerWidget {
                                       data[index].title!,
                                       textAlign: TextAlign.center,
                                       style:
-                                          // TextStyle(
-                                          //   color: Theme.of(
-                                          //     context,
-                                          //   ).colorScheme.secondary,
-                                          //   fontSize: 20.sp,
-                                          //   fontWeight: FontWeight.bold,
                                           // ),
                                           Theme.of(
                                             context,
@@ -181,8 +185,8 @@ class ImageSection extends ConsumerWidget {
                                           ),
                                     ),
                                   ),
-                                  SizedBox(height: 1.h),
-                                  SizedBox(height: 1.h),
+                                  SizedBox(height: 10.r),
+                                  SizedBox(height: 10.r),
                                   Row(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
@@ -201,7 +205,7 @@ class ImageSection extends ConsumerWidget {
                                               ).colorScheme.secondary,
                                             ),
                                       ),
-                                      SizedBox(width: 1.w),
+                                      SizedBox(width: 10.r),
                                       Text(
                                         '|',
                                         style: TextStyle(
@@ -210,7 +214,7 @@ class ImageSection extends ConsumerWidget {
                                           ).colorScheme.secondary,
                                         ),
                                       ),
-                                      SizedBox(width: 1.w),
+                                      SizedBox(width: 10.r),
                                       Expanded(
                                         child: genreId.when(
                                           data: (genres) {
@@ -246,10 +250,8 @@ class ImageSection extends ConsumerWidget {
                                                       context,
                                                     ).colorScheme.secondary,
                                                   ),
-                                              overflow: TextOverflow
-                                                  .ellipsis,
-                                              maxLines:
-                                                  1, 
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
                                             );
                                           },
                                           error: (e, _) =>
@@ -261,7 +263,7 @@ class ImageSection extends ConsumerWidget {
                                     ],
                                   ),
 
-                                  SizedBox(height: 1.h),
+                                  SizedBox(height: 10.r),
 
                                   Row(
                                     mainAxisSize: MainAxisSize.min,
@@ -273,13 +275,13 @@ class ImageSection extends ConsumerWidget {
                                           context,
                                         ).colorScheme.primary,
                                       ),
-                                      SizedBox(width: 2.sw),
+                                      SizedBox(width: 10.w),
                                       Icon(
                                         Icons.star,
                                         color: Colors.amber,
                                         size: 15.sp,
                                       ),
-                                      SizedBox(width: 2.sw),
+                                      SizedBox(width: 10.w),
                                       Text(
                                         data[index].voteAverage.toStringAsFixed(
                                           1,
@@ -299,30 +301,31 @@ class ImageSection extends ConsumerWidget {
                                     ],
                                   ),
                                   SizedBox(height: 1.h),
-                                  Row(
-                                    children: [
-                                      ElevatedButton(
-                                        onPressed: () {},
-                                        style: ElevatedButton.styleFrom(
-                                          fixedSize: Size(40.sw, 6.sh),
-                                        ),
-                                        child: Text('Watch Trailer'),
-                                      ),
-                                      SizedBox(width: 5.sw),
-                                      ElevatedButton(
-                                        onPressed: () {},
-                                        style: ElevatedButton.styleFrom(
-                                          fixedSize: Size(10.sw, 6.sh),
-                                          padding: EdgeInsets.zero,
-                                          alignment: Alignment.center,
-                                        ),
-                                        child: Icon(
-                                          Icons.bookmark_add,
-                                          size: 20.sp,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                  SizedBox(height: 10.r),
+                                  // Row(
+                                  //   children: [
+                                  //     ElevatedButton(
+                                  //       onPressed: () {},
+                                  //       style: ElevatedButton.styleFrom(
+                                  //         fixedSize: Size(40.w, 6.h),
+                                  //       ),
+                                  //       child: Text('Watch Trailer'),
+                                  //     ),
+                                  //     SizedBox(width: 5.w),
+                                  //     ElevatedButton(
+                                  //       onPressed: () {},
+                                  //       style: ElevatedButton.styleFrom(
+                                  //         fixedSize: Size(10.w, 6.h),
+                                  //         padding: EdgeInsets.zero,
+                                  //         alignment: Alignment.center,
+                                  //       ),
+                                  //       child: Icon(
+                                  //         Icons.bookmark_add,
+                                  //         size: 20.sp,
+                                  //       ),
+                                  //     ),
+                                  //   ],
+                                  // ),
                                 ],
                               ),
                             ),
@@ -341,7 +344,7 @@ class ImageSection extends ConsumerWidget {
         },
         loading: () {
           return SizedBox(
-            height: 40.sh,
+            height: 40.h,
             child: Shimmer.fromColors(
               baseColor: Theme.of(
                 context,
@@ -352,7 +355,7 @@ class ImageSection extends ConsumerWidget {
               //  period: const Duration(milliseconds: 1200),
               child: Container(
                 width: double.infinity,
-                height: 40.sh,
+                height: 40.h,
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.surfaceVariant,
                 ),

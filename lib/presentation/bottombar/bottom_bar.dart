@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:movie_watch/presentation/movies_screen/movies_screen.dart';
 import 'package:movie_watch/presentation/profile/profile.dart';
 import 'package:movie_watch/presentation/search/search.dart';
 import 'package:movie_watch/presentation/tab_bar/tab_bar.dart';
 import 'package:movie_watch/presentation/watchlist/watchlist.dart';
-import 'package:sizer/sizer.dart';
 
 class Bottombar extends StatefulWidget {
   const Bottombar({super.key});
@@ -39,11 +39,11 @@ class _BottombarState extends State<Bottombar> {
               onTap: () => _onTap(index),
               child: Container(
                 height: double.infinity,
-                margin: EdgeInsets.symmetric(vertical: 1.h),
-                padding: EdgeInsets.symmetric(horizontal: 4.sw),
+                margin: EdgeInsets.symmetric(vertical: 5.r),
+                padding: EdgeInsets.symmetric(horizontal: 5.r),
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.primary,
-                  borderRadius: BorderRadius.circular(3.sw),
+                  borderRadius: BorderRadius.circular(10.r),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -51,15 +51,15 @@ class _BottombarState extends State<Bottombar> {
                     Image.asset(
                       'assets/icons/$image.png',
                       height: 17.sp,
-                      width:17.sp,
+                      width: 17.sp,
                       color: isSelected
                           ? Theme.of(context).colorScheme.secondary
                           : Theme.of(context).colorScheme.onSurface,
                     ),
-                    SizedBox(width: 0.5.h),
+                    SizedBox(width: 10.w),
                     Text(
                       title,
-                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                         color: isSelected
                             ? Theme.of(context).colorScheme.secondary
                             : Theme.of(context).colorScheme.onSurface,
@@ -77,14 +77,14 @@ class _BottombarState extends State<Bottombar> {
                 children: [
                   Image.asset(
                     'assets/icons/$image.png',
-                   height: 17.sp,
+                    height: 17.sp,
                     width: 17.sp,
                     color: Theme.of(context).colorScheme.onSurface,
                   ),
-                  SizedBox(height: 0.5.h),
+                  SizedBox(height: 5.h),
                   Text(
                     title,
-                    style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
@@ -104,20 +104,20 @@ class _BottombarState extends State<Bottombar> {
         children: [
           Positioned.fill(child: _body[_index]),
           Positioned(
-            right: 9.sw,
-            left: 9.sw,
-            bottom: 6.sh,
+            right: 60.w,
+            left: 60.w,
+            bottom: 40.h,
 
             child: Container(
-              height: 8.5.sh,
+              height: 55.h,
 
               padding: _index == 0
-                  ? EdgeInsets.symmetric(horizontal: 6.sw).copyWith(left: 1.h)
+                  ? EdgeInsets.symmetric(horizontal: 20.r).copyWith(left: 5.r)
                   : _index == 3
-                  ? EdgeInsets.symmetric(horizontal: 6.sw).copyWith(right: 1.h)
-                  : EdgeInsets.symmetric(horizontal: 6.sw),
+                  ? EdgeInsets.symmetric(horizontal: 20.r).copyWith(right: 5.r)
+                  : EdgeInsets.symmetric(horizontal: 20.r),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(3.sw),
+                borderRadius: BorderRadius.circular(10.r),
                 color: Theme.of(context).colorScheme.secondary,
               ),
               child: Row(

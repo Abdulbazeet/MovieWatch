@@ -66,7 +66,9 @@ class AppRoutes {
 
           final title = extras['title'] as String;
           final movieType = extras['movieType'] as MovieType;
-          return ShowAll(title: title, movieType: movieType);
+          final tableType = extras['tableType'] as TableType;
+          return ShowAll(title: title, movieType: movieType, tableType: tableType,
+          );
         },
       ),
     ],

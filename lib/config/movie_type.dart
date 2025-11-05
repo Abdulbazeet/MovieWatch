@@ -1,1 +1,10 @@
-enum MovieType { movie, tvshow, kdrama, anime }
+enum TableType { movies, tvshows, kdramas, anime }
+
+enum MovieType {
+  nowPlaying,
+  popular,
+  topRated,
+  trending,
+  upcoming,
+  airingToday,
+}

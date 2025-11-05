@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:movie_watch/config/tmdb_config.dart';
 import 'package:movie_watch/models/movies.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:sizer/sizer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class MovieSection extends ConsumerWidget {
@@ -27,7 +27,7 @@ class MovieSection extends ConsumerWidget {
         children: [
           /// Header Row
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 5.sw, vertical: 1.h),
+            padding: EdgeInsets.symmetric(horizontal: 20.r, vertical: 20.r),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -38,11 +38,15 @@ class MovieSection extends ConsumerWidget {
                   ),
                 ),
                 GestureDetector(
+                
                   onTap: onShowAll,
-                  child: Text(
-                    'Show all',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurface,
+                  child: Container(
+                   margin: EdgeInsets.only(left: 10.r,),
+                    child: Text(
+                      'Show all',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
                     ),
                   ),
                 ),
@@ -53,11 +57,10 @@ class MovieSection extends ConsumerWidget {
           /// Movie list
           movies.when(
             data: (list) => Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5.sw),
+              padding: EdgeInsets.symmetric(horizontal: 20.r),
               child: SizedBox(
-                height: 30.sh,
+                height: 240.h,
                 child: ListView.builder(
-                
                   scrollDirection: Axis.horizontal,
                   itemCount: list.length,
                   itemBuilder: (context, index) {
@@ -66,8 +69,8 @@ class MovieSection extends ConsumerWidget {
 
                     final formatedDate = DateFormat('MMM d, yyyy').format(date);
                     return Container(
-                      width: 35.sw,
-                      margin: EdgeInsets.only(right: 3.sw),
+                      width: 130.w,
+                      margin: EdgeInsets.only(right: 20.r),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -75,10 +78,10 @@ class MovieSection extends ConsumerWidget {
                             imageUrl:
                                 '${TmdbConfig.img_url}w500${movie.posterPath}',
                             imageBuilder: (context, imageProvider) => Container(
-                              width: 35.sw,
-                              height: 24.sh,
+                              width: 130.w,
+                              height: 190.h,
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
+                                borderRadius: BorderRadius.circular(10.r),
                                 image: DecorationImage(
                                   image: imageProvider,
                                   fit: BoxFit.cover,
@@ -93,27 +96,36 @@ class MovieSection extends ConsumerWidget {
                                 context,
                               ).colorScheme.onSurface.withValues(alpha: .3),
                               child: Container(
-                                width: 35.sw,
-                                height: 24.sh,
+                                width: 130.w,
+                                height: 190.h,
                                 decoration: BoxDecoration(
                                   color: Theme.of(
                                     context,
                                   ).colorScheme.surfaceVariant,
-                                  borderRadius: BorderRadius.circular(8),
+                                  borderRadius: BorderRadius.circular(10.r),
                                 ),
                               ),
                             ),
-                            errorWidget: (context, _, __) =>
-                                const Icon(Icons.broken_image),
+                            errorWidget: (context, _, __) => Container(
+                              width: 130.w,
+                              height: 190.h,
+                              decoration: BoxDecoration(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.surfaceVariant,
+                                borderRadius: BorderRadius.circular(10.r),
+                              ),
+                              child: const Icon(Icons.broken_image),
+                            ),
                           ),
-                          SizedBox(height: 1.h),
+                          SizedBox(height: 10.r),
                           Text(
                             movie.title ?? '',
                             style: Theme.of(context).textTheme.bodySmall
                                 ?.copyWith(fontWeight: FontWeight.bold),
                             overflow: TextOverflow.ellipsis,
                           ),
-                          SizedBox(height: 1.h),
+                          SizedBox(height: 10.r),
                           Text(
                             formatedDate,
                             style: Theme.of(context).textTheme.bodySmall
@@ -128,13 +140,13 @@ class MovieSection extends ConsumerWidget {
               ),
             ),
             error: (error, _) => Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(20.r),
               child: Text('Error: $error'),
             ),
             loading: () => Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5.sw),
+              padding: EdgeInsets.symmetric(horizontal: 20.r),
               child: SizedBox(
-                height: 24.sh,
+                height: 190.h,
                 child: Shimmer.fromColors(
                   baseColor: Theme.of(
                     context,
@@ -144,13 +156,15 @@ class MovieSection extends ConsumerWidget {
                   ).colorScheme.onSurface.withValues(alpha: .3),
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: 5,
+                    itemCount: 20,
                     itemBuilder: (_, __) => Container(
-                      width: 35.sw,
-                      margin: EdgeInsets.only(right: 3.sw),
+                      width: 130.w,
+                      margin: EdgeInsets.only(right: 20.r),
                       decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.surfaceVariant,
-                        borderRadius: BorderRadius.circular(8),
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onSurface.withValues(alpha: .5),
+                        borderRadius: BorderRadius.circular(10.r),
                       ),
                     ),
                   ),

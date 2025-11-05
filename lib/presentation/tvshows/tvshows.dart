@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:movie_watch/common/widgets/movie_section.dart';
+import 'package:movie_watch/config/movie_type.dart';
 import 'package:movie_watch/data/tmdb_providers.dart';
 import 'package:movie_watch/presentation/movies_screen/image_section.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:sizer/sizer.dart';
 
 class TvShows extends ConsumerStatefulWidget {
   const TvShows({super.key});
@@ -44,6 +46,7 @@ class _TvShowsState extends ConsumerState<TvShows>
     final trending = ref.watch(trendingSeriesPovider);
     final upcoming = ref.watch(upcomingSeriesPovider);
     final topRated = ref.watch(topRatedSeriesPovider);
+    TableType tableType = TableType.tvshows;
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
@@ -62,42 +65,109 @@ class _TvShowsState extends ConsumerState<TvShows>
               ImageSection(
                 genreId: genreId,
                 movies: popularSeries,
-                onPressesd: () {},
+                onPressesd: () {
+                  context.push(
+                    '/show-all',
+                    extra: {
+                      'title': 'Popular',
+                      'tableType': tableType,
+                      "movieType": MovieType.popular,
+                    },
+                  );
+                },
               ),
 
               //airing today
               MovieSection(
                 movies: airingToday,
                 title: 'Airing Today',
-                onShowAll: () {},
+                onShowAll: () {
+                  context.push(
+                    '/show-all',
+                    extra: {
+                      'title': 'Airing Today',
+                      'tableType': tableType,
+                      "movieType": MovieType.airingToday,
+                    },
+                  );
+                },
               ),
 
               //New series
-              MovieSection(movies: newSeries, title: 'New', onShowAll: () {}),
+              MovieSection(
+                movies: newSeries,
+                title: 'New',
+                onShowAll: () {
+                  context.push(
+                    '/show-all',
+                    extra: {
+                      'title': 'New',
+                      'tableType': tableType,
+                      "movieType": MovieType.nowPlaying,
+                    },
+                  );
+                },
+              ),
 
               //popular series
               MovieSection(
                 movies: popularSeries,
                 title: 'Popular',
-                onShowAll: () {},
+                onShowAll: () {
+                  context.push(
+                    '/show-all',
+                    extra: {
+                      'title': 'Popular',
+                      'tableType': tableType,
+                      "movieType": MovieType.popular,
+                    },
+                  );
+                },
               ),
               MovieSection(
                 movies: trending,
                 title: 'Trending',
-                onShowAll: () {},
+                onShowAll: () {
+                  context.push(
+                    '/show-all',
+                    extra: {
+                      'title': 'Trending',
+                      'tableType': tableType,
+                      "movieType": MovieType.trending,
+                    },
+                  );
+                },
               ),
               MovieSection(
                 movies: upcoming,
                 title: 'Upcoming',
-                onShowAll: () {},
+                onShowAll: () {
+                  context.push(
+                    '/show-all',
+                    extra: {
+                      'title': 'Upcoming',
+                      'tableType': tableType,
+                      "movieType": MovieType.upcoming,
+                    },
+                  );
+                },
               ),
               MovieSection(
                 movies: topRated,
                 title: 'Top Rated',
-                onShowAll: () {},
+                onShowAll: () {
+                  context.push(
+                    '/show-all',
+                    extra: {
+                      'title': 'Top Rated',
+                      'tableType': tableType,
+                      "movieType": MovieType.topRated,
+                    },
+                  );
+                },
               ),
 
-              SliverToBoxAdapter(child: SizedBox(height: 20.sh)),
+              SliverToBoxAdapter(child: SizedBox(height: 85.h)),
             ],
           ),
         ),
@@ -106,6 +176,5 @@ class _TvShowsState extends ConsumerState<TvShows>
   }
 
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 }

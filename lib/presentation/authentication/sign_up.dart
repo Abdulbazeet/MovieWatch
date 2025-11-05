@@ -1,8 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sizer/sizer.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -21,11 +21,11 @@ class _SignUpState extends State<SignUp> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 4.sw),
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 2.sh),
+                SizedBox(height: 20.h),
                 Row(
                   children: [
                     Spacer(),
@@ -46,9 +46,9 @@ class _SignUpState extends State<SignUp> {
                     ),
                   ],
                 ),
-                SizedBox(height: 3.sh),
+                SizedBox(height: 20.h),
                 Text('Sign up', style: Theme.of(context).textTheme.bodyLarge),
-                SizedBox(height: 3.sh),
+                SizedBox(height: 20.h),
                 TextField(
                   controller: _email,
                   keyboardType: TextInputType.emailAddress,
@@ -59,20 +59,20 @@ class _SignUpState extends State<SignUp> {
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       /// borderSide: BorderSide(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(3.sw),
+                      borderRadius: BorderRadius.circular(10.r),
                     ),
                     border: OutlineInputBorder(
                       /// borderSide: BorderSide(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(3.sw),
+                      borderRadius: BorderRadius.circular(10.r),
                     ),
                     // errorBorder: OutlineInputBorder(
                     //   /// borderSide: BorderSide(color: Colors.grey),
-                    //   borderRadius: BorderRadius.circular(3.sw),
+                    //   borderRadius: BorderRadius.circular(3.w),
 
                     // ),
                     focusedBorder: OutlineInputBorder(
                       /// borderSide: BorderSide(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(3.sw),
+                      borderRadius: BorderRadius.circular(10.r),
                     ),
 
                     hint: Text(
@@ -81,7 +81,7 @@ class _SignUpState extends State<SignUp> {
                     ),
                   ),
                 ),
-                SizedBox(height: 3.sh),
+                SizedBox(height: 20.h),
                 TextField(
                   controller: _password,
                   keyboardType: TextInputType.emailAddress,
@@ -93,19 +93,19 @@ class _SignUpState extends State<SignUp> {
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       /// borderSide: BorderSide(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(3.sw),
+                      borderRadius: BorderRadius.circular(10.r),
                     ),
                     enabledBorder: OutlineInputBorder(
                       /// borderSide: BorderSide(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(3.sw),
+                      borderRadius: BorderRadius.circular(10.r),
                     ), // errorBorder: OutlineInputBorder(
                     //   /// borderSide: BorderSide(color: Colors.grey),
-                    //   borderRadius: BorderRadius.circular(3.sw),
+                    //   borderRadius: BorderRadius.circular(3.w),
 
                     // ),
                     focusedBorder: OutlineInputBorder(
                       /// borderSide: BorderSide(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(3.sw),
+                      borderRadius: BorderRadius.circular(10.r),
                     ),
 
                     hint: Text(
@@ -124,13 +124,13 @@ class _SignUpState extends State<SignUp> {
                     ),
                   ),
                 ),
-                SizedBox(height: 3.sh),
+                SizedBox(height: 20.h),
                 Row(
                   children: [
                     Spacer(),
 
                     InkWell(
-                      //  borderRadius: BorderRadius.circular(3.sw),
+                      //  borderRadius: BorderRadius.circular(3.w),
                       onTap: () {},
                       child: Text(
                         'Forgot password ?',
@@ -142,9 +142,9 @@ class _SignUpState extends State<SignUp> {
                     ),
                   ],
                 ),
-                SizedBox(height: 3.sh),
+                SizedBox(height: 20.h),
                 ElevatedButton(onPressed: () {}, child: Text('Sign up')),
-                SizedBox(height: 3.sh),
+                SizedBox(height: 20.h),
                 RichText(
                   text: TextSpan(
                     children: [
@@ -163,24 +163,24 @@ class _SignUpState extends State<SignUp> {
                     ],
                   ),
                 ),
-                SizedBox(height: 3.sh),
+                SizedBox(height: 20.h),
                 Row(
                   children: [
                     Expanded(child: Divider()),
-                    SizedBox(width: 2.sw),
+                    SizedBox(width: 10.w),
                     Text('Or', style: Theme.of(context).textTheme.bodyMedium),
-                    SizedBox(width: 2.sw),
+                    SizedBox(width: 10.w),
                     Expanded(child: Divider()),
                   ],
                 ),
-                SizedBox(height: 3.sh),
+                SizedBox(height: 20.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          fixedSize: Size.fromHeight(6.sh),
+                          fixedSize: Size.fromHeight(6.h),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -193,11 +193,11 @@ class _SignUpState extends State<SignUp> {
                       ),
                     ),
 
-                    SizedBox(width: 6.sw),
+                    SizedBox(width: 20.w),
                     Expanded(
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          fixedSize: Size.fromHeight(6.sh),
+                          fixedSize: Size.fromHeight(6.h),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -209,12 +209,12 @@ class _SignUpState extends State<SignUp> {
                         child: Image.asset('assets/icons/gmail.png'),
                       ),
                     ),
-                    SizedBox(width: 6.sw),
+                    SizedBox(width: 20.w),
 
                     Expanded(
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          fixedSize: Size.fromHeight(6.sh),
+                          fixedSize: Size.fromHeight(6.h),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -228,14 +228,15 @@ class _SignUpState extends State<SignUp> {
                     ),
                   ],
                 ),
-                SizedBox(height: 31.sh),
+                SizedBox(height: 40.h),
                 Center(
                   child: RichText(
                     text: TextSpan(
                       children: [
                         TextSpan(
                           text: 'ALready have an account ',
-                          style: Theme.of(context).textTheme.bodyMedium,
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(fontWeight: FontWeight.normal),
                         ),
                         TextSpan(
                           text: 'Sign in',

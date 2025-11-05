@@ -1,12 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:movie_watch/config/tmdb_config.dart';
 import 'package:movie_watch/data/tmdb_providers.dart';
 import 'package:movie_watch/models/movies.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:sizer/sizer.dart';
 
 class Details extends ConsumerStatefulWidget {
   final Movie? currentMovie;
@@ -29,7 +29,7 @@ class _DetailsState extends ConsumerState<Details> {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            expandedHeight: 40.sh,
+            expandedHeight: 40.h,
             leading: IconButton(
               onPressed: () {
                 context.pop();
@@ -119,10 +119,10 @@ class _DetailsState extends ConsumerState<Details> {
 
           SliverToBoxAdapter(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5.sw),
+              padding: EdgeInsets.symmetric(horizontal: 5.w),
               child: Column(
                 children: [
-                  SizedBox(height: 1.sh),
+                  SizedBox(height: 1.h),
                   Row(
                     children: [
                       Expanded(
@@ -134,12 +134,12 @@ class _DetailsState extends ConsumerState<Details> {
                           ),
                         ),
                       ),
-                      SizedBox(width: 2.sw),
+                      SizedBox(width: 2.w),
                       GestureDetector(
                         onTap: () {},
                         child: Icon(Icons.bookmark_add),
                       ),
-                      SizedBox(width: 3.sw),
+                      SizedBox(width: 3.w),
                       GestureDetector(onTap: () {}, child: Icon(Icons.share)),
                     ],
                   ),
@@ -149,10 +149,10 @@ class _DetailsState extends ConsumerState<Details> {
           ),
           SliverToBoxAdapter(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5.sw),
+              padding: EdgeInsets.symmetric(horizontal: 5.w),
               child: Column(
                 children: [
-                  SizedBox(height: 1.sh),
+                  SizedBox(height: 1.h),
                   Row(
                     children: [
                       Text(
@@ -163,16 +163,16 @@ class _DetailsState extends ConsumerState<Details> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(width: 2.sw),
+                      SizedBox(width: 2.w),
                       Text(
                         '|',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(width: 2.sw),
+                      SizedBox(width: 2.w),
                       Icon(Icons.star, color: Colors.amber, size: 15.sp),
-                      SizedBox(width: 2.sw),
+                      SizedBox(width: 2.w),
                       Text(
                         widget.currentMovie!.voteAverage.toStringAsFixed(1),
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -190,18 +190,18 @@ class _DetailsState extends ConsumerState<Details> {
           ),
           SliverToBoxAdapter(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5.sw),
+              padding: EdgeInsets.symmetric(horizontal: 5.w),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 2.sh),
+                  SizedBox(height: 2.h),
                   Row(
                     children: [
                       movie_details.when(
                         data: (data) {
                           final genre = data.genres;
                           return Wrap(
-                            spacing: 2.sw,
+                            spacing: 2.w,
                             children: [
                               for (int i = 0; i < genre.length; i++) ...[
                                 Text(
@@ -232,7 +232,7 @@ class _DetailsState extends ConsumerState<Details> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 1.sh),
+                  SizedBox(height: 1.h),
                   AnimatedSize(
                     duration: Duration(milliseconds: 300),
                     child: movie_details.when(
@@ -254,7 +254,7 @@ class _DetailsState extends ConsumerState<Details> {
                       ),
                     ),
                   ),
-                  //  SizedBox(height: 3.sh),
+                  //  SizedBox(height: 3.h),
                   GestureDetector(
                     onTap: () {
                       setState(() {
@@ -269,14 +269,14 @@ class _DetailsState extends ConsumerState<Details> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 2.sh),
+                  SizedBox(height: 2.h),
                 ],
               ),
             ),
           ),
           SliverToBoxAdapter(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5.sw),
+              padding: EdgeInsets.symmetric(horizontal: 5.w),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -297,7 +297,7 @@ class _DetailsState extends ConsumerState<Details> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 2.sh),
+                  SizedBox(height: 2.h),
                   Row(
                     children: [
                       cast_details.when(
@@ -308,7 +308,7 @@ class _DetailsState extends ConsumerState<Details> {
                               //   imageUrl:
                               //       "${TmdbConfig.img_url}w200/${cast.profilePath}",
                               // ),
-                              Text(cast.name)
+                              Text(cast.name),
                             ],
                           );
                         },
