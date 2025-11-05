@@ -6,6 +6,7 @@ import 'package:movie_watch/models/cast.dart';
 import 'package:movie_watch/models/genre.dart';
 import 'package:movie_watch/models/movie_details.dart';
 import 'package:movie_watch/models/movies.dart';
+import 'package:movie_watch/models/videos.dart';
 
 class TmdbServices {
   var formattedDate = DateTime.now().toIso8601String().split('T')[0];
@@ -245,52 +246,6 @@ class TmdbServices {
     }
   }
 
-  Future<MovieDetails> fetchMovieDetails(int movieId) async {
-    try {
-      final url = 'https://api.themoviedb.org/3/movie/$movieId?language=en-US';
-
-      http.Response response = await http.get(
-        Uri.parse(url),
-        headers: <String, String>{
-          'accept': 'application/json',
-          'Authorization': 'Bearer $header',
-        },
-      );
-      if (response.statusCode == 200) {
-        var data = jsonDecode(response.body);
-        return MovieDetails.fromJson(data);
-      } else {
-        throw Exception('Error is ${response.body}');
-      }
-    } catch (e) {
-      print(e);
-      throw Exception('Error fetching movie details: $e');
-    }
-  }
-
-  Future<Cast> fetchMovieCast(int movieId) async {
-    try {
-      final url =
-          "https://api.themoviedb.org/3/movie/$movieId/credits?api_key=$_apikey&language=en-US";
-      http.Response response = await http.get(
-        Uri.parse(url),
-        headers: <String, String>{
-          'accept': 'application/json',
-          'Authorization': 'Bearer $header',
-        },
-      );
-      if (response.statusCode == 200) {
-        var data = jsonDecode(response.body);
-        return Cast.fromJson(data);
-      } else {
-        throw Exception('Error is ${response.body}');
-      }
-    } catch (e) {
-      print(e);
-      throw Exception('Error fetching movie details: $e');
-    }
-  }
-
   Future<List<Movie>> fetchNowPlaying({int page = 1, String? genreId}) async {
     final url = buildDiscoverUrl(
       voteCount: 100,
@@ -376,6 +331,100 @@ class TmdbServices {
       }
     } catch (e, str) {
       throw Exception('Error is $e - $str');
+    }
+  }
+
+  Future<MovieDetails> fetchMovieDetails(int movieId) async {
+    try {
+      final url = 'https://api.themoviedb.org/3/movie/$movieId?language=en-US';
+
+      http.Response response = await http.get(
+        Uri.parse(url),
+        headers: <String, String>{
+          'accept': 'application/json',
+          'Authorization': 'Bearer $header',
+        },
+      );
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        return MovieDetails.fromJson(data);
+      } else {
+        throw Exception('Error is ${response.body}');
+      }
+    } catch (e) {
+      print(e);
+      throw Exception('Error fetching movie details: $e');
+    }
+  }
+
+  Future<Cast> fetchMovieCredits(int movieId) async {
+    try {
+      final url =
+          "https://api.themoviedb.org/3/movie/$movieId/credits?api_key=$_apikey&language=en-US";
+      http.Response response = await http.get(
+        Uri.parse(url),
+        headers: <String, String>{
+          'accept': 'application/json',
+          'Authorization': 'Bearer $header',
+        },
+      );
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        return Cast.fromJson(data);
+      } else {
+        throw Exception('Error is ${response.body}');
+      }
+    } catch (e) {
+      print(e);
+      throw Exception('Error fetching movie details: $e');
+    }
+  }
+
+  Future<Movie> fetchRecommendations(int movieId) async {
+    try {
+      final url =
+          'https://api.themoviedb.org/3/movie/$movieId/recommendations?language=en-US&page=1';
+
+      http.Response response = await http.get(
+        Uri.parse(url),
+        headers: <String, String>{
+          'accept': 'application/json',
+          'Authorization': 'Bearer $header',
+        },
+      );
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body)['results'];
+        return Movie.fromJson(data);
+      } else {
+        throw Exception('Error is ${response.body}');
+      }
+    } catch (e) {
+      print(e);
+      throw Exception('Error fetching movie recommendations: $e');
+    }
+  }
+
+  Future<Videos> fetchVideos(int movieId) async {
+    try {
+      final url =
+          'https://api.themoviedb.org/3/movie/$movieId/videos?language=en-US';
+
+      http.Response response = await http.get(
+        Uri.parse(url),
+        headers: <String, String>{
+          'accept': 'application/json',
+          'Authorization': 'Bearer $header',
+        },
+      );
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        return Videos.fromJson(data);
+      } else {
+        throw Exception('Error is ${response.body}');
+      }
+    } catch (e) {
+      print(e);
+      throw Exception('Error fetching videos: $e');
     }
   }
 

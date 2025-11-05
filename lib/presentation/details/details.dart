@@ -23,7 +23,7 @@ class _DetailsState extends ConsumerState<Details> {
     final movie_details = ref.watch(
       movieDetailsProvider(widget.currentMovie!.id),
     );
-    final cast_details = ref.watch(movieCastProvider(widget.currentMovie!.id));
+    final cast_details = ref.watch(movieCreditsProvider(widget.currentMovie!.id));
 
     return Scaffold(
       body: CustomScrollView(

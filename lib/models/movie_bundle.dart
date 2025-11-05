@@ -4,36 +4,41 @@ import 'dart:convert';
 import 'package:movie_watch/models/cast.dart';
 import 'package:movie_watch/models/movie_details.dart';
 import 'package:movie_watch/models/movies.dart';
+import 'package:movie_watch/models/videos.dart';
 
 class MovieBundle {
-  final Cast cast;
+  final Credits credits;
   final MovieDetails movieDetails;
-  final List<Movie> movie;
+  final List<Movie> recommendations;
+  final Videos video;
   MovieBundle({
-    required this.cast,
+    required this.credits,
     required this.movieDetails,
-    required this.movie,
+    required this.recommendations,
+    required this.video,
   });
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'cast': cast.toMap(),
+      'credits': credits.toMap(),
       'movieDetails': movieDetails.toMap(),
-      'movie': movie.map((x) => x.toMap()).toList(),
+      'recommendations': recommendations.map((x) => x.toMap()).toList(),
+      'video': video.toMap(),
     };
   }
 
   factory MovieBundle.fromMap(Map<String, dynamic> map) {
     return MovieBundle(
-      cast: Cast.fromMap(map['cast'] as Map<String, dynamic>),
+      credits: Credits.fromMap(map['credits'] as Map<String, dynamic>),
       movieDetails: MovieDetails.fromMap(
         map['movieDetails'] as Map<String, dynamic>,
       ),
-      movie: List<Movie>.from(
-        (map['movie'] as List<int>).map<Movie>(
+      recommendations: List<Movie>.from(
+        (map['recommendations'] as List<int>).map<Movie>(
           (x) => Movie.fromMap(x as Map<String, dynamic>),
         ),
       ),
+      video: Videos.fromMap(map['video'] as Map<String, dynamic>),
     );
   }
 
