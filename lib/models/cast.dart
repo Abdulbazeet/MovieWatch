@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 class Cast {
   final int id;
   final String name;
@@ -5,7 +8,6 @@ class Cast {
   final String? profilePath;
   final double popularity;
   final int order;
-
   Cast({
     required this.id,
     required this.name,
@@ -15,20 +17,31 @@ class Cast {
     required this.order,
   });
 
-  factory Cast.fromJson(Map<String, dynamic> json) {
+
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'id': id,
+      'name': name,
+      'character': character,
+      'profilePath': profilePath,
+      'popularity': popularity,
+      'order': order,
+    };
+  }
+
+  factory Cast.fromMap(Map<String, dynamic> map) {
     return Cast(
-      id: json['id'] ?? 0,
-      name: json['name'] ?? '',
-      character: json['character'] ?? '',
-      profilePath: json['profile_path'],
-      popularity: (json['popularity'] != null)
-          ? json['popularity'].toDouble()
-          : 0.0,
-      order: json['order'] ?? 0,
+      id: map['id'] as int,
+      name: map['name'] as String,
+      character: map['character'] as String,
+      profilePath: map['profilePath'] != null ? map['profilePath'] as String : null,
+      popularity: map['popularity'] as double,
+      order: map['order'] as int,
     );
   }
 
-  static List<Cast> fromJsonList(List<dynamic> jsonList) {
-    return jsonList.map((json) => Cast.fromJson(json)).toList();
-  }
+  String toJson() => json.encode(toMap());
+
+  factory Cast.fromJson(String source) => Cast.fromMap(json.decode(source) as Map<String, dynamic>);
 }

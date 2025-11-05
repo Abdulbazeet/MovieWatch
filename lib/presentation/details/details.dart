@@ -157,7 +157,7 @@ class _DetailsState extends ConsumerState<Details> {
                     children: [
                       Text(
                         movie_details.value != null
-                            ? movie_details.value!.releaseDate.substring(0, 4)
+                            ? movie_details.value!.release_date.substring(0, 4)
                             : 'Loading',
                         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                           fontWeight: FontWeight.bold,

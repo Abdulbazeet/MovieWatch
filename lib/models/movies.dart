@@ -1,3 +1,6 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
+
 class Movie {
   final int id;
   final String? title;
@@ -43,4 +46,49 @@ class Movie {
       adult: json['adult'] ?? false,
     );
   }
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'id': id,
+      'title': title,
+      'overview': overview,
+      'posterPath': posterPath,
+      'backdropPath': backdropPath,
+      'releaseDate': releaseDate,
+      'originalLanguage': originalLanguage,
+      'genreIds': genreIds,
+      'voteAverage': voteAverage,
+      'voteCount': voteCount,
+      'popularity': popularity,
+      'adult': adult,
+    };
+  }
+
+  factory Movie.fromMap(Map<String, dynamic> map) {
+    return Movie(
+      id: map['id'] as int,
+      title: map['title'] != null ? map['title'] as String : null,
+      overview: map['overview'] != null ? map['overview'] as String : null,
+      posterPath: map['posterPath'] != null
+          ? map['posterPath'] as String
+          : null,
+      backdropPath: map['backdropPath'] != null
+          ? map['backdropPath'] as String
+          : null,
+      releaseDate: map['releaseDate'] != null
+          ? map['releaseDate'] as String
+          : null,
+      originalLanguage: map['originalLanguage'] as String,
+      genreIds: List<int>.from((map['genreIds'] as List<int>)),
+      voteAverage: map['voteAverage'] as double,
+      voteCount: map['voteCount'] as int,
+      popularity: map['popularity'] as double,
+      adult: map['adult'] as bool,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory Movie.fromNewJson(String source) =>
+      Movie.fromMap(json.decode(source) as Map<String, dynamic>);
 }
