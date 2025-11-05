@@ -51,6 +51,7 @@ class _MovieScreenState extends ConsumerState<MovieScreen>
              * now playing row
              */
             MovieSection(
+              tableType: tableType,
               movies: nowPlayingMovies,
               title: 'Now Playing',
               onShowAll: () {
@@ -69,6 +70,7 @@ class _MovieScreenState extends ConsumerState<MovieScreen>
              * Popular row
              */
             MovieSection(
+              tableType: tableType,
               movies: populaMovies,
               title: 'Popular',
               onShowAll: () {
@@ -86,6 +88,7 @@ class _MovieScreenState extends ConsumerState<MovieScreen>
              * Trending row
              */
             MovieSection(
+              tableType: tableType,
               movies: trendingMovies,
               title: 'Trending',
               onShowAll: () {
@@ -104,6 +107,7 @@ class _MovieScreenState extends ConsumerState<MovieScreen>
              * Upcoming
              */
             MovieSection(
+              tableType: tableType,
               movies: upcomingMovies,
               title: 'Upcoming',
               onShowAll: () {
@@ -121,6 +125,7 @@ class _MovieScreenState extends ConsumerState<MovieScreen>
              * Top rated row
              */
             MovieSection(
+              tableType: tableType,
               movies: topRated,
               title: 'Top Rated',
               onShowAll: () {

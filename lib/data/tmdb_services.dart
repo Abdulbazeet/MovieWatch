@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:movie_watch/config/tmdb_config.dart';
-import 'package:movie_watch/models/cast.dart';
+import 'package:movie_watch/models/credits.dart';
 import 'package:movie_watch/models/genre.dart';
 import 'package:movie_watch/models/movie_details.dart';
 import 'package:movie_watch/models/movies.dart';
@@ -347,13 +347,18 @@ class TmdbServices {
       );
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
+
+        print('yes');
+        print(MovieDetails.fromMap(data).original_language);
+        print('yess');
         return MovieDetails.fromJson(data);
       } else {
+        print('o');
         throw Exception('Error is ${response.body}');
       }
-    } catch (e) {
+    } catch (e, str) {
       print(e);
-      throw Exception('Error fetching movie details: $e');
+      throw Exception('Error fetching movie details: $e, $str');
     }
   }
 
@@ -380,7 +385,7 @@ class TmdbServices {
     }
   }
 
-  Future<Movie> fetchRecommendations(int movieId) async {
+  Future<Movie> fetchMovieRecommendations(int movieId) async {
     try {
       final url =
           'https://api.themoviedb.org/3/movie/$movieId/recommendations?language=en-US&page=1';
@@ -404,7 +409,7 @@ class TmdbServices {
     }
   }
 
-  Future<Videos> fetchVideos(int movieId) async {
+  Future<Videos> fetchMovieVideos(int movieId) async {
     try {
       final url =
           'https://api.themoviedb.org/3/movie/$movieId/videos?language=en-US';

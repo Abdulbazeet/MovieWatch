@@ -9,6 +9,9 @@ import 'package:movie_watch/models/movies.dart';
 class MovieListNotifier extends AsyncNotifier<List<Movie>> {
   int _page = 1;
   bool _hasMore = true;
+  late String? genreId;
+  late MovieType movieType;
+  late TableType tableTYpe;
 
   // @override
   // FutureOr<List<Movie>> build(
@@ -21,7 +24,11 @@ class MovieListNotifier extends AsyncNotifier<List<Movie>> {
   @override
   Future<List<Movie>> build() async {
     // Initial fetch
-    return [];
+    return _fetchPage(
+      movieType: movieType,
+      tableTYpe: tableTYpe,
+      genreId: genreId,
+    );
   }
 
   Future<List<Movie>> _fetchPage({
@@ -127,4 +134,9 @@ final movieListNotifier =
       MovieListNotifier,
       List<Movie>,
       (String? genreId, MovieType movieType, TableType tableType)
-    >((arg) => MovieListNotifier());
+    >(
+      (arg) => MovieListNotifier()
+        ..genreId = arg.$1
+        ..movieType = arg.$2
+        ..tableTYpe = arg.$3,
+    );

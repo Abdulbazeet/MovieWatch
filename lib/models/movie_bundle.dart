@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-import 'package:movie_watch/models/cast.dart';
+import 'package:movie_watch/models/credits.dart';
 import 'package:movie_watch/models/movie_details.dart';
 import 'package:movie_watch/models/movies.dart';
 import 'package:movie_watch/models/videos.dart';

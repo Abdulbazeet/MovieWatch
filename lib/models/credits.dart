@@ -19,7 +19,7 @@ class Credits {
     return Credits(
       id: map['id'] as int,
       cast: List<Cast>.from(
-        (map['cast'] as List<int>).map<Cast>(
+        (map['cast'] as List).map(
           (x) => Cast.fromMap(x as Map<String, dynamic>),
         ),
       ),

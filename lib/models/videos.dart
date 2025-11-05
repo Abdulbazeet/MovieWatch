@@ -18,7 +18,7 @@ class Videos {
     return Videos(
       id: map['id'] as int,
       results: List<Results>.from(
-        (map['results'] as List<int>).map<Results>(
+        (map['results'] as List).map(
           (x) => Results.fromMap(x as Map<String, dynamic>),
         ),
       ),
@@ -141,9 +141,7 @@ class Results {
       size: map['size'] as int,
       type: map['type'] as String,
       official: map['official'] as bool,
-      publishedAt: DateTime.fromMillisecondsSinceEpoch(
-        map['publishedAt'] as int,
-      ),
+      publishedAt: DateTime.parse(map['published_at']),
     );
   }
 

@@ -71,8 +71,12 @@ class MovieDetails {
       'overview': overview,
       'popularity': popularity,
       'poster_path': poster_path,
-      'production_companies': production_companies.map((x) => x.toMap()).toList(),
-      'production_countries': production_countries.map((x) => x.toMap()).toList(),
+      'production_companies': production_companies
+          .map((x) => x.toMap())
+          .toList(),
+      'production_countries': production_countries
+          .map((x) => x.toMap())
+          .toList(),
       'release_date': release_date,
       'revenue': revenue,
       'runtime': runtime,
@@ -89,9 +93,16 @@ class MovieDetails {
   factory MovieDetails.fromMap(Map<String, dynamic> map) {
     return MovieDetails(
       adult: map['adult'] as bool,
-      backdrop_path: map['backdrop_path'] != null ? map['backdrop_path'] as String : null,
+      backdrop_path: map['backdrop_path'] != null
+          ? map['backdrop_path'] as
+           String
+          : null,
       budget: map['budget'] as int,
-      genres: List<Genres>.from((map['genres'] as List<int>).map<Genres>((x) => Genres.fromMap(x as Map<String,dynamic>),),),
+      genres: List<Genres>.from(
+        (map['genres'] as List).map(
+          (x) => Genres.fromMap(x as Map<String, dynamic>),
+        ),
+      ),
       homepage: map['homepage'] != null ? map['homepage'] as String : null,
       id: map['id'] as int,
       imdb_id: map['imdb_id'] != null ? map['imdb_id'] as String : null,
@@ -99,13 +110,27 @@ class MovieDetails {
       original_title: map['original_title'] as String,
       overview: map['overview'] as String,
       popularity: map['popularity'] as double,
-      poster_path: map['poster_path'] != null ? map['poster_path'] as String : null,
-      production_companies: List<ProductionCompany>.from((map['production_companies'] as List<int>).map<ProductionCompany>((x) => ProductionCompany.fromMap(x as Map<String,dynamic>),),),
-      production_countries: List<ProductionCoutries>.from((map['production_countries'] as List<int>).map<ProductionCoutries>((x) => ProductionCoutries.fromMap(x as Map<String,dynamic>),),),
+      poster_path: map['poster_path'] != null
+          ? map['poster_path'] as String
+          : null,
+      production_companies: List<ProductionCompany>.from(
+        (map['production_companies'] as List).map(
+          (x) => ProductionCompany.fromMap(x as Map<String, dynamic>),
+        ),
+      ),
+      production_countries: List<ProductionCoutries>.from(
+        (map['production_countries'] as List).map(
+          (x) => ProductionCoutries.fromMap(x as Map<String, dynamic>),
+        ),
+      ),
       release_date: map['release_date'] as String,
       revenue: map['revenue'] as int,
       runtime: map['runtime'] as int,
-      spoken_languages: List<SpokenLanguage>.from((map['spoken_languages'] as List<int>).map<SpokenLanguage>((x) => SpokenLanguage.fromMap(x as Map<String,dynamic>),),),
+      spoken_languages: List<SpokenLanguage>.from(
+        (map['spoken_languages'] as List).map(
+          (x) => SpokenLanguage.fromMap(x as Map<String, dynamic>),
+        ),
+      ),
       status: map['status'] as String,
       tagline: map['tagline'] != null ? map['tagline'] as String : null,
       title: map['title'] as String,
@@ -117,7 +142,8 @@ class MovieDetails {
 
   String toJson() => json.encode(toMap());
 
-  factory MovieDetails.fromJson(String source) => MovieDetails.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory MovieDetails.fromJson(String source) =>
+      MovieDetails.fromMap(json.decode(source) as Map<String, dynamic>);
 }
 
 class ProductionCompany {
@@ -207,5 +233,6 @@ class SpokenLanguage {
 
   String toJson() => json.encode(toMap());
 
-  factory SpokenLanguage.fromJson(String source) => SpokenLanguage.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory SpokenLanguage.fromJson(String source) =>
+      SpokenLanguage.fromMap(json.decode(source) as Map<String, dynamic>);
 }

@@ -36,23 +36,11 @@ class AppRoutes {
       GoRoute(path: '/profile', builder: (context, state) => Profile()),
       GoRoute(
         path: '/details',
-        pageBuilder: (context, state) {
-          final currentMovie = state.extra as Movie;
-          return CustomTransitionPage(
-            key: state.pageKey,
-            child: Details(currentMovie: currentMovie),
-            transitionDuration: const Duration(milliseconds: 700),
-            transitionsBuilder:
-                (context, animation, secondaryAnimation, child) {
-                  return FadeTransition(
-                    opacity: CurvedAnimation(
-                      parent: animation,
-                      curve: Curves.easeInOut,
-                    ),
-                    child: child,
-                  );
-                },
-          );
+        builder: (context, state) {
+          final extras = state.extra as Map<String, dynamic>;
+          final tableType = extras['tableType'] as TableType;
+          final movies = extras['movie'] as Movie;
+          return Details(currentMovie: movies, tableTYpe: tableType);
         },
       ),
       GoRoute(
@@ -67,7 +55,10 @@ class AppRoutes {
           final title = extras['title'] as String;
           final movieType = extras['movieType'] as MovieType;
           final tableType = extras['tableType'] as TableType;
-          return ShowAll(title: title, movieType: movieType, tableType: tableType,
+          return ShowAll(
+            title: title,
+            movieType: movieType,
+            tableType: tableType,
           );
         },
       ),

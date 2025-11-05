@@ -79,6 +79,7 @@ class _TvShowsState extends ConsumerState<TvShows>
 
               //airing today
               MovieSection(
+                tableType: tableType,
                 movies: airingToday,
                 title: 'Airing Today',
                 onShowAll: () {
@@ -95,6 +96,7 @@ class _TvShowsState extends ConsumerState<TvShows>
 
               //New series
               MovieSection(
+                tableType: tableType,
                 movies: newSeries,
                 title: 'New',
                 onShowAll: () {
@@ -111,6 +113,7 @@ class _TvShowsState extends ConsumerState<TvShows>
 
               //popular series
               MovieSection(
+                tableType: tableType,
                 movies: popularSeries,
                 title: 'Popular',
                 onShowAll: () {
@@ -125,6 +128,7 @@ class _TvShowsState extends ConsumerState<TvShows>
                 },
               ),
               MovieSection(
+                tableType: tableType,
                 movies: trending,
                 title: 'Trending',
                 onShowAll: () {
@@ -139,6 +143,7 @@ class _TvShowsState extends ConsumerState<TvShows>
                 },
               ),
               MovieSection(
+                tableType: tableType,
                 movies: upcoming,
                 title: 'Upcoming',
                 onShowAll: () {
@@ -153,6 +158,7 @@ class _TvShowsState extends ConsumerState<TvShows>
                 },
               ),
               MovieSection(
+                tableType: tableType,
                 movies: topRated,
                 title: 'Top Rated',
                 onShowAll: () {

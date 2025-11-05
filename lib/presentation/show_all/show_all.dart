@@ -6,7 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:movie_watch/config/tmdb_config.dart';
-import 'package:movie_watch/data/now_playing_movie_notifier.dart';
+import 'package:movie_watch/data/movie_list_notifiers.dart';
 import 'package:movie_watch/data/tmdb_providers.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -53,22 +53,22 @@ class _ShowAllState extends ConsumerState<ShowAll> {
             .loadMore(selectedGenre, widget.movieType, widget.tableType);
       }
     });
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      // if (!_initialFetchDone) {
-      //   _initialFetchDone = true;
-      // }else{
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //   // if (!_initialFetchDone) {
+    //   //   _initialFetchDone = true;
+    //   // }else{
 
-      // }
-      ref
-          .read(
-            movieListNotifier((
-              selectedGenre,
-              widget.movieType,
-              widget.tableType,
-            )).notifier,
-          )
-          .refreshUI(selectedGenre, widget.movieType, widget.tableType);
-    });
+    //   // }
+    //   ref
+    //       .read(
+    //         movieListNotifier((
+    //           selectedGenre,
+    //           widget.movieType,
+    //           widget.tableType,
+    //         )).notifier,
+    //       )
+    //       .refreshUI(selectedGenre, widget.movieType, widget.tableType);
+    // });
   }
 
   @override
@@ -486,15 +486,7 @@ class _ShowAllState extends ConsumerState<ShowAll> {
                       ),
                     );
                   },
-                  loading: () => SizedBox(
-                    //  height: ,
-                    child: Center(
-                      child: CircularProgressIndicator(
-                        color: Theme.of(context).colorScheme.primary,
-                        backgroundColor: Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
-                  ),
+                  loading: () => Center(child: CircularProgressIndicator()),
                 ),
               ),
             ],
