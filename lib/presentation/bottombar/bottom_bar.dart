@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:movie_watch/presentation/movies_screen/movies_screen.dart';
 import 'package:movie_watch/presentation/profile/profile.dart';
 import 'package:movie_watch/presentation/search/search.dart';
 import 'package:movie_watch/presentation/tab_bar/tab_bar.dart';

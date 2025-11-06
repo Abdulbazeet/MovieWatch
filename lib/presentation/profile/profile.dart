@@ -9,12 +9,15 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  Widget profilesettigs() {
+  Widget profilesettigs({
+    required String title,
+    required List<String> subtitles,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Account',
+          title,
           style: Theme.of(
             context,
           ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
@@ -27,44 +30,30 @@ class _ProfileState extends State<Profile> {
             borderRadius: BorderRadius.circular(10.r),
           ),
           child: ListView.builder(
-            itemCount: 2,
+            itemCount: subtitles.length,
+            physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemBuilder: (context, index) {
-              return Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      'Edit profile',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface,
+              return Container(
+                margin: index < subtitles.length - 1
+                    ? EdgeInsets.only(bottom: 10.r)
+                    : null,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        subtitles[index],
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
                       ),
                     ),
-                  ),
-                  Icon(Icons.arrow_forward_ios_rounded, size: 15.r),
-                ],
+                    Icon(Icons.arrow_forward_ios_rounded, size: 15.r),
+                  ],
+                ),
               );
             },
           ),
-
-          // Column(
-          //   children: [
-
-          //     SizedBox(height: 10.r),
-          //     Row(
-          //       children: [
-          //         Expanded(
-          //           child: Text(
-          //             'Change Linked Account',
-          //             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-          //               color: Theme.of(context).colorScheme.onSurface,
-          //             ),
-          //           ),
-          //         ),
-          //         Icon(Icons.arrow_forward_ios_rounded, size: 15.r),
-          //       ],
-          //     ),
-          //   ],
-          // ),
         ),
       ],
     );
@@ -80,8 +69,45 @@ class _ProfileState extends State<Profile> {
         padding: EdgeInsets.symmetric(horizontal: 20.r, vertical: 20.r),
         child: ListView(
           children: [
-            profilesettigs(),
+            profilesettigs(
+              subtitles: [
+                'Edit profile',
+                'Email & passord',
+                'Manage linked accounts',
+                'Language & region',
+              ],
+              title: 'Profile',
+            ),
             SizedBox(height: 20.r),
+            profilesettigs(
+              title: 'Preference',
+              subtitles: [
+                'Notifications',
+                'Theme & appearance',
+                'Content filters',
+                'Playback rediretion',
+              ],
+            ),
+            SizedBox(height: 20.r),
+            profilesettigs(
+              title: 'Billing & Monetization',
+              subtitles: [
+                'Subscription status',
+                'Upgrade / manage plans',
+                'Redeem code',
+              ],
+            ),
+            SizedBox(height: 20.r),
+            profilesettigs(
+              title: 'Support & About',
+              subtitles: [
+                'Help center / FAQs',
+                'Contact support',
+                'Report a problem',
+                'Privacy policy & terms',
+                'App version 7 credits',
+              ],
+            ),
           ],
         ),
       ),

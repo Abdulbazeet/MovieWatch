@@ -41,7 +41,7 @@ class _ShowAllState extends ConsumerState<ShowAll> {
     super.initState();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=
-          _scrollController.position.maxScrollExtent - 200) {
+          _scrollController.position.maxScrollExtent - 300) {
         ref
             .read(
               movieListNotifier((
