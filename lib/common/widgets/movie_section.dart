@@ -7,7 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 
-import 'package:movie_watch/config/movie_type.dart';
+import 'package:movie_watch/config/enums.dart';
 import 'package:movie_watch/config/tmdb_config.dart';
 import 'package:movie_watch/models/movies.dart';
 

@@ -8,3 +8,7 @@ enum MovieType {
   upcoming,
   airingToday,
 }
+enum bottomType{
+  trailers,
+  recommendations
+}

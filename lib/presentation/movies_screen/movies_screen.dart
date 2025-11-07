@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:movie_watch/common/widgets/movie_section.dart';
-import 'package:movie_watch/config/movie_type.dart';
+import 'package:movie_watch/config/enums.dart';
 import 'package:movie_watch/data/tmdb_providers.dart';
 import 'package:movie_watch/presentation/movies_screen/image_section.dart';
 

@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
@@ -6,6 +8,7 @@ import 'package:movie_watch/models/credits.dart';
 import 'package:movie_watch/models/genre.dart';
 import 'package:movie_watch/models/movie_details.dart';
 import 'package:movie_watch/models/movies.dart';
+import 'package:movie_watch/models/recommendations.dart';
 import 'package:movie_watch/models/videos.dart';
 
 class TmdbServices {
@@ -348,24 +351,22 @@ class TmdbServices {
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
 
-        print('yes');
-        print(MovieDetails.fromMap(data).original_language);
-        print('yess');
-        return MovieDetails.fromJson(data);
+      
+        return MovieDetails.fromMap(data);
       } else {
-        print('o');
-        throw Exception('Error is ${response.body}');
+        throw Exception('Error is ${response.body}, movie details');
       }
     } catch (e, str) {
-      print(e);
+      // print(e);
       throw Exception('Error fetching movie details: $e, $str');
     }
   }
 
-  Future<Cast> fetchMovieCredits(int movieId) async {
+  Future<Credits> fetchMovieCredits(int movieId) async {
     try {
       final url =
-          "https://api.themoviedb.org/3/movie/$movieId/credits?api_key=$_apikey&language=en-US";
+          'https://api.themoviedb.org/3/movie/$movieId/credits?language=en-US';
+
       http.Response response = await http.get(
         Uri.parse(url),
         headers: <String, String>{
@@ -375,9 +376,10 @@ class TmdbServices {
       );
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
-        return Cast.fromJson(data);
+
+        return Credits.fromMap(data);
       } else {
-        throw Exception('Error is ${response.body}');
+        throw Exception('Error is ${response.body}, credits');
       }
     } catch (e) {
       print(e);
@@ -385,7 +387,7 @@ class TmdbServices {
     }
   }
 
-  Future<Movie> fetchMovieRecommendations(int movieId) async {
+  Future<List<Recommendations>> fetchMovieRecommendations(int movieId) async {
     try {
       final url =
           'https://api.themoviedb.org/3/movie/$movieId/recommendations?language=en-US&page=1';
@@ -398,10 +400,10 @@ class TmdbServices {
         },
       );
       if (response.statusCode == 200) {
-        var data = jsonDecode(response.body)['results'];
-        return Movie.fromJson(data);
+        List data = jsonDecode(response.body)['results'];
+        return data.map((e) => Recommendations.fromMap(e)).toList();
       } else {
-        throw Exception('Error is ${response.body}');
+        throw Exception('Error is ${response.body}, video recommendations');
       }
     } catch (e) {
       print(e);
@@ -423,9 +425,9 @@ class TmdbServices {
       );
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
-        return Videos.fromJson(data);
+        return Videos.fromMap(data);
       } else {
-        throw Exception('Error is ${response.body}');
+        throw Exception('Error is ${response.body} movie videos');
       }
     } catch (e) {
       print(e);

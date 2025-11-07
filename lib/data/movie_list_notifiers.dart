@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:movie_watch/config/movie_type.dart';
+import 'package:movie_watch/config/enums.dart';
 import 'package:movie_watch/data/tmdb_providers.dart';
 import 'package:movie_watch/models/movies.dart';
 

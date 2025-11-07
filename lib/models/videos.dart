@@ -16,11 +16,9 @@ class Videos {
 
   factory Videos.fromMap(Map<String, dynamic> map) {
     return Videos(
-      id: map['id'] as int,
+      id: map['id'] ?? 0,
       results: List<Results>.from(
-        (map['results'] as List).map(
-          (x) => Results.fromMap(x as Map<String, dynamic>),
-        ),
+        (map['results'] as List).map((x) => Results.fromMap(x)),
       ),
     );
   }
@@ -132,14 +130,14 @@ class Results {
 
   factory Results.fromMap(Map<String, dynamic> map) {
     return Results(
-      id: map['id'] as String,
-      iso6391: map['iso6391'] as String,
-      iso31661: map['iso31661'] as String,
-      name: map['name'] as String,
-      key: map['key'] as String,
-      site: map['site'] as String,
-      size: map['size'] as int,
-      type: map['type'] as String,
+      id: map['id'] ?? '',
+      iso6391: map['iso_639_1'] ?? '',
+      iso31661: map['iso_3166_1'] ?? '',
+      name: map['name'] ?? '',
+      key: map['key'] ?? '',
+      site: map['site'] ?? '',
+      size: map['size'] ?? 0,
+      type: map['type'] ?? '',
       official: map['official'] as bool,
       publishedAt: DateTime.parse(map['published_at']),
     );

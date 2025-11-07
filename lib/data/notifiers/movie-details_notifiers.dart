@@ -7,6 +7,7 @@ import 'package:movie_watch/models/credits.dart';
 import 'package:movie_watch/models/movie_bundle.dart';
 import 'package:movie_watch/models/movie_details.dart';
 import 'package:movie_watch/models/movies.dart';
+import 'package:movie_watch/models/recommendations.dart';
 import 'package:movie_watch/models/videos.dart';
 
 class MovieDetailsNotifiers extends AsyncNotifier<MovieBundle> {
@@ -21,13 +22,14 @@ class MovieDetailsNotifiers extends AsyncNotifier<MovieBundle> {
     final details = await Future.wait([
       api.fetchMovieDetails(movieId),
       api.fetchMovieCredits(movieId),
+
       api.fetchMovieRecommendations(movieId),
       api.fetchMovieVideos(movieId),
     ]);
     final movieDetails = MovieBundle(
       credits: details[1] as Credits,
       movieDetails: details[0] as MovieDetails,
-      recommendations: details[2] as List<Movie>,
+      recommendations: details[2] as List<Recommendations>,
       video: details[3] as Videos,
     );
     return movieDetails;

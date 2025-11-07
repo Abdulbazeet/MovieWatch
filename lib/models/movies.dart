@@ -66,23 +66,19 @@ class Movie {
 
   factory Movie.fromMap(Map<String, dynamic> map) {
     return Movie(
-      id: map['id'] as int,
-      title: map['title'] != null ? map['title'] as String : null,
-      overview: map['overview'] != null ? map['overview'] as String : null,
-      posterPath: map['posterPath'] != null
-          ? map['posterPath'] as String
-          : null,
+      id: map['id'] ?? 0,
+      title: map['title'] != null ? map['title'] ?? '' : null,
+      overview: map['overview'] != null ? map['overview'] ?? '' : null,
+      posterPath: map['posterPath'] != null ? map['posterPath'] ?? '' : null,
       backdropPath: map['backdropPath'] != null
-          ? map['backdropPath'] as String
+          ? map['backdropPath'] ?? ''
           : null,
-      releaseDate: map['releaseDate'] != null
-          ? map['releaseDate'] as String
-          : null,
-      originalLanguage: map['originalLanguage'] as String,
+      releaseDate: map['releaseDate'] != null ? map['releaseDate'] ?? '' : null,
+      originalLanguage: map['originalLanguage'] ?? '',
       genreIds: List<int>.from((map['genreIds'] as List<int>)),
-      voteAverage: map['voteAverage'] as double,
-      voteCount: map['voteCount'] as int,
-      popularity: map['popularity'] as double,
+      voteAverage: map['voteAverage'] ?? 0.0,
+      voteCount: map['voteCount'] ?? 0,
+      popularity: map['popularity'] ?? 0.0,
       adult: map['adult'] as bool,
     );
   }

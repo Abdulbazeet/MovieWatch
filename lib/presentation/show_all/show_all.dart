@@ -10,7 +10,7 @@ import 'package:movie_watch/data/movie_list_notifiers.dart';
 import 'package:movie_watch/data/tmdb_providers.dart';
 import 'package:shimmer/shimmer.dart';
 
-import 'package:movie_watch/config/movie_type.dart';
+import 'package:movie_watch/config/enums.dart';
 
 class ShowAll extends ConsumerStatefulWidget {
   final String title;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:movie_watch/config/movie_type.dart';
+import 'package:movie_watch/config/enums.dart';
 import 'package:movie_watch/models/movies.dart';
 import 'package:movie_watch/presentation/authentication/sign_in.dart';
 import 'package:movie_watch/presentation/authentication/sign_up.dart';

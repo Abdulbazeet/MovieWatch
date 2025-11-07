@@ -3,6 +3,7 @@ import 'package:movie_watch/data/tmdb_services.dart';
 import 'package:movie_watch/models/credits.dart';
 import 'package:movie_watch/models/movie_details.dart';
 import 'package:movie_watch/models/movies.dart';
+import 'package:movie_watch/models/recommendations.dart';
 import 'package:movie_watch/models/videos.dart';
 
 final tmdbserviceProvider = Provider<TmdbServices>((ref) => TmdbServices());
@@ -50,9 +51,8 @@ final topRatedMovies = FutureProvider((ref) {
   return service.fetchTopRated();
 });
 
-final test = FutureProvider.family<MovieDetails, int>((ref, movieId) {
-  
-  final api = ref.watch(tmdbserviceProvider).fetchMovieDetails(movieId);
+final test = FutureProvider.family<List<Recommendations>, int>((ref, movieId) {
+  final api = ref.watch(tmdbserviceProvider).fetchMovieRecommendations(movieId);
   return api;
 });
 
