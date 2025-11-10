@@ -7,6 +7,9 @@ import 'package:movie_watch/config/enums.dart';
 import 'package:movie_watch/config/tmdb_config.dart';
 import 'package:movie_watch/data/notifiers/movie-details_notifiers.dart';
 import 'package:movie_watch/models/movies.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+
 class Details extends ConsumerStatefulWidget {
   final Movie? currentMovie;
   final TableType tableTYpe;
@@ -25,6 +28,11 @@ class _DetailsState extends ConsumerState<Details> {
   TextOverflow? _overflow = TextOverflow.ellipsis;
   int? maxline = 3;
   String more = 'See more';
+  @override
+  void initState() {
+    super.initState();
+    //  _youtubePlayerController = YoutubePlayerController(initialVideoId: );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -287,6 +295,105 @@ class _DetailsState extends ConsumerState<Details> {
                             ),
                           ),
                         ],
+                      ),
+                      SizedBox(height: 10.r),
+                      SizedBox(
+                        height: 220.h,
+                        child: ListView.builder(
+                          // physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: data.video.results.length,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) {
+                            final video = data.video.results[index];
+                            print(data.video.results.length);
+
+                            // Only YouTube videos are supported
+                            if (video.site != 'YouTube') {
+                              return const SizedBox.shrink();
+                            }
+
+                            final videoId = YoutubePlayer.convertUrlToId(
+                              'https://www.youtube.com/watch?v=${video.key}',
+                            );
+
+                            // Thumbnail URL from YouTube
+                            final thumbnailUrl =
+                                'https://img.youtube.com/vi/$videoId/hqdefault.jpg';
+
+                            // Local state to control when player loads
+                            bool showPlayer = false;
+
+                            return StatefulBuilder(
+                              builder: (context, setInnerState) {
+                                return Container(
+                                  margin: EdgeInsets.only(right: 10.r),
+                                  width: 240.w,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      setInnerState(() {
+                                        showPlayer = true;
+                                      });
+                                    },
+                                    child: AnimatedSwitcher(
+                                      duration: const Duration(
+                                        milliseconds: 400,
+                                      ),
+                                      child: showPlayer
+                                          ? YoutubePlayer(
+                                              key: ValueKey(videoId),
+                                              controller:
+                                                  YoutubePlayerController(
+                                                    initialVideoId:
+                                                        videoId ?? '',
+                                                    flags:
+                                                        const YoutubePlayerFlags(
+                                                          autoPlay: true,
+                                                          mute: false,
+                                                          enableCaption: false,
+                                                        ),
+                                                  ),
+                                              showVideoProgressIndicator: true,
+                                              progressIndicatorColor: Theme.of(
+                                                context,
+                                              ).colorScheme.primary,
+                                            )
+                                          : Stack(
+                                              alignment: Alignment.center,
+                                              children: [
+                                                ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                        10.r,
+                                                      ),
+                                                  child: Image.network(
+                                                    thumbnailUrl,
+                                                    width: double.infinity,
+                                                    height: 200.h,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                ),
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    color: Colors.black
+                                                        .withOpacity(0.5),
+                                                  ),
+                                                  child: const Icon(
+                                                    Icons.play_arrow_rounded,
+                                                    size: 60,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                        ),
                       ),
                     ],
                   ),
