@@ -1,12 +1,15 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:movie_watch/common/widgets/movie_section.dart';
 import 'package:movie_watch/config/enums.dart';
 import 'package:movie_watch/config/tmdb_config.dart';
 import 'package:movie_watch/data/notifiers/movie-details_notifiers.dart';
 import 'package:movie_watch/models/movies.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
@@ -214,7 +217,7 @@ class _DetailsState extends ConsumerState<Details> {
                       ),
                       SizedBox(height: 10.r),
                       SizedBox(
-                        height: 190.h,
+                        height: 140.h,
                         child: ListView.builder(
                           shrinkWrap: true,
                           itemCount: data.credits.cast.length,
@@ -287,18 +290,15 @@ class _DetailsState extends ConsumerState<Details> {
                       SizedBox(height: 10.r),
                       Row(
                         children: [
-                          GestureDetector(
-                            onTap: () {},
-                            child: Text(
-                              'Trailers',
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
+                          Text(
+                            'Trailers',
+                            style: Theme.of(context).textTheme.bodyMedium,
                           ),
                         ],
                       ),
                       SizedBox(height: 10.r),
                       SizedBox(
-                        height: 220.h,
+                        height: 150.h,
                         child: ListView.builder(
                           // physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
@@ -306,7 +306,6 @@ class _DetailsState extends ConsumerState<Details> {
                           scrollDirection: Axis.horizontal,
                           itemBuilder: (context, index) {
                             final video = data.video.results[index];
-                            print(data.video.results.length);
 
                             // Only YouTube videos are supported
                             if (video.site != 'YouTube') {
@@ -395,6 +394,129 @@ class _DetailsState extends ConsumerState<Details> {
                           },
                         ),
                       ),
+                      SizedBox(height: 10.r),
+                      if (data.recommendations.isNotEmpty)
+                        Row(
+                          children: [
+                            Text(
+                              'Recommendations',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                          ],
+                        ),
+
+                      SizedBox(height: 10.r),
+                      if (data.recommendations.isNotEmpty)
+                        SizedBox(
+                          height: 240.h,
+                          child: ListView.builder(
+                            itemCount: data.recommendations.length,
+                            shrinkWrap: true,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              final movie = data.recommendations[index];
+                              final date = DateTime.parse(movie.releaseDate);
+
+                              final formatedDate = DateFormat(
+                                'MMM d, yyyy',
+                              ).format(date);
+                              return GestureDetector(
+                                onTap: () {},
+                                child: Container(
+                                  width: 130.w,
+                                  margin: EdgeInsets.only(right: 20.r),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      CachedNetworkImage(
+                                        imageUrl:
+                                            '${TmdbConfig.img_url}w500${movie.posterPath}',
+                                        imageBuilder:
+                                            (context, imageProvider) =>
+                                                Container(
+                                                  width: 130.w,
+                                                  height: 190.h,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          10.r,
+                                                        ),
+                                                    image: DecorationImage(
+                                                      image: imageProvider,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
+                                                ),
+                                        placeholder: (context, url) =>
+                                            Shimmer.fromColors(
+                                              baseColor: Theme.of(context)
+                                                  .colorScheme
+                                                  .onSurface
+                                                  .withValues(alpha: .5),
+                                              highlightColor: Theme.of(context)
+                                                  .colorScheme
+                                                  .onSurface
+                                                  .withValues(alpha: .3),
+                                              child: Container(
+                                                width: 130.w,
+                                                height: 190.h,
+                                                decoration: BoxDecoration(
+                                                  color: Theme.of(
+                                                    context,
+                                                  ).colorScheme.surfaceVariant,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                        10.r,
+                                                      ),
+                                                ),
+                                              ),
+                                            ),
+                                        errorWidget: (context, _, __) =>
+                                            Container(
+                                              width: 130.w,
+                                              height: 190.h,
+                                              decoration: BoxDecoration(
+                                                color: Theme.of(
+                                                  context,
+                                                ).colorScheme.surfaceVariant,
+                                                borderRadius:
+                                                    BorderRadius.circular(10.r),
+                                              ),
+                                              child: const Icon(
+                                                Icons.broken_image,
+                                              ),
+                                            ),
+                                      ),
+                                      SizedBox(height: 10.r),
+                                      Text(
+                                        movie.title ?? '',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall
+                                            ?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      SizedBox(height: 10.r),
+                                      Text(
+                                        formatedDate,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall
+                                            ?.copyWith(
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                      ),
+                                      const Spacer(),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
                     ],
                   ),
                 ),
@@ -404,6 +526,7 @@ class _DetailsState extends ConsumerState<Details> {
           error: (error, stackTrace) {
             return Text(error.toString());
           },
+
           loading: () {
             return CircularProgressIndicator();
           },
