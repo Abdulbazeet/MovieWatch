@@ -9,17 +9,20 @@ import 'package:movie_watch/config/enums.dart';
 import 'package:movie_watch/config/tmdb_config.dart';
 import 'package:movie_watch/data/notifiers/movie-details_notifiers.dart';
 import 'package:movie_watch/models/movies.dart';
+import 'package:movie_watch/models/recommendations.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 class Details extends ConsumerStatefulWidget {
   final Movie? currentMovie;
-  final TableType tableTYpe;
-  const Details({
+  final TableType tableType;
+
+  const Details(
+   {
     super.key,
     required this.currentMovie,
-    required this.tableTYpe,
+    required this.tableType,
   });
 
   @override
@@ -415,13 +418,22 @@ class _DetailsState extends ConsumerState<Details> {
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {
                               final movie = data.recommendations[index];
-                              final date = DateTime.parse(movie.releaseDate);
+                              final date = DateTime.parse(movie.releaseDate!);
 
                               final formatedDate = DateFormat(
                                 'MMM d, yyyy',
                               ).format(date);
                               return GestureDetector(
-                                onTap: () {},
+                                onTap: () {
+                                  context.push(
+                                    '/details',
+                                    extra: {
+                                        'movie': data.recommendations[index],
+                                      
+                                      'tableType': widget.tableType,
+                                    },
+                                  );
+                                },
                                 child: Container(
                                   width: 130.w,
                                   margin: EdgeInsets.only(right: 20.r),

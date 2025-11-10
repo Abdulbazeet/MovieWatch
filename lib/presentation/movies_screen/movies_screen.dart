@@ -43,8 +43,8 @@ class _MovieScreenState extends ConsumerState<MovieScreen>
             //
             ImageSection(
               genreId: genreId,
+              tableType: tableType,
               movies: populaMovies,
-              onPressesd: () {},
             ),
             /***
              * 

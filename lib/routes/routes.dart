@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:movie_watch/config/enums.dart';
 import 'package:movie_watch/models/movies.dart';
+import 'package:movie_watch/models/recommendations.dart';
 import 'package:movie_watch/presentation/authentication/sign_in.dart';
 import 'package:movie_watch/presentation/authentication/sign_up.dart';
 import 'package:movie_watch/presentation/bottombar/bottom_bar.dart';
@@ -39,8 +40,18 @@ class AppRoutes {
         builder: (context, state) {
           final extras = state.extra as Map<String, dynamic>;
           final tableType = extras['tableType'] as TableType;
-          final movies = extras['movie'] as Movie;
-          return Details(currentMovie: movies, tableTYpe: tableType);
+          final movieOrRec =
+              extras['movie']; // could be Movie OR Recommendations
+
+          Movie? movie;
+          Recommendations? recommendations;
+
+          if (movieOrRec is Movie) {
+            movie = movieOrRec;
+          } else if (movieOrRec is Recommendations) {
+            recommendations = movieOrRec;
+          }
+          return Details(currentMovie: movieOrRec, tableType: tableType,  );
         },
       ),
       GoRoute(

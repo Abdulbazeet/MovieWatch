@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:movie_watch/config/enums.dart';
 import 'package:shimmer/shimmer.dart';
 
 import 'package:movie_watch/config/tmdb_config.dart';
@@ -13,11 +14,12 @@ import 'package:movie_watch/models/genre.dart';
 import 'package:movie_watch/models/movies.dart';
 
 class ImageSection extends ConsumerWidget {
-  final VoidCallback? onPressesd;
   final AsyncValue<List<Movie>> movies;
   final AsyncValue<List<Genres>> genreId;
+  final TableType tableType;
+
   const ImageSection({
-    this.onPressesd,
+    required this.tableType,
     required this.movies,
     required this.genreId,
   });
@@ -45,13 +47,21 @@ class ImageSection extends ConsumerWidget {
                   itemBuilder: (context, index, realIndex) {
                     return Stack(
                       children: [
-                        Container(
-                          margin: EdgeInsets.only(right: 20.r),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10.r),
-                          ),
-                          child: GestureDetector(
-                            onTap: onPressesd,
+                        GestureDetector(
+                          onTap: () {
+                            context.push(
+                              '/details',
+                              extra: {
+                                'movie': data[index],
+                                'tableType': tableType,
+                              },
+                            );
+                          },
+                          child: Container(
+                            margin: EdgeInsets.only(right: 20.r),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.r),
+                            ),
                             child: Hero(
                               tag: data[index].id,
                               transitionOnUserGestures: true,

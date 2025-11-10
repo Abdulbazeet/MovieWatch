@@ -11,7 +11,7 @@ class MovieListNotifier extends AsyncNotifier<List<Movie>> {
   bool _hasMore = true;
   late String? genreId;
   late MovieType movieType;
-  late TableType tableTYpe;
+  late TableType tableType;
 
   // @override
   // FutureOr<List<Movie>> build(
@@ -19,14 +19,14 @@ class MovieListNotifier extends AsyncNotifier<List<Movie>> {
   // ) async {
   //   final movieType = params.$1;
   //   final tableType = params.$2;
-  //   return _fetchPage(reset: true, movieType: movieType, tableTYpe: tableType);
+  //   return _fetchPage(reset: true, movieType: movieType, tableType: tableType);
   // }
   @override
   Future<List<Movie>> build() async {
     // Initial fetch
     return _fetchPage(
       movieType: movieType,
-      tableTYpe: tableTYpe,
+      tableType: tableType,
       genreId: genreId,
     );
   }
@@ -35,9 +35,9 @@ class MovieListNotifier extends AsyncNotifier<List<Movie>> {
     bool reset = false,
     String? genreId,
     required MovieType movieType,
-    required TableType tableTYpe,
+    required TableType tableType,
   }) async {
-    final movies = await switch (tableTYpe) {
+    final movies = await switch (tableType) {
       TableType.movies => switch (movieType) {
         MovieType.nowPlaying =>
           ref
@@ -97,14 +97,14 @@ class MovieListNotifier extends AsyncNotifier<List<Movie>> {
   Future loadMore(
     String? genreId,
     MovieType movieType,
-    TableType tableTYpe,
+    TableType tableType,
   ) async {
     if (!_hasMore) return;
     _page++;
     final newMovies = await _fetchPage(
       genreId: genreId,
       movieType: movieType,
-      tableTYpe: tableTYpe,
+      tableType: tableType,
     );
     if (newMovies.isEmpty) _hasMore = false;
     state = AsyncData([...state.value ?? [], ...newMovies]);
@@ -123,7 +123,7 @@ class MovieListNotifier extends AsyncNotifier<List<Movie>> {
       reset: true,
       genreId: genreId,
       movieType: movieType,
-      tableTYpe: tableType,
+      tableType: tableType,
     );
     state = AsyncData(movies);
   }
@@ -138,5 +138,5 @@ final movieListNotifier =
       (arg) => MovieListNotifier()
         ..genreId = arg.$1
         ..movieType = arg.$2
-        ..tableTYpe = arg.$3,
+        ..tableType = arg.$3,
     );

@@ -13,9 +13,9 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(
     ProviderScope(
-      child:
+      child: 
       
-      //  DevicePreview(
+      // DevicePreview(
       //   enabled: !kReleaseMode,
       //   defaultDevice: Devices.ios.iPhone16ProMax,
       //   builder: (context) => MyApp(),
@@ -31,17 +31,18 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: const Size(430, 932),
-    
+      designSize: const Size(393, 851),
+
+      // const Size(430, 932),
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) => MaterialApp.router(
         debugShowCheckedModeBanner: false,
-                title: 'MoviewWatch',
+        title: 'MoviewWatch',
 
         // locale: DevicePreview.locale(context),
         // builder: DevicePreview.appBuilder,
-    
+
         theme: AppTheme.lightmode,
         darkTheme: AppTheme.lightmode,
         routerConfig: AppRoutes.goRoute,

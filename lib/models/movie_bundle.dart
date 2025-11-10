@@ -3,13 +3,14 @@ import 'dart:convert';
 
 import 'package:movie_watch/models/credits.dart';
 import 'package:movie_watch/models/movie_details.dart';
+import 'package:movie_watch/models/movies.dart';
 import 'package:movie_watch/models/recommendations.dart';
 import 'package:movie_watch/models/videos.dart';
 
 class MovieBundle {
   final Credits credits;
   final MovieDetails movieDetails;
-  final List<Recommendations> recommendations;
+  final List<Movie> recommendations;
   final Videos video;
   MovieBundle({
     required this.credits,
@@ -31,7 +32,7 @@ class MovieBundle {
     return MovieBundle(
       credits: Credits.fromMap(map['credits']),
       movieDetails: MovieDetails.fromMap(map['movieDetails']),
-      recommendations: List<Recommendations>.from(
+      recommendations: List<Movie>.from(
         (map['recommendations'] as List).map((x) => Recommendations.fromMap(x)),
       ),
       video: Videos.fromMap(map['video']),

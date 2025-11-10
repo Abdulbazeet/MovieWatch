@@ -387,7 +387,7 @@ class TmdbServices {
     }
   }
 
-  Future<List<Recommendations>> fetchMovieRecommendations(int movieId) async {
+  Future<List<Movie>> fetchMovieRecommendations(int movieId) async {
     try {
       final url =
           'https://api.themoviedb.org/3/movie/$movieId/recommendations?language=en-US&page=1';
@@ -401,7 +401,7 @@ class TmdbServices {
       );
       if (response.statusCode == 200) {
         List data = jsonDecode(response.body)['results'];
-        return data.map((e) => Recommendations.fromMap(e)).toList();
+        return data.map((e) => Movie.fromMap(e)).toList();
       } else {
         throw Exception('Error is ${response.body}, video recommendations');
       }

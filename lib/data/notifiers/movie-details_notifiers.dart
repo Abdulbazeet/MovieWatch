@@ -29,7 +29,7 @@ class MovieDetailsNotifiers extends AsyncNotifier<MovieBundle> {
     final movieDetails = MovieBundle(
       credits: details[1] as Credits,
       movieDetails: details[0] as MovieDetails,
-      recommendations: details[2] as List<Recommendations>,
+      recommendations: details[2] as List<Movie>,
       video: details[3] as Videos,
     );
     return movieDetails;

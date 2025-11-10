@@ -39,7 +39,7 @@ class Movie {
       backdropPath: json['backdrop_path'],
       releaseDate: json['release_date'] ?? json['first_air_date'],
       originalLanguage: json['original_language'] ?? '',
-      genreIds: List<int>.from(json['genre_ids'] ?? []),
+      genreIds: List<int>.from(json['genre_ids'] as List),
       voteAverage: (json['vote_average'] ?? 0).toDouble(),
       voteCount: json['vote_count'] ?? 0,
       popularity: (json['popularity'] ?? 0).toDouble(),
@@ -69,15 +69,17 @@ class Movie {
       id: map['id'] ?? 0,
       title: map['title'] != null ? map['title'] ?? '' : null,
       overview: map['overview'] != null ? map['overview'] ?? '' : null,
-      posterPath: map['posterPath'] != null ? map['posterPath'] ?? '' : null,
-      backdropPath: map['backdropPath'] != null
-          ? map['backdropPath'] ?? ''
+      posterPath: map['poster_path'] != null ? map['poster_path'] ?? '' : null,
+      backdropPath: map['backdrop_path'] != null
+          ? map['backdrop_path'] ?? ''
           : null,
-      releaseDate: map['releaseDate'] != null ? map['releaseDate'] ?? '' : null,
-      originalLanguage: map['originalLanguage'] ?? '',
-      genreIds: List<int>.from((map['genreIds'] as List<int>)),
-      voteAverage: map['voteAverage'] ?? 0.0,
-      voteCount: map['voteCount'] ?? 0,
+      releaseDate: map['release_date'] != null
+          ? map['release_date'] ?? ''
+          : null,
+      originalLanguage: map['original_language'] ?? '',
+      genreIds: List<int>.from((map['genre_ids'] as List)),
+      voteAverage: map['vote_average'] ?? 0.0,
+      voteCount: map['vote_count'] ?? 0,
       popularity: map['popularity'] ?? 0.0,
       adult: map['adult'] as bool,
     );

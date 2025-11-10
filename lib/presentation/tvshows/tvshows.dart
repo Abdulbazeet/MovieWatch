@@ -62,20 +62,20 @@ class _TvShowsState extends ConsumerState<TvShows>
             physics: AlwaysScrollableScrollPhysics(),
             slivers: [
               //popular header
-              ImageSection(
-                genreId: genreId,
-                movies: popularSeries,
-                onPressesd: () {
-                  context.push(
-                    '/show-all',
-                    extra: {
-                      'title': 'Popular',
-                      'tableType': tableType,
-                      "movieType": MovieType.popular,
-                    },
-                  );
-                },
-              ),
+              // ImageSection(
+              //   genreId: genreId,
+              //   movies: popularSeries,
+              //   onPressesd: () {
+              //     context.push(
+              //       '/show-all',
+              //       extra: {
+              //         'title': 'Popular',
+              //         'tableType': tableType,
+              //         "movieType": MovieType.popular,
+              //       },
+              //     );
+              //   },
+              // ),
 
               //airing today
               MovieSection(

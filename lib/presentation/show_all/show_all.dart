@@ -388,7 +388,7 @@ class _ShowAllState extends ConsumerState<ShowAll> {
                         maxCrossAxisExtent: 130.w, // max width per tile
                         mainAxisSpacing: 20.r,
                         crossAxisSpacing: 20.r,
-                        childAspectRatio: .48,
+                        childAspectRatio: .43,
                       ),
                       itemCount: data.length,
                       itemBuilder: (context, index) {
@@ -397,82 +397,93 @@ class _ShowAllState extends ConsumerState<ShowAll> {
                         final formatedDate = DateFormat(
                           'MMM d, yyyy',
                         ).format(showDate);
-                        return Container(
-                          width: 130.w,
-                          height: 220.h,
-                          //    margin: EdgeInsets.only(right: 10.r),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              CachedNetworkImage(
-                                imageUrl:
-                                    '${TmdbConfig.img_url}w500${movie.posterPath}',
-                                imageBuilder: (context, imageProvider) =>
-                                    Container(
-                                      width: 130.w,
-                                      height: 190.h,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(8),
-                                        image: DecorationImage(
-                                          image: imageProvider,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    ),
-                                placeholder: (context, url) =>
-                                    Shimmer.fromColors(
-                                      baseColor: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface
-                                          .withValues(alpha: .5),
-                                      highlightColor: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface
-                                          .withValues(alpha: .3),
-                                      child: Container(
+                        return GestureDetector(
+                          onTap: () {
+                              context.push(
+                              '/details',
+                              extra: {
+                                'movie': data[index],
+                                'tableType': widget.tableType,
+                              },
+                            );
+                          },
+                          child: Container(
+                            width: 130.w,
+                            height: 220.h,
+                            //    margin: EdgeInsets.only(right: 10.r),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CachedNetworkImage(
+                                  imageUrl:
+                                      '${TmdbConfig.img_url}w500${movie.posterPath}',
+                                  imageBuilder: (context, imageProvider) =>
+                                      Container(
                                         width: 130.w,
                                         height: 190.h,
                                         decoration: BoxDecoration(
-                                          color: Theme.of(
-                                            context,
-                                          ).colorScheme.surfaceVariant,
-                                          borderRadius: BorderRadius.circular(
-                                            8,
+                                          borderRadius: BorderRadius.circular(8),
+                                          image: DecorationImage(
+                                            image: imageProvider,
+                                            fit: BoxFit.cover,
                                           ),
                                         ),
                                       ),
-                                    ),
-                                errorWidget: (context, _, __) => Container(
-                                  width: 130.w,
-                                  height: 190.h,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10.r),
-                                  ),
-                                  child: Container(
+                                  placeholder: (context, url) =>
+                                      Shimmer.fromColors(
+                                        baseColor: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface
+                                            .withValues(alpha: .5),
+                                        highlightColor: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface
+                                            .withValues(alpha: .3),
+                                        child: Container(
+                                          width: 130.w,
+                                          height: 190.h,
+                                          decoration: BoxDecoration(
+                                            color: Theme.of(
+                                              context,
+                                            ).colorScheme.surfaceVariant,
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                  errorWidget: (context, _, __) => Container(
                                     width: 130.w,
                                     height: 190.h,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10.r),
                                     ),
-                                    child: const Icon(Icons.broken_image),
+                                    child: Container(
+                                      width: 130.w,
+                                      height: 190.h,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10.r),
+                                      ),
+                                      child: const Icon(Icons.broken_image),
+                                    ),
                                   ),
                                 ),
-                              ),
-                              SizedBox(height: 10.r),
-                              Text(
-                                movie.title ?? '',
-                                style: Theme.of(context).textTheme.bodySmall
-                                    ?.copyWith(fontWeight: FontWeight.bold),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              SizedBox(height: 10.r),
-                              Text(
-                                formatedDate,
-                                style: Theme.of(context).textTheme.bodySmall
-                                    ?.copyWith(fontWeight: FontWeight.w600),
-                              ),
-                              const Spacer(),
-                            ],
+                                SizedBox(height: 10.r),
+                                Text(
+                                  movie.title ?? '',
+                                  style: Theme.of(context).textTheme.bodySmall
+                                      ?.copyWith(fontWeight: FontWeight.bold),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                SizedBox(height: 10.r),
+                                Text(
+                                  formatedDate,
+                                  style: Theme.of(context).textTheme.bodySmall
+                                      ?.copyWith(fontWeight: FontWeight.w600),
+                                ),
+                                const Spacer(),
+                              ],
+                            ),
                           ),
                         );
                       },
