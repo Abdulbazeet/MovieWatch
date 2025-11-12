@@ -33,7 +33,7 @@ class MovieBundle {
       credits: Credits.fromMap(map['credits']),
       movieDetails: MovieDetails.fromMap(map['movieDetails']),
       recommendations: List<Movie>.from(
-        (map['recommendations'] as List).map((x) => Recommendations.fromMap(x)),
+        (map['recommendations'] as List).map((x) => Movie.fromMap(x)),
       ),
       video: Videos.fromMap(map['video']),
     );

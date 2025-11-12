@@ -1,8 +1,9 @@
-import 'package:flutter/material.dart';
+// ignore_for_file: unused_local_variable
+
 import 'package:go_router/go_router.dart';
 import 'package:movie_watch/config/enums.dart';
 import 'package:movie_watch/models/movies.dart';
-import 'package:movie_watch/models/recommendations.dart';
+import 'package:movie_watch/models/recommendedMovies.dart';
 import 'package:movie_watch/presentation/authentication/sign_in.dart';
 import 'package:movie_watch/presentation/authentication/sign_up.dart';
 import 'package:movie_watch/presentation/bottombar/bottom_bar.dart';
@@ -12,6 +13,8 @@ import 'package:movie_watch/presentation/onboard/onboard.dart';
 import 'package:movie_watch/presentation/onboard/splash_screen.dart';
 import 'package:movie_watch/presentation/profile/profile.dart';
 import 'package:movie_watch/presentation/search/search.dart';
+import 'package:movie_watch/presentation/series_details/tvshow_screen.dart';
+import 'package:movie_watch/presentation/seriesdetail/series_detail.dart';
 import 'package:movie_watch/presentation/show_all/show_all.dart';
 import 'package:movie_watch/presentation/tab_bar/tab_bar.dart';
 import 'package:movie_watch/presentation/watchlist/watchlist.dart';
@@ -51,7 +54,34 @@ class AppRoutes {
           } else if (movieOrRec is Recommendations) {
             recommendations = movieOrRec;
           }
-          return Details(currentMovie: movieOrRec, tableType: tableType,  );
+          return Details(currentMovie: movieOrRec, tableType: tableType);
+        },
+      ),
+      GoRoute(
+        path: '/tvshows-details',
+        builder: (context, state) {
+          final extras = state.extra as Map<String, dynamic>;
+          final tableType = extras['tableType'] as TableType;
+          final movieOrRec =
+              extras['movie']; // could be Movie OR Recommendations
+
+          Movie? movie;
+          Recommendations? recommendations;
+
+          if (movieOrRec is Movie) {
+            movie = movieOrRec;
+          } else if (movieOrRec is Recommendations) {
+            recommendations = movieOrRec;
+          }
+          return TvshowScreen(currentMovie: movieOrRec, tableType: tableType);
+        },
+      ),
+      GoRoute(
+        path: '/series-details',
+        builder: (context, state) {
+          final m = state.extra as Movie;
+
+          return SeriesDetails(m);
         },
       ),
       GoRoute(

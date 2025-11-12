@@ -42,7 +42,7 @@ class MovieSection extends ConsumerWidget {
                     color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
-                GestureDetector(
+                InkWell(
                   onTap: onShowAll,
                   child: Container(
                     margin: EdgeInsets.only(left: 10.r),
@@ -74,10 +74,20 @@ class MovieSection extends ConsumerWidget {
                     final formatedDate = DateFormat('MMM d, yyyy').format(date);
                     return GestureDetector(
                       onTap: () {
-                        context.push(
-                          '/details',
-                          extra: {'movie': list[index], 'tableType': tableType},
-                        );
+                        switch (tableType) {
+                          case TableType.movies:
+                            context.push(
+                              '/details',
+                              extra: {
+                                'movie': list[index],
+                                'tableType': tableType,
+                              },
+                            );
+                          case TableType.tvshows:
+                            context.push('/tvshows-details');
+                            break;
+                          default:
+                        }
                       },
                       child: Container(
                         width: 130.w,

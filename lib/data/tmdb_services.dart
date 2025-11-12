@@ -9,6 +9,9 @@ import 'package:movie_watch/models/genre.dart';
 import 'package:movie_watch/models/movie_details.dart';
 import 'package:movie_watch/models/movies.dart';
 import 'package:movie_watch/models/recommendations.dart';
+import 'package:movie_watch/models/series_trailer.dart';
+import 'package:movie_watch/models/show_details.dart';
+import 'package:movie_watch/models/tvseries_credit.dart';
 import 'package:movie_watch/models/videos.dart';
 
 class TmdbServices {
@@ -351,7 +354,6 @@ class TmdbServices {
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
 
-      
         return MovieDetails.fromMap(data);
       } else {
         throw Exception('Error is ${response.body}, movie details');
@@ -635,7 +637,6 @@ class TmdbServices {
       page: page,
       genreId: genreId,
     );
-    'https://api.themoviedb.org/3/tv/airing_today?language=en-US&page=1';
 
     try {
       http.Response response = await http.get(
@@ -648,6 +649,102 @@ class TmdbServices {
       if (response.statusCode == 200) {
         List data = jsonDecode(response.body)['results'];
         return data.map((e) => Movie.fromJson(e)).toList();
+      } else {
+        throw Exception('Error is ${response.body}');
+      }
+    } catch (e, str) {
+      throw Exception('Error is $e - $str');
+    }
+  }
+
+  Future<TvShow> fetchTvSeriesDetails({required int seriesId}) async {
+    var url = 'https://api.themoviedb.org/3/tv/$seriesId?language=en-US';
+
+    try {
+      http.Response response = await http.get(
+        Uri.parse(url),
+        headers: <String, String>{
+          'accept': 'application/json',
+          'Authorization': 'Bearer $header',
+        },
+      );
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        return TvShow.fromMap(data);
+      } else {
+        throw Exception('Error is ${response.body}');
+      }
+    } catch (e, str) {
+      throw Exception('Error is $e - $str');
+    }
+  }
+
+  Future<TvSeriesCredits> fetchTvSeriesCredit({
+    required int seriesId,
+  }) async {
+    var url =
+        'https://api.themoviedb.org/3/tv/$seriesId/aggregate_credits?language=en-US';
+
+    try {
+      http.Response response = await http.get(
+        Uri.parse(url),
+        headers: <String, String>{
+          'accept': 'application/json',
+          'Authorization': 'Bearer $header',
+        },
+      );
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        return TvSeriesCredits.fromMap(data);
+      } else {
+        throw Exception('Error is ${response.body}');
+      }
+    } catch (e, str) {
+      throw Exception('Error is $e - $str');
+    }
+  }
+
+  Future<RecommendedSeries> fetchRecommendedTvSeries({
+    required int seriesId,
+  }) async {
+    var url =
+        'https://api.themoviedb.org/3/tv/$seriesId/recommendations?language=en-US&page=1';
+
+    try {
+      http.Response response = await http.get(
+        Uri.parse(url),
+        headers: <String, String>{
+          'accept': 'application/json',
+          'Authorization': 'Bearer $header',
+        },
+      );
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        return RecommendedSeries.fromMap(data);
+      } else {
+        throw Exception('Error is ${response.body}');
+      }
+    } catch (e, str) {
+      throw Exception('Error is $e - $str');
+    }
+  }
+
+  Future<SeriesTrailers> fetchTvSeriesTrailers({
+    required int seriesId,
+  }) async {
+    var url = 'https://api.themoviedb.org/3/tv/$seriesId/videos?language=en-US';
+
+    try {
+      http.Response response = await http.get(
+        Uri.parse(url),
+        headers: <String, String>{
+          'accept': 'application/json',
+          'Authorization': 'Bearer $header',
+        },
+      );
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        return SeriesTrailers.fromMap(data);
       } else {
         throw Exception('Error is ${response.body}');
       }

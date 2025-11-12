@@ -4,22 +4,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:movie_watch/common/widgets/movie_section.dart';
 import 'package:movie_watch/config/enums.dart';
 import 'package:movie_watch/config/tmdb_config.dart';
 import 'package:movie_watch/data/notifiers/movie-details_notifiers.dart';
 import 'package:movie_watch/models/movies.dart';
-import 'package:movie_watch/models/recommendations.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 class Details extends ConsumerStatefulWidget {
   final Movie? currentMovie;
   final TableType tableType;
 
-  const Details(
-   {
+  const Details({
     super.key,
     required this.currentMovie,
     required this.tableType,
@@ -220,7 +216,7 @@ class _DetailsState extends ConsumerState<Details> {
                       ),
                       SizedBox(height: 10.r),
                       SizedBox(
-                        height: 140.h,
+                        height: 170.h,
                         child: ListView.builder(
                           shrinkWrap: true,
                           itemCount: data.credits.cast.length,
@@ -235,7 +231,6 @@ class _DetailsState extends ConsumerState<Details> {
                               decoration: BoxDecoration(
                                 // color: Colors.grey,
                                 borderRadius: BorderRadius.circular(10.r),
-                                //boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 2)]
                               ),
 
                               child: Column(
@@ -245,8 +240,7 @@ class _DetailsState extends ConsumerState<Details> {
                                     backgroundColor: Colors.grey,
 
                                     backgroundImage:
-                                        data.credits.cast[index].profilePath !=
-                                            null
+                                        data.credits.cast[index].profilePath!.isNotEmpty 
                                         ? NetworkImage(
                                             '${TmdbConfig.img_url}original${data.credits.cast[index].profilePath}',
                                           )
@@ -262,7 +256,7 @@ class _DetailsState extends ConsumerState<Details> {
                                         ? AssetImage('assets/images/male.png')
                                         : null,
                                   ),
-
+                                 
                                   Text(
                                     data.credits.cast[index].originalName,
                                     textAlign: TextAlign.center,
@@ -428,8 +422,8 @@ class _DetailsState extends ConsumerState<Details> {
                                   context.push(
                                     '/details',
                                     extra: {
-                                        'movie': data.recommendations[index],
-                                      
+                                      'movie': data.recommendations[index],
+
                                       'tableType': widget.tableType,
                                     },
                                   );

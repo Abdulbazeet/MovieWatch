@@ -31,66 +31,74 @@ class _BottombarState extends State<Bottombar> {
       switchInCurve: Curves.easeInCubic,
       switchOutCurve: Curves.easeOutCubic,
       duration: Duration(milliseconds: 300),
-
       child: isSelected
           ? InkWell(
               key: ValueKey(isSelected),
               onTap: () => _onTap(index),
-              child: Container(
-                height: double.infinity,
-                margin: EdgeInsets.symmetric(vertical: 5.r),
-                padding: EdgeInsets.symmetric(horizontal: 5.r),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary,
-                  borderRadius: BorderRadius.circular(10.r),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      'assets/icons/$image.png',
-                      height: 17.sp,
-                      width: 17.sp,
-                      color: isSelected
-                          ? Theme.of(context).colorScheme.secondary
-                          : Theme.of(context).colorScheme.onSurface,
-                    ),
-                    SizedBox(width: 10.w),
-                    Text(
-                      title,
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+              child: SizedBox(
+                height: 45.sh,
+                child: Container(
+                  // height: double.infinity,
+                  margin: EdgeInsets.symmetric(vertical: 5.r),
+                  padding: EdgeInsets.symmetric(horizontal: 5.r),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.primary,
+                    borderRadius: BorderRadius.circular(10.r),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'assets/icons/$image.png',
+                        height: 17.sp,
+                        width: 17.sp,
                         color: isSelected
                             ? Theme.of(context).colorScheme.secondary
                             : Theme.of(context).colorScheme.onSurface,
                       ),
-                    ),
-                  ],
+                      SizedBox(width: 10.w),
+                      Text(
+                        title,
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          color: isSelected
+                              ? Theme.of(context).colorScheme.secondary
+                              : Theme.of(context).colorScheme.onSurface,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             )
           : InkWell(
               key: ValueKey(isSelected),
               onTap: () => _onTap(index),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    'assets/icons/$image.png',
-                    height: 17.sp,
-                    width: 17.sp,
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
-                  SizedBox(height: 5.h),
-                  Text(
-                    title,
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+              child: SizedBox(
+                height: 60.sh,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/icons/$image.png',
+                      height: 17.sp,
+                      width: 17.sp,
                       color: Theme.of(context).colorScheme.onSurface,
                     ),
-                  ),
-                ],
+                    SizedBox(height: 5.h),
+                    Text(
+                      title,
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
     );
+    //   ),
+    // );
   }
 
   final List<Widget> _body = [TabScreen(), Search(), Watchlist(), Profile()];
