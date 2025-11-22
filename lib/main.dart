@@ -1,0 +1,47 @@
+import 'package:device_preview/device_preview.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+ import 'package:movie_watch/routes/routes.dart';
+import 'package:movie_watch/theme/theme.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'routes/routes.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  runApp(
+    DevicePreview(
+      enabled: !kReleaseMode,
+      defaultDevice: Devices.ios.iPhone16ProMax,
+      isToolbarVisible: true,
+      builder: (context) => const ProviderScope(child: MyApp()),
+    ),
+
+    // const ProviderScope(child: MyApp())
+  );
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return  MaterialApp.router(
+      debugShowCheckedModeBanner: false,
+      useInheritedMediaQuery: true,
+      title: 'MoviewWatch',
+
+      // These three lines are mandatory for DevicePreview
+      locale: DevicePreview.locale(context),
+      builder: DevicePreview.appBuilder,
+
+      theme: AppTheme.lightmode,
+      darkTheme: AppTheme.lightmode, // ← FIX THIS LINE
+
+      routerConfig: AppRoutes.goRoute,
+    );
+  }
+}

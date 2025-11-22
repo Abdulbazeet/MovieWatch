@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "642353294475",
+    "project_id": "movie-watch-69af5",
+    "storage_bucket": "movie-watch-69af5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:642353294475:android:b0d9495af3d8919de0788e",
+        "android_client_info": {
+          "package_name": "com.example.movie_watch"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQ3XvzEgkHdi1iB7uUrjXvxPwrYwg1Lvs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
