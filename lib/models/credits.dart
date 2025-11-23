@@ -29,7 +29,7 @@ class Cast {
   final bool adult;
   final int gender;
   final int id;
-  final String knownForDepartment;
+  final String known_for_department;
   final String name;
   final String originalName;
   final double popularity;
@@ -43,7 +43,7 @@ class Cast {
     required this.adult,
     required this.gender,
     required this.id,
-    required this.knownForDepartment,
+    required this.known_for_department,
     required this.name,
     required this.originalName,
     required this.popularity,
@@ -59,7 +59,7 @@ class Cast {
       adult: map['adult'] ?? false,
       gender: map['gender'] ?? 0,
       id: map['id'] ?? 0,
-      knownForDepartment: map['known_for_department'] ?? '',
+      known_for_department: map['known_for_department'] ?? '',
       name: map['name'] ?? '',
       originalName: map['original_name'] ?? '',
       popularity: (map['popularity'] ?? 0).toDouble(),
@@ -76,7 +76,7 @@ class Cast {
       'adult': adult,
       'gender': gender,
       'id': id,
-      'known_for_department': knownForDepartment,
+      'known_for_department': known_for_department,
       'name': name,
       'original_name': originalName,
       'popularity': popularity,

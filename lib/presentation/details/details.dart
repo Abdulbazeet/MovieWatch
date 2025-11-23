@@ -7,6 +7,7 @@ import 'package:movie_watch/config/enums.dart';
 import 'package:movie_watch/config/tmdb_config.dart';
 import 'package:movie_watch/config/utils.dart';
 import 'package:movie_watch/data/notifiers/movie-details_notifiers.dart';
+import 'package:movie_watch/models/credits.dart';
 import 'package:movie_watch/models/movies.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
@@ -53,6 +54,18 @@ class _DetailsState extends ConsumerState<Details> {
               'yyyy',
             ).format(DateTime.parse(data.movieDetails.release_date));
             final duration = Utils.timeDuration(data.movieDetails.runtime);
+            final List<Cast> casts = data.credits.cast.where((n) {
+              return n.known_for_department == 'Acting';
+            }).toList();
+            final String directors = data.credits.cast
+                .where((crew) => crew.known_for_department == 'Directing')
+                .map((writer) => writer.name)
+                .join(', ');
+            final String writers = data.credits.cast
+                .where((crew) => crew.known_for_department == 'Writing')
+                .map((writer) => writer.name)
+                .join(', ');
+
             return ListView(
               children: [
                 SizedBox(
@@ -223,37 +236,8 @@ class _DetailsState extends ConsumerState<Details> {
 
                     children: [
                       SizedBox(height: 5),
-                      Row(
-                        children: [
-                          // ElevatedButton(
-                          //   onPressed: () {},
-                          //   style: ElevatedButton.styleFrom(
-                          //     backgroundColor: Theme.of(
-                          //       context,
-                          //     ).colorScheme.primary,
-                          //     foregroundColor: Theme.of(
-                          //       context,
-                          //     ).colorScheme.onPrimary,
-                          //     padding: EdgeInsets.symmetric(
-                          //       horizontal: 15,
-                          //       vertical: 8,
-                          //     ),
-                          //     shape: RoundedRectangleBorder(
-                          //       borderRadius: BorderRadius.circular(10),
-                          //     ),
-                          //     minimumSize: Size(60,40)
-                          //   ),
-                          //   child: Text(text),
-                          // ),
-                          SizedBox(height: 5),
-                          Text(
-                            data.movieDetails.tagline,
-                            style: Theme.of(context).textTheme.labelSmall
-                                ?.copyWith(fontStyle: FontStyle.italic),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 10),
+
+                      SizedBox(height: 30),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -343,7 +327,13 @@ class _DetailsState extends ConsumerState<Details> {
                                     },
                                   ),
                                 ),
-                                SizedBox(height: 10),
+                                SizedBox(height: 5),
+                                Text(
+                                  data.movieDetails.tagline,
+                                  style: Theme.of(context).textTheme.labelSmall
+                                      ?.copyWith(fontStyle: FontStyle.italic),
+                                ),
+                                SizedBox(height: 5),
                                 Wrap(
                                   children: [
                                     Text(
@@ -389,14 +379,69 @@ class _DetailsState extends ConsumerState<Details> {
                         ],
                       ),
 
-                      SizedBox(height: 10),
+                      if (directors.isNotEmpty) ...[
+                        SizedBox(height: 30),
 
-                      SizedBox(height: 10),
+                        Divider(color: Theme.of(context).colorScheme.onSurface),
+                        SizedBox(height: 10),
+
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'Directors',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                            SizedBox(height: 5),
+                            Text(
+                              directors,
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
+                                  ),
+                            ),
+                          ],
+                        ),
+                      ],
+                      if (writers.isNotEmpty) ...[
+                        SizedBox(height: 10),
+
+                        Divider(color: Theme.of(context).colorScheme.onSurface),
+                        SizedBox(height: 10),
+
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'Writers',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                            SizedBox(height: 5),
+                            Text(
+                              writers,
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
+                                  ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 10),
+
+                        Divider(color: Theme.of(context).colorScheme.onSurface),
+                      ],
+                      SizedBox(height:30),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Cast',
+                            'Top Cast',
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
                           Text(
@@ -405,80 +450,94 @@ class _DetailsState extends ConsumerState<Details> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 20),
+                      SizedBox(height: 10),
                       SizedBox(
-                        height: 140,
+                        height: 260,
                         child: ListView.builder(
+                          physics: const BouncingScrollPhysics(),
                           shrinkWrap: true,
-                          itemCount: data.credits.cast.length,
+                          clipBehavior: Clip.none,
+                          itemCount: casts.length,
                           scrollDirection: Axis.horizontal,
                           itemBuilder: (context, index) {
-                            if (data.credits.cast[index].knownForDepartment !=
-                                'Acting') {
-                              return SizedBox.shrink();
-                            }
                             return Container(
+                              width: 130,
                               padding: EdgeInsets.symmetric(
-                                vertical: 10,
-                                horizontal: 10,
-                              ),
-                              margin: EdgeInsets.only(right: 10),
+                                vertical: 20,
+                                //  horizontal: 10,
+                              ).copyWith(top: 0),
+                              margin: EdgeInsets.only(right: 20),
                               decoration: BoxDecoration(
-                                // color: Colors.grey,
+                                // color: Colors.grey
+                                color: Theme.of(context).colorScheme.surface,
                                 borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black,
+                                    offset: Offset(3, 3),
+                                    blurRadius: 3,
+                                    spreadRadius: 0,
+                                  ),
+                                ],
                               ),
 
                               child: Column(
+                                mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  SizedBox(
-                                    width: 80, // = radius * 2
-                                    height: 80,
-                                    child: ClipOval(
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(10),
+                                      topRight: Radius.circular(10),
+                                    ),
+                                    child: Container(
+                                      width: 130, // = radius * 2
+                                      height: 150,
+                                      color: Colors.grey,
+
                                       child: Image.network(
                                         data
                                                 .credits
                                                 .cast[index]
                                                 .profilePath!
                                                 .isNotEmpty
-                                            ? '${TmdbConfig.img_url}original${data.credits.cast[index].profilePath}'
-                                            : data.credits.cast[index].gender ==
-                                                  1
+                                            ? '${TmdbConfig.img_url}original${casts[index].profilePath}'
+                                            : casts[index].gender == 1
                                             ? 'assets/images/female.jpeg'
-                                            : data.credits.cast[index].gender ==
-                                                  2
+                                            : casts[index].gender == 2
                                             ? 'assets/images/male.png'
                                             : 'assets/images/unknown.png',
-                                        fit: BoxFit.cover, // ← THIS IS THE KEY
-                                        loadingBuilder:
-                                            (context, child, loadingProgress) {
-                                              if (loadingProgress == null)
-                                                return child;
-                                              return CircleAvatar(
-                                                radius: 40,
-                                                backgroundColor:
-                                                    Colors.grey.shade800,
-                                              );
-                                            },
-                                        errorBuilder:
-                                            (context, error, stackTrace) =>
-                                                CircleAvatar(
-                                                  radius: 40,
-                                                  backgroundColor:
-                                                      Colors.grey.shade800,
-                                                ),
+                                        fit: BoxFit.cover,
+                                        // ← THIS IS THE KEY
+                                        // loadingBuilder:
+                                        //     (context, child, loadingProgress) {
+                                        //       if (loadingProgress == null)
+                                        //         return child;
+                                        //       return CircleAvatar(
+                                        //         radius: 40,
+                                        //         backgroundColor:
+                                        //             Colors.grey.shade800,
+                                        //       );
+                                        //     },
+                                        // errorBuilder:
+                                        //     (context, error, stackTrace) =>
+                                        //         CircleAvatar(
+                                        //           radius: 40,
+                                        //           backgroundColor:
+                                        //               Colors.grey.shade800,
+                                        //         ),
                                       ),
                                     ),
                                   ),
-
+                                  SizedBox(height: 5),
                                   Text(
-                                    data.credits.cast[index].originalName,
+                                    casts[index].originalName,
                                     textAlign: TextAlign.center,
                                     maxLines: 4,
                                     style: Theme.of(context).textTheme.bodySmall
                                         ?.copyWith(fontWeight: FontWeight.bold),
                                   ),
                                   Text(
-                                    data.credits.cast[index].character,
+                                    casts[index].character,
                                     textAlign: TextAlign.center,
                                     maxLines: 4,
                                     style: Theme.of(
@@ -491,7 +550,7 @@ class _DetailsState extends ConsumerState<Details> {
                           },
                         ),
                       ),
-                      SizedBox(height: 20),
+                      SizedBox(height: 30),
                       Row(
                         children: [
                           Text(
@@ -596,7 +655,7 @@ class _DetailsState extends ConsumerState<Details> {
                           },
                         ),
                       ),
-                      SizedBox(height: 20),
+                      SizedBox(height: 30),
                       if (data.recommendations.isNotEmpty)
                         Row(
                           children: [
