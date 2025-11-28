@@ -57,11 +57,11 @@ class _DetailsState extends ConsumerState<Details> {
             final List<Cast> casts = data.credits.cast.where((n) {
               return n.known_for_department == 'Acting';
             }).toList();
-            final String directors = data.credits.cast
+            final directors = data.credits.cast
                 .where((crew) => crew.known_for_department == 'Directing')
                 .map((writer) => writer.name)
                 .join(', ');
-            final String writers = data.credits.cast
+            final writers = data.credits.cast
                 .where((crew) => crew.known_for_department == 'Writing')
                 .map((writer) => writer.name)
                 .join(', ');
@@ -228,16 +228,14 @@ class _DetailsState extends ConsumerState<Details> {
                     ],
                   ),
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 30),
+
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
 
                     children: [
-                      SizedBox(height: 5),
-
-                      SizedBox(height: 30),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -436,7 +434,7 @@ class _DetailsState extends ConsumerState<Details> {
 
                         Divider(color: Theme.of(context).colorScheme.onSurface),
                       ],
-                      SizedBox(height:30),
+                      SizedBox(height: 30),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -495,11 +493,7 @@ class _DetailsState extends ConsumerState<Details> {
                                       color: Colors.grey,
 
                                       child: Image.network(
-                                        data
-                                                .credits
-                                                .cast[index]
-                                                .profilePath!
-                                                .isNotEmpty
+                                        casts[index].profilePath!.isNotEmpty
                                             ? '${TmdbConfig.img_url}original${casts[index].profilePath}'
                                             : casts[index].gender == 1
                                             ? 'assets/images/female.jpeg'
@@ -507,24 +501,6 @@ class _DetailsState extends ConsumerState<Details> {
                                             ? 'assets/images/male.png'
                                             : 'assets/images/unknown.png',
                                         fit: BoxFit.cover,
-                                        // ← THIS IS THE KEY
-                                        // loadingBuilder:
-                                        //     (context, child, loadingProgress) {
-                                        //       if (loadingProgress == null)
-                                        //         return child;
-                                        //       return CircleAvatar(
-                                        //         radius: 40,
-                                        //         backgroundColor:
-                                        //             Colors.grey.shade800,
-                                        //       );
-                                        //     },
-                                        // errorBuilder:
-                                        //     (context, error, stackTrace) =>
-                                        //         CircleAvatar(
-                                        //           radius: 40,
-                                        //           backgroundColor:
-                                        //               Colors.grey.shade800,
-                                        //         ),
                                       ),
                                     ),
                                   ),

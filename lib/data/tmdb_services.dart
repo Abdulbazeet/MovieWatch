@@ -677,6 +677,7 @@ class TmdbServices {
         throw Exception('Error is ${response.body}');
       }
     } catch (e, str) {
+      print("$e - $str");
       throw Exception('Error is $e - $str');
     }
   }
@@ -701,6 +702,8 @@ class TmdbServices {
         return TvSeriesCredits.listFromMap(data);
         //return data.map((e) => TvSeriesCredits.listFromMap(e)).toList();
       } else {
+        print(response.body);
+
         throw Exception('Error is ${response.body}');
       }
     } catch (e, str) {
@@ -752,6 +755,7 @@ class TmdbServices {
         return SeriesTrailers.fromMap(data);
       } else {
         print(response.body);
+
         throw Exception('Error is ${response.body}');
       }
     } catch (e, str) {

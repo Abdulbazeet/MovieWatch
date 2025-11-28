@@ -6,7 +6,7 @@ class TvShow {
   final bool adult;
   final String? backdropPath;
   final List<CreatedBy> createdBy;
-  final List<int> episodeRunTime;
+  final int episodeRunTime;
   final String firstAirDate;
   final List<Genres> genres;
   final String homepage;
@@ -16,7 +16,7 @@ class TvShow {
   final String lastAirDate;
   final Episode? lastEpisodeToAir;
   final String name;
-  final dynamic nextEpisodeToAir;
+  final Episode? nextEpisodeToAir;
   final List<Network> networks;
   final int numberOfEpisodes;
   final int numberOfSeasons;
@@ -43,7 +43,7 @@ class TvShow {
     required this.episodeRunTime,
     required this.firstAirDate,
     required this.genres,
-    required this .homepage,
+    required this.homepage,
     required this.id,
     required this.inProduction,
     required this.languages,
@@ -81,8 +81,8 @@ class TvShow {
               map['created_by'].map((x) => CreatedBy.fromMap(x)),
             ),
       episodeRunTime: map['episode_run_time'] == null
-          ? []
-          : List<int>.from(map['episode_run_time']),
+          ? 0
+          : map['episode_run_time'][0],
       firstAirDate: map['first_air_date'] ?? '',
       genres: map['genres'] == null
           ? []
@@ -98,7 +98,9 @@ class TvShow {
           ? null
           : Episode.fromMap(map['last_episode_to_air']),
       name: map['name'] ?? '',
-      nextEpisodeToAir: map['next_episode_to_air'],
+      nextEpisodeToAir: map['next_episode_to_air'] == null
+          ? null
+          : Episode.fromMap(map['next_episode_to_air']),
       networks: map['networks'] == null
           ? []
           : List<Network>.from(map['networks'].map((x) => Network.fromMap(x))),

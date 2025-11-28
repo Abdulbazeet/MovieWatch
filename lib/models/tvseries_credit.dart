@@ -35,7 +35,7 @@ class TvSeriesCredits {
     name: map['name'] ?? '',
     originalName: map['original_name'] ?? '',
     popularity: (map['popularit`y'] ?? 0).toDouble(),
-    profilePath: map['profile_path'],
+    profilePath: map['profile_path'] ?? '',
     roles: map['roles'] == null
         ? []
         : List<Role>.from((map['roles'] as List).map((e) => Role.fromMap(e))),
