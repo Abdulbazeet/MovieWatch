@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:movie_watch/config/tmdb_config.dart';
 import 'package:movie_watch/models/credits.dart';
+import 'package:movie_watch/models/episodes.dart';
 import 'package:movie_watch/models/genre.dart';
 import 'package:movie_watch/models/movie_details.dart';
 import 'package:movie_watch/models/movies.dart';
@@ -670,6 +671,7 @@ class TmdbServices {
       );
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
+        // print(data);
         return TvShow.fromMap(data);
       } else {
         print(response.body);
@@ -760,6 +762,33 @@ class TmdbServices {
       }
     } catch (e, str) {
       throw Exception('Error is $e - $str');
+    }
+  }
+
+  Future<Episodes> fetchEpisodeDeatils(
+    int seriesId,
+    int episode_number,
+    int season_number,
+  ) async {
+    var url =
+        'https://api.themoviedb.org/3/tv/$seriesId/season/$season_number/episode/$episode_number?language=en-US';
+
+    try {
+      http.Response response = await http.get(
+        Uri.parse(url),
+        headers: <String, String>{
+          'accept': 'application/json',
+          'Authorization': 'Bearer $header',
+        },
+      );
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        return Episodes.fromMap(data);
+      } else {
+        throw Exception(response.body);
+      }
+    } catch (e, st) {
+      throw Exception(" $e - $st");
     }
   }
 }

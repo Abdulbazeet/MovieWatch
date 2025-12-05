@@ -6,7 +6,7 @@ class TvShow {
   final bool adult;
   final String? backdropPath;
   final List<CreatedBy> createdBy;
-  final int episodeRunTime;
+  final dynamic episodeRunTime;
   final String firstAirDate;
   final List<Genres> genres;
   final String homepage;
@@ -80,9 +80,11 @@ class TvShow {
           : List<CreatedBy>.from(
               map['created_by'].map((x) => CreatedBy.fromMap(x)),
             ),
-      episodeRunTime: map['episode_run_time'] == null
-          ? 0
-          : map['episode_run_time'][0],
+      episodeRunTime: map['episode_run_time'],
+      
+      //  == []
+      //     ? 0
+      //     : map['episode_run_time'],
       firstAirDate: map['first_air_date'] ?? '',
       genres: map['genres'] == null
           ? []

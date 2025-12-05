@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:movie_watch/config/enums.dart';
 import 'package:movie_watch/config/tmdb_config.dart';
 import 'package:movie_watch/config/utils.dart';
 import 'package:movie_watch/data/notifiers/tvseries-details_notifier.dart';
-import 'package:movie_watch/data/tmdb_providers.dart';
 import 'package:movie_watch/models/movies.dart';
+import 'package:movie_watch/models/show_details.dart';
 import 'package:movie_watch/models/tvseries_credit.dart';
 
 class TvshowScreen extends ConsumerStatefulWidget {
@@ -64,6 +63,10 @@ class _TvshowScreenState extends ConsumerState<TvshowScreen> {
             final List<TvSeriesCredits> casts = data.tvseriesCredit
                 .where((element) => element.knownForDepartment == 'Acting')
                 .toList();
+            final List<Season> seasons = data.tvshwDetails.seasons
+                // .where((element) => element.knownForDepartment == 'Acting')
+                .toList();
+
             final episodeDate = DateFormat(
               'EEE MMM d, yyyy',
             ).format(DateTime.parse(lastEpisode.airDate));
@@ -172,7 +175,8 @@ class _TvshowScreenState extends ConsumerState<TvshowScreen> {
                                             ),
                                             SizedBox(width: 5),
                                             Text(
-                                              "${data.tvshwDetails.voteAverage.toStringAsFixed(1)}/10",
+                                              data.tvshwDetails.voteAverage
+                                                  .toStringAsFixed(1),
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .bodySmall
@@ -357,12 +361,17 @@ class _TvshowScreenState extends ConsumerState<TvshowScreen> {
                                     },
                                   ),
                                 ),
-                                SizedBox(height: 5),
-                                Text(
-                                  data.tvshwDetails.tagline,
-                                  style: Theme.of(context).textTheme.labelSmall
-                                      ?.copyWith(fontStyle: FontStyle.italic),
-                                ),
+                                if (data.tvshwDetails.tagline.isNotEmpty) ...[
+                                  SizedBox(height: 5),
+                                  Text(
+                                    data.tvshwDetails.tagline,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelSmall
+                                        ?.copyWith(fontStyle: FontStyle.italic),
+                                  ),
+                                ],
+
                                 SizedBox(height: 5),
                                 Wrap(
                                   children: [
@@ -496,7 +505,7 @@ class _TvshowScreenState extends ConsumerState<TvshowScreen> {
                             return Container(
                               width: 130,
                               padding: EdgeInsets.symmetric(
-                                vertical: 20,
+                                vertical: 0,
                                 //  horizontal: 10,
                               ).copyWith(top: 0),
                               margin: EdgeInsets.only(right: 20),
@@ -575,7 +584,7 @@ class _TvshowScreenState extends ConsumerState<TvshowScreen> {
                       SizedBox(height: 10),
                       Container(
                         width: double.infinity,
-                        height: 200,
+                        height: 160,
                         decoration: BoxDecoration(
                           // color: Colors.grey
                           color: Theme.of(context).colorScheme.surface,
@@ -597,7 +606,7 @@ class _TvshowScreenState extends ConsumerState<TvshowScreen> {
                                 bottomLeft: Radius.circular(10),
                               ),
                               child: Container(
-                                width: 100,
+                                width: 120,
                                 height: 200,
                                 decoration: BoxDecoration(),
                                 child: Image.network(
@@ -606,45 +615,225 @@ class _TvshowScreenState extends ConsumerState<TvshowScreen> {
                                 ),
                               ),
                             ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 10,
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Season ${lastEpisode.seasonNumber} Episode ${lastEpisode.episodeNumber}",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium
-                                        ?.copyWith(fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                    lastEpisode.name,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium
-                                        ?.copyWith(fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                    episodeDate,
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.bodyMedium,
-                                  ),
-                                  Text(
-                                    lastEpisode.overview,
-                                    maxLines: 5,
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.bodySmall,
-                                  ),
-                                ],
+                            Expanded(
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 10,
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Season ${lastEpisode.seasonNumber} Episode ${lastEpisode.episodeNumber}",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                    ),
+                                    Text(
+                                      lastEpisode.name,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                    ),
+                                    Text(
+                                      episodeDate,
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.bodyMedium,
+                                    ),
+                                    Text(
+                                      lastEpisode.overview,
+                                      maxLines: 3,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.bodySmall,
+                                    ),
+                                    SizedBox(height: 3),
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.star,
+                                          color: Colors.yellow,
+                                          size: 17,
+                                        ),
+
+                                        Text(
+                                          lastEpisode.voteAverage
+                                              .toStringAsFixed(1),
+                                          style: Theme.of(
+                                            context,
+                                          ).textTheme.labelSmall,
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ],
+                        ),
+                      ),
+                      SizedBox(height: 30),
+                      Text(
+                        'All Seasons',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      SizedBox(height: 10),
+
+                      SizedBox(
+                        height: 160,
+                        // width: 300,
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: seasons.length,
+                          clipBehavior: Clip.none,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) {
+                            var items = seasons[index];
+                            final seasonsYear = DateFormat(
+                              'yyyy',
+                            ).format(DateTime.parse(items.airDate));
+                            return Container(
+                              height: 160,
+                              width: 350,
+                              margin: EdgeInsets.only(right: 10),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.surface,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black,
+                                    offset: Offset(3, 3),
+                                    blurRadius: 3,
+                                    spreadRadius: 0,
+                                  ),
+                                ],
+                              ),
+                              child: Row(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(10),
+                                      bottomLeft: Radius.circular(10),
+                                    ),
+                                    child: Container(
+                                      height: 160,
+                                      width: 100,
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey,
+                                      ),
+                                      child: Image.network(
+                                        "${TmdbConfig.img_url}original${items.posterPath}",
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Padding(
+                                      padding: EdgeInsets.all(10),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            seasons[index].name,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium
+                                                ?.copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                          ),
+                                          SizedBox(height: 5),
+                                          Row(
+                                            children: [
+                                              Container(
+                                                padding: EdgeInsets.symmetric(
+                                                  horizontal: 4,
+                                                  vertical: 2,
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  color: Theme.of(
+                                                    context,
+                                                  ).colorScheme.primary,
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
+                                                ),
+                                                child: Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Icon(
+                                                      Icons.star,
+                                                      color: Colors.yellow,
+                                                      size: 17,
+                                                    ),
+                                                    Text(
+                                                      items.voteAverage
+                                                          .toStringAsFixed(1),
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .labelSmall
+                                                          ?.copyWith(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              SizedBox(width: 10),
+                                              Text(
+                                                seasonsYear,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodySmall
+                                                    ?.copyWith(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                              ),
+                                              SizedBox(width: 10),
+                                              Text(
+                                                "${items.episodeCount} episodes",
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodySmall
+                                                    ?.copyWith(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(height: 5),
+                                          Text(
+                                            items.overview,
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 5,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodySmall
+                                                ?.copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ],
