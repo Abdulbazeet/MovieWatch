@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:movie_watch/config/tmdb_config.dart';
 import 'package:movie_watch/config/utils.dart';
 import 'package:movie_watch/data/notifiers/tvseries-details_notifier.dart';
+import 'package:movie_watch/data/tmdb_providers.dart';
 import 'package:movie_watch/models/movies.dart';
 import 'package:movie_watch/models/show_details.dart';
 import 'package:movie_watch/models/tvseries_credit.dart';
@@ -31,6 +32,31 @@ class _TvshowScreenState extends ConsumerState<TvshowScreen> {
     // final t = ref.watch(test(widget.currentMovie!.id));
     //  print(t.value![0].name);
     final screensize = MediaQuery.of(context).size.height;
+
+    _showEpisodeDetails(BuildContext newContext) {
+      // final showdetails = ref.watch(
+      //   episodeDetailsProvider((
+      //     episodeNumber: 1,
+      //     seasonNumber: 1,
+      //     seriesId: 1,
+      //   )),
+      // );
+      showBottomSheet(
+        context: newContext,
+        builder: (context) => StatefulBuilder(
+          builder: (context, bottomState) {
+            return BottomSheet(
+              onClosing: () {
+                
+              },
+              builder: (context) {
+            
+              return Container();
+            },);
+          },
+        ),
+      );
+    }
 
     return Scaffold(
       body: Center(
@@ -598,87 +624,94 @@ class _TvshowScreenState extends ConsumerState<TvshowScreen> {
                             ),
                           ],
                         ),
-                        child: Row(
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(10),
-                                bottomLeft: Radius.circular(10),
-                              ),
-                              child: Container(
-                                width: 120,
-                                height: 200,
-                                decoration: BoxDecoration(),
-                                child: Image.network(
-                                  "${TmdbConfig.img_url}original${data.tvshwDetails.lastEpisodeToAir!.stillPath}",
-                                  fit: BoxFit.cover,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: InkWell(
+                            onTap: () => _showEpisodeDetails(context),
+                            child: Row(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(10),
+                                    bottomLeft: Radius.circular(10),
+                                  ),
+                                  child: Container(
+                                    width: 120,
+                                    height: 200,
+                                    decoration: BoxDecoration(),
+                                    child: Image.network(
+                                      "${TmdbConfig.img_url}original${data.tvshwDetails.lastEpisodeToAir!.stillPath}",
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 10,
-                                  vertical: 10,
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Season ${lastEpisode.seasonNumber} Episode ${lastEpisode.episodeNumber}",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodySmall
-                                          ?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                Expanded(
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 10,
+                                      vertical: 10,
                                     ),
-                                    Text(
-                                      lastEpisode.name,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium
-                                          ?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                    ),
-                                    Text(
-                                      episodeDate,
-                                      style: Theme.of(
-                                        context,
-                                      ).textTheme.bodyMedium,
-                                    ),
-                                    Text(
-                                      lastEpisode.overview,
-                                      maxLines: 3,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: Theme.of(
-                                        context,
-                                      ).textTheme.bodySmall,
-                                    ),
-                                    SizedBox(height: 3),
-                                    Row(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        Icon(
-                                          Icons.star,
-                                          color: Colors.yellow,
-                                          size: 17,
-                                        ),
-
                                         Text(
-                                          lastEpisode.voteAverage
-                                              .toStringAsFixed(1),
+                                          "Season ${lastEpisode.seasonNumber} Episode ${lastEpisode.episodeNumber}",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodySmall
+                                              ?.copyWith(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                        ),
+                                        Text(
+                                          lastEpisode.name,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium
+                                              ?.copyWith(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                        ),
+                                        Text(
+                                          episodeDate,
                                           style: Theme.of(
                                             context,
-                                          ).textTheme.labelSmall,
+                                          ).textTheme.bodyMedium,
+                                        ),
+                                        Text(
+                                          lastEpisode.overview,
+                                          maxLines: 3,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: Theme.of(
+                                            context,
+                                          ).textTheme.bodySmall,
+                                        ),
+                                        SizedBox(height: 3),
+                                        Row(
+                                          children: [
+                                            Icon(
+                                              Icons.star,
+                                              color: Colors.yellow,
+                                              size: 17,
+                                            ),
+
+                                            Text(
+                                              lastEpisode.voteAverage
+                                                  .toStringAsFixed(1),
+                                              style: Theme.of(
+                                                context,
+                                              ).textTheme.labelSmall,
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     ),
-                                  ],
+                                  ),
                                 ),
-                              ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
                       ),
                       SizedBox(height: 30),
@@ -819,12 +852,9 @@ class _TvshowScreenState extends ConsumerState<TvshowScreen> {
                                             items.overview,
                                             overflow: TextOverflow.ellipsis,
                                             maxLines: 5,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodySmall
-                                                ?.copyWith(
-                                                  fontWeight: FontWeight.bold,
-                                                ),
+                                            style: Theme.of(
+                                              context,
+                                            ).textTheme.bodySmall,
                                           ),
                                         ],
                                       ),

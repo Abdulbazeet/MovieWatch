@@ -765,11 +765,11 @@ class TmdbServices {
     }
   }
 
-  Future<Episodes> fetchEpisodeDeatils(
-    int seriesId,
-    int episode_number,
-    int season_number,
-  ) async {
+  Future<Episodes> fetchEpisodeDetails({
+    required int seriesId,
+    required int episode_number,
+    required int season_number,
+  }) async {
     var url =
         'https://api.themoviedb.org/3/tv/$seriesId/season/$season_number/episode/$episode_number?language=en-US';
 

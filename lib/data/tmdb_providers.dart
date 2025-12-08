@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movie_watch/data/tmdb_services.dart';
 import 'package:movie_watch/models/credits.dart';
+import 'package:movie_watch/models/episodes.dart';
 import 'package:movie_watch/models/movie_details.dart';
 import 'package:movie_watch/models/movies.dart';
 import 'package:movie_watch/models/recommendations.dart';
@@ -97,3 +98,18 @@ final topRatedSeriesPovider = FutureProvider((ref) {
 final test = FutureProvider.family<List<TvSeriesCredits>, int>((ref, param) {
   return ref.watch(tmdbserviceProvider).fetchTvSeriesCredit(seriesId: param);
 });
+typedef episoeDetailsParams = ({
+  int seriesId,
+  int episodeNumber,
+  int seasonNumber,
+});
+final episodeDetailsProvider =
+    FutureProvider.family<Episodes, episoeDetailsParams>((ref, param) {
+      return ref
+          .watch(tmdbserviceProvider)
+          .fetchEpisodeDetails(
+            seriesId: param.seriesId,
+            episode_number: param.episodeNumber,
+            season_number: param.seasonNumber,
+          );
+    });
