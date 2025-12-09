@@ -783,11 +783,15 @@ class TmdbServices {
       );
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
+     //   print(response.body);
         return Episodes.fromMap(data);
+        
       } else {
+        print(response.body);
         throw Exception(response.body);
       }
     } catch (e, st) {
+      print("$e - $st");
       throw Exception(" $e - $st");
     }
   }

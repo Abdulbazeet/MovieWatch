@@ -9,6 +9,7 @@ import 'package:movie_watch/data/tmdb_providers.dart';
 import 'package:movie_watch/models/movies.dart';
 import 'package:movie_watch/models/show_details.dart';
 import 'package:movie_watch/models/tvseries_credit.dart';
+import 'package:riverpod/src/framework.dart';
 
 class TvshowScreen extends ConsumerStatefulWidget {
   final Movie? currentMovie;
@@ -24,6 +25,7 @@ class _TvshowScreenState extends ConsumerState<TvshowScreen> {
   TextOverflow? _overflow = TextOverflow.ellipsis;
   int? maxline = 3;
   String more = 'See more';
+  // final size = MediaQuery.of(context).size
   @override
   Widget build(BuildContext context) {
     final details = ref.watch(
@@ -33,26 +35,260 @@ class _TvshowScreenState extends ConsumerState<TvshowScreen> {
     //  print(t.value![0].name);
     final screensize = MediaQuery.of(context).size.height;
 
-    _showEpisodeDetails(BuildContext newContext) {
-      // final showdetails = ref.watch(
-      //   episodeDetailsProvider((
-      //     episodeNumber: 1,
-      //     seasonNumber: 1,
-      //     seriesId: 1,
-      //   )),
-      // );
-      showBottomSheet(
-        context: newContext,
+    showEpisodeDetails() {
+      final showdetails = ref.read(
+        episodeDetailsProvider((
+          episodeNumber:
+              details.value!.tvshwDetails.lastEpisodeToAir!.episodeNumber,
+          seasonNumber:
+              details.value!.tvshwDetails.lastEpisodeToAir!.seasonNumber,
+          seriesId: details.value!.tvshwDetails.lastEpisodeToAir!.showId,
+        )),
+      );
+      showModalBottomSheet(
+        enableDrag: true,        
+        // shape: Border.symmetric(horizontal: ),
+        context: context,
         builder: (context) => StatefulBuilder(
           builder: (context, bottomState) {
             return BottomSheet(
-              onClosing: () {
-                
-              },
+
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadiusGeometry.circular(20),
+              ),
+
+              onClosing: () {},
               builder: (context) {
-            
-              return Container();
-            },);
+                //    var episode = reff.watch(showdetails as ProviderListenable<dynamic>);
+                return showdetails.when(
+                  data: (data) {
+                    final date = DateFormat(
+                      "EEE MMM d, yyyy",
+                    ).format(DateTime.parse(data.air_date));
+                    final runtime = Utils.timeDuration(data.runtime);
+                    // print(data);
+                    return Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: ListView(
+                        children: [
+                          Column(
+                            children: [
+                              SizedBox(
+                                width: double.infinity,
+                                height: screensize * .3,
+
+                                child: Stack(
+                                  children: [
+                                    Positioned.fill(
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(10),
+                                        child: Container(
+                                          width: double.infinity,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(
+                                              10,
+                                            ),
+                                          ),
+                                          child: Image.network(
+                                            '${TmdbConfig.img_url}original${data.still_path}',
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Positioned.fill(
+                                      child: IgnorePointer(
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            gradient: LinearGradient(
+                                              begin: Alignment.bottomCenter,
+                                              end: Alignment.topCenter,
+                                              colors: [
+                                                Colors.black.withValues(
+                                                  alpha: .9,
+                                                ),
+                                                Colors.black.withValues(
+                                                  alpha: .5,
+                                                ),
+                                                Colors.transparent,
+                                                Colors.transparent,
+                                                Colors.black.withValues(
+                                                  alpha: .5,
+                                                ),
+                                                Colors.black.withValues(
+                                                  alpha: .9,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Positioned(
+                                      bottom: 10,
+                                      right: 10,
+                                      left: 10,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Season ${data.season_number} Episode ${data.episode_number}",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodySmall
+                                                ?.copyWith(
+                                                  color: Colors.white,
+                                                  // fontWeight: FontWeight.bold,
+                                                ),
+                                          ),
+                                          SizedBox(height: 5),
+                                          Text(
+                                            data.name,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium
+                                                ?.copyWith(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                          ),
+                                          SizedBox(height: 5),
+                                          Text(
+                                            date,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodySmall
+                                                ?.copyWith(color: Colors.white),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(height: 5),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.star,
+                                          color: Colors.yellow,
+                                          size: 17,
+                                        ),
+                                        Text(
+                                          data.vote_average.toStringAsFixed(1),
+                                          style: Theme.of(
+                                            context,
+                                          ).textTheme.bodySmall,
+                                        ),
+                                        SizedBox(width: 5),
+                                        Text(
+                                          runtime,
+                                          style: Theme.of(
+                                            context,
+                                          ).textTheme.bodySmall,
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 5),
+                                    Text(
+                                      data.overview,
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.bodySmall,
+                                    ),
+                                    SizedBox(height: 5),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          'Guest Stars',
+                                          style: Theme.of(
+                                            context,
+                                          ).textTheme.bodyMedium,
+                                        ),
+                                     
+                                      ],
+                                    ),
+                                    SizedBox(height: 2.5),
+                                    SizedBox(
+                                      height: 200,
+                                      child: ListView.builder(
+                                        shrinkWrap: true,
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount: data.guest_stars.length,
+                                        clipBehavior: Clip.none,
+                                        itemBuilder: (context, index) {
+                                          final guestStars =
+                                              data.guest_stars[index];
+                                          return Container(
+                                            width: 130,
+                                            padding: EdgeInsets.symmetric(
+                                              vertical: 0,
+                                              //  horizontal: 10,
+                                            ).copyWith(top: 0),
+                                            margin: EdgeInsets.only(right: 20),
+                                            decoration: BoxDecoration(
+                                              // color: Colors.grey
+                                              color: Theme.of(
+                                                context,
+                                              ).colorScheme.surface,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.black,
+                                                  offset: Offset(3, 3),
+                                                  blurRadius: 3,
+                                                  spreadRadius: 0,
+                                                ),
+                                              ],
+                                            ),
+                                            child: Column(
+                                              children: [
+                                                ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadiusGeometry.circular(
+                                                        10,
+                                                      ),
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.grey,
+                                                    ),
+                                                    child: Image.network(
+                                                      "${TmdbConfig.img_url}original${guestStars.profile_path}",
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  error: (error, stackTrace) {
+                    return Center(child: Text('$error - $stackTrace'));
+                  },
+                  loading: () {
+                    return Center(child: CircularProgressIndicator.adaptive());
+                  },
+                );
+              },
+            );
           },
         ),
       );
@@ -627,7 +863,7 @@ class _TvshowScreenState extends ConsumerState<TvshowScreen> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child: InkWell(
-                            onTap: () => _showEpisodeDetails(context),
+                            onTap: () => showEpisodeDetails(),
                             child: Row(
                               children: [
                                 ClipRRect(

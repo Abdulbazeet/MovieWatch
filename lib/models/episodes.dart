@@ -15,7 +15,7 @@ class Episodes {
   final String production_code;
   final int runtime;
 
-  final String season_number;
+  final int season_number;
   final String still_path;
   final double vote_average;
   final int vote_count;
@@ -68,7 +68,7 @@ class Episodes {
       id: map['id'] ?? 0,
       production_code: map['production_code'] ?? '',
       runtime: map['runtime'] ?? 0,
-      season_number: map['season_number'] ?? '',
+      season_number: map['season_number'] ?? 0,
       still_path: map['still_path'] ?? '',
       vote_average: map['vote_average'] ?? 0.0,
       vote_count: map['vote_count'] ?? 0,
