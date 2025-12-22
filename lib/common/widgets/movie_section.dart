@@ -91,7 +91,9 @@ class MovieSection extends ConsumerWidget {
                               case TableType.tvshows:
                                 context.push(
                                   '/tvshows-details',
-                                  extra: list[index],
+                                  extra:{
+                                    'series': list[index]
+                                  } ,
                                 );
                                 break;
                               default:

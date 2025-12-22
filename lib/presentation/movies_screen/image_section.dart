@@ -48,13 +48,25 @@ class ImageSection extends ConsumerWidget {
                       children: [
                         GestureDetector(
                           onTap: () {
-                            context.push(
-                              '/details',
-                              extra: {
-                                'movie': data[index],
-                                'tableType': tableType,
-                              },
-                            );
+                            switch (tableType) {
+                              case TableType.movies:
+                                context.push(
+                                  '/details',
+                                  extra: {
+                                    'movie': data[index],
+                                    'tableType': tableType,
+                                  },
+                                );
+
+                              case TableType.tvshows:
+                                context.push(
+                                  '/tvshows-details',
+                                  extra: {'series': data[index]},
+                                );
+
+                                break;
+                              default:
+                            }
                           },
                           child: Container(
                             decoration: BoxDecoration(
@@ -363,7 +375,7 @@ class ImageSection extends ConsumerWidget {
               //  period: const Duration(milliseconds: 1200),
               child: Container(
                 width: double.infinity,
-               // height: 40,
+                // height: 40,
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.surfaceVariant,
                 ),

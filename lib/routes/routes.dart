@@ -3,6 +3,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:movie_watch/config/enums.dart';
 import 'package:movie_watch/models/movies.dart';
+import 'package:movie_watch/models/recommendations.dart';
 import 'package:movie_watch/models/recommendedMovies.dart';
 import 'package:movie_watch/presentation/authentication/sign_in.dart';
 import 'package:movie_watch/presentation/authentication/sign_up.dart';
@@ -59,19 +60,21 @@ class AppRoutes {
       GoRoute(
         path: '/tvshows-details',
         builder: (context, state) {
-          final m = state.extra as Movie;
+          final m = state.extra as Map<String, dynamic>;
+          final series = m['series'];
+          RecommendedSeries? recommendedSeries;
 
-          return TvshowScreen(currentMovie: m);
+          Movie? movie;
+          if (series is RecommendedSeries) {
+            recommendedSeries = series;
+          } else if (series is Movie) {
+            movie = series;
+          }
+
+          return TvshowScreen(currentMovie: series);
         },
       ),
-      // GoRoute(
-      //   path: '/series-details',
-      //   builder: (context, state) {
-      //     final m = state.extra as Movie;
 
-      //     return SeriesDetails(m);
-      //   },
-      // ),
       GoRoute(
         path: '/tab-screen',
         builder: (context, state) => const TabScreen(),

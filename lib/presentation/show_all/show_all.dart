@@ -390,7 +390,7 @@ class _ShowAllState extends ConsumerState<ShowAll> {
                                 maxCrossAxisExtent: 100, // max width per tile
                                 mainAxisSpacing: 20,
                                 crossAxisSpacing: 20,
-                                childAspectRatio: .50,
+                                childAspectRatio: .40,
                               ),
                           itemCount: data.length,
                           itemBuilder: (context, index) {

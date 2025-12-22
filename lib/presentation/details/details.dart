@@ -76,7 +76,9 @@ class _DetailsState extends ConsumerState<Details> {
                         child: Container(
                           color: Colors.grey,
                           child: Image.network(
-                            '${TmdbConfig.img_url}original${data.movieDetails.backdrop_path}',
+                            data.movieDetails.backdrop_path.isNotEmpty
+                                ? '${TmdbConfig.img_url}original${data.movieDetails.backdrop_path}'
+                                : '${TmdbConfig.img_url}original${data.movieDetails.poster_path}',
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -526,111 +528,111 @@ class _DetailsState extends ConsumerState<Details> {
                           },
                         ),
                       ),
-                      SizedBox(height: 30),
-                      Row(
-                        children: [
-                          Text(
-                            'Trailers',
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 10),
-                      SizedBox(
-                        height: 150,
-                        child: ListView.builder(
-                          // physics: const NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: data.video.results.length,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) {
-                            final video = data.video.results[index];
+                      // SizedBox(height: 30),
+                      // Row(
+                      //   children: [
+                      //     Text(
+                      //       'Trailers',
+                      //       style: Theme.of(context).textTheme.bodyMedium,
+                      //     ),
+                      //   ],
+                      // ),
+                      // SizedBox(height: 10),
+                      // SizedBox(
+                      //   height: 150,
+                      //   child: ListView.builder(
+                      //     // physics: const NeverScrollableScrollPhysics(),
+                      //     shrinkWrap: true,
+                      //     itemCount: data.video.results.length,
+                      //     scrollDirection: Axis.horizontal,
+                      //     itemBuilder: (context, index) {
+                      //       final video = data.video.results[index];
 
-                            // Only YouTube videos are supported
-                            if (video.site != 'YouTube') {
-                              return const SizedBox.shrink();
-                            }
+                      //       // Only YouTube videos are supported
+                      //       if (video.site != 'YouTube') {
+                      //         return const SizedBox.shrink();
+                      //       }
 
-                            final videoId = YoutubePlayer.convertUrlToId(
-                              'https://www.youtube.com/watch?v=${video.key}',
-                            );
+                      //       final videoId = YoutubePlayer.convertUrlToId(
+                      //         'https://www.youtube.com/watch?v=${video.key}',
+                      //       );
 
-                            // Thumbnail URL from YouTube
-                            final thumbnailUrl =
-                                'https://img.youtube.com/vi/$videoId/hqdefault.jpg';
+                      //       // Thumbnail URL from YouTube
+                      //       final thumbnailUrl =
+                      //           'https://img.youtube.com/vi/$videoId/hqdefault.jpg';
 
-                            // Local state to control when player loads
-                            bool showPlayer = false;
+                      //       // Local state to control when player loads
+                      //       bool showPlayer = false;
 
-                            return StatefulBuilder(
-                              builder: (context, setInnerState) {
-                                return Container(
-                                  margin: EdgeInsets.only(right: 10),
-                                  width: 240,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      setInnerState(() {
-                                        showPlayer = true;
-                                      });
-                                    },
-                                    child: AnimatedSwitcher(
-                                      duration: const Duration(
-                                        milliseconds: 400,
-                                      ),
-                                      child: showPlayer
-                                          ? YoutubePlayer(
-                                              key: ValueKey(videoId),
-                                              controller:
-                                                  YoutubePlayerController(
-                                                    initialVideoId:
-                                                        videoId ?? '',
-                                                    flags:
-                                                        const YoutubePlayerFlags(
-                                                          autoPlay: true,
-                                                          mute: false,
-                                                          enableCaption: false,
-                                                        ),
-                                                  ),
-                                              showVideoProgressIndicator: true,
-                                              progressIndicatorColor: Theme.of(
-                                                context,
-                                              ).colorScheme.primary,
-                                            )
-                                          : Stack(
-                                              alignment: Alignment.center,
-                                              children: [
-                                                ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                  child: Image.network(
-                                                    thumbnailUrl,
-                                                    width: double.infinity,
-                                                    height: 200,
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                ),
-                                                Container(
-                                                  decoration: BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                    color: Colors.black
-                                                        .withOpacity(0.5),
-                                                  ),
-                                                  child: const Icon(
-                                                    Icons.play_arrow_rounded,
-                                                    size: 60,
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                    ),
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                        ),
-                      ),
+                      //       return StatefulBuilder(
+                      //         builder: (context, setInnerState) {
+                      //           return Container(
+                      //             margin: EdgeInsets.only(right: 10),
+                      //             width: 240,
+                      //             child: GestureDetector(
+                      //               onTap: () {
+                      //                 setInnerState(() {
+                      //                   showPlayer = true;
+                      //                 });
+                      //               },
+                      //               child: AnimatedSwitcher(
+                      //                 duration: const Duration(
+                      //                   milliseconds: 400,
+                      //                 ),
+                      //                 child: showPlayer
+                      //                     ? YoutubePlayer(
+                      //                         key: ValueKey(videoId),
+                      //                         controller:
+                      //                             YoutubePlayerController(
+                      //                               initialVideoId:
+                      //                                   videoId ?? '',
+                      //                               flags:
+                      //                                   const YoutubePlayerFlags(
+                      //                                     autoPlay: true,
+                      //                                     mute: false,
+                      //                                     enableCaption: false,
+                      //                                   ),
+                      //                             ),
+                      //                         showVideoProgressIndicator: true,
+                      //                         progressIndicatorColor: Theme.of(
+                      //                           context,
+                      //                         ).colorScheme.primary,
+                      //                       )
+                      //                     : Stack(
+                      //                         alignment: Alignment.center,
+                      //                         children: [
+                      //                           ClipRRect(
+                      //                             borderRadius:
+                      //                                 BorderRadius.circular(10),
+                      //                             child: Image.network(
+                      //                               thumbnailUrl,
+                      //                               width: double.infinity,
+                      //                               height: 200,
+                      //                               fit: BoxFit.cover,
+                      //                             ),
+                      //                           ),
+                      //                           Container(
+                      //                             decoration: BoxDecoration(
+                      //                               shape: BoxShape.circle,
+                      //                               color: Colors.black
+                      //                                   .withOpacity(0.5),
+                      //                             ),
+                      //                             child: const Icon(
+                      //                               Icons.play_arrow_rounded,
+                      //                               size: 60,
+                      //                               color: Colors.white,
+                      //                             ),
+                      //                           ),
+                      //                         ],
+                      //                       ),
+                      //               ),
+                      //             ),
+                      //           );
+                      //         },
+                      //       );
+                      //     },
+                      //   ),
+                      // ),
                       SizedBox(height: 30),
                       if (data.recommendations.isNotEmpty)
                         Row(
