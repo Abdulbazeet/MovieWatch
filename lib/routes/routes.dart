@@ -46,14 +46,6 @@ class AppRoutes {
           final tableType = extras['tableType'] as TableType;
           final movieId = extras['id']; // could be Movie OR Recommendations
 
-          // Movie? movie;
-          // Recommendations? recommendations;
-
-          // if (movieOrRec is Movie) {
-          //   movie = movieOrRec;
-          // } else if (movieOrRec is Recommendations) {
-          //   recommendations = movieOrRec;
-          // }
           return Details(movieId: movieId, tableType: tableType);
         },
       ),
@@ -61,15 +53,6 @@ class AppRoutes {
         path: '/tvshows-details',
         builder: (context, state) {
           final id = state.extra as int;
-          // final series = m['id'];
-          // RecommendedSeries? recommendedSeries;
-
-          // Movie? movie;
-          // if (series is RecommendedSeries) {
-          //   recommendedSeries = series;p
-          // } else if (series is Movie) {
-          //   movie = series;
-          // }
 
           return TvshowScreen(id: id);
         },
@@ -100,7 +83,7 @@ class AppRoutes {
           final extras = state.extra as Map<String, dynamic>;
           final id = extras['id'] as int;
           final name = extras['name'] as String;
-          return PersonDetails(personId: id,name: name, );
+          return PersonDetails(personId: id, name: name);
         },
       ),
     ],

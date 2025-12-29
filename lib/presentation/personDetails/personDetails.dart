@@ -1,8 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:movie_watch/config/enums.dart';
 import 'package:movie_watch/config/tmdb_config.dart';
 import 'package:movie_watch/data/notifiers/person_details-notifier.dart';
 import 'package:movie_watch/models/person/person-credits.dart';
@@ -103,20 +105,22 @@ class _PersonDetailsState extends ConsumerState<PersonDetails> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
-                            height: screensize * .22,
+                          CachedNetworkImage(
+                            imageUrl:
+                                '${TmdbConfig.img_url}original${data.personDetails.profile_path}',
+                            imageBuilder: (context, imageProvider) => Container(
+                              height: screensize * .22,
+                              width: MediaQuery.of(context).size.width *.3,
 
-                            decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(10),
+                              decoration: BoxDecoration(
+                                color: Colors.grey,
+                                borderRadius: BorderRadius.circular(10),
+                                image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
+                              ),
+                              clipBehavior: Clip.hardEdge,
                             ),
-                            clipBehavior: Clip.hardEdge,
-                            child: data.personDetails.profile_path != null
-                                ? Image.network(
-                                    '${TmdbConfig.img_url}original${data.personDetails.profile_path}',
-                                    fit: BoxFit.cover,
-                                  )
-                                : null,
+                            errorWidget: (context, url, error) =>
+                                Container(height: screensize * .22),
                           ),
                           SizedBox(height: 15),
                           Text(
@@ -207,85 +211,6 @@ class _PersonDetailsState extends ConsumerState<PersonDetails> {
                     itemBuilder: (context, index) {
                       final items = orderedMovieList[index];
 
-                      // final orderedList  = data.personCredits.sort((a, b) => b.popularity!.compareTo(a.popularity!),);
-                      // return Container(
-                      //   height: 150,
-                      //   width: 350,
-                      //   margin: EdgeInsets.only(right: 10),
-                      //   decoration: BoxDecoration(
-                      //     color: Theme.of(context).colorScheme.surface,
-                      //     borderRadius: BorderRadius.circular(10),
-                      //     boxShadow: [
-                      //       BoxShadow(
-                      //         color: Colors.black,
-                      //         offset: Offset(3, 3),
-                      //         blurRadius: 3,
-                      //         spreadRadius: 0,
-                      //       ),
-                      //     ],
-                      //   ),
-                      //   child: ClipRRect(
-                      //     borderRadius: BorderRadiusGeometry.circular(10),
-                      //     child: Row(
-                      //       children: [
-                      //         SizedBox(
-                      //           width: 100,
-
-                      //           child: items.poster_path != null
-                      //               ? Image.network(
-                      //                   "${TmdbConfig.img_url}original${items.poster_path}",
-                      //                   fit: BoxFit.cover,
-                      //                 )
-                      //               : null,
-                      //         ),
-
-                      //         Container(
-                      //           padding: EdgeInsets.symmetric(
-                      //             horizontal: 10,
-                      //             vertical: 10,
-                      //           ),
-                      //           child: Column(
-                      //             crossAxisAlignment: CrossAxisAlignment.start,
-
-                      //             children: [
-                      //               Text(
-                      //                 items.title!,
-                      //                 style: Theme.of(
-                      //                   context,
-                      //                 ).textTheme.bodyMedium,
-                      //               ),
-                      //               SizedBox(height: 10),
-                      //               Row(
-                      //                 children: [
-                      //                   Icon(
-                      //                     Icons.star,
-                      //                     color: Colors.yellow,
-                      //                     size: 16,
-                      //                   ),
-                      //                   SizedBox(height: 10),
-                      //                   SizedBox(width: 5),
-                      //                   Text(
-                      //                     "${items.vote_average!.toStringAsFixed(1)}/10",
-                      //                     style: Theme.of(
-                      //                       context,
-                      //                     ).textTheme.bodySmall,
-                      //                   ),
-                      //                 ],
-                      //               ),
-                      //               SizedBox(height: 10),
-                      //               Text(
-                      //                 items.character!,
-                      //                 style: Theme.of(
-                      //                   context,
-                      //                 ).textTheme.bodySmall,
-                      //               ),
-                      //             ],
-                      //           ),
-                      //         ),
-                      //       ],
-                      //     ),
-                      //   ),
-                      // );
                       return Container(
                         // height: 250,
                         width: 100,
@@ -333,54 +258,69 @@ class _PersonDetailsState extends ConsumerState<PersonDetails> {
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            Center(
-                              child: Text(
-                                DateFormat(
-                                  'yyyy',
-                                ).format(DateTime.parse(items.release_date!)),
+                        GestureDetector(
+                          onTap: () {
+                            if (items.media_type == 'movie') {
+                              context.push(
+                                '/details',
+                                extra: {
+                                  'tableType': TableType.movies,
+                                  'id': items.id,
+                                },
+                              );
+                            } else if (items.media_type == 'tv') {
+                              context.go('/tvshows-details', extra: items.id);
+                            }
+                          },
+                          child: Row(
+                            children: [
+                              Center(
+                                child: Text(
+                                  DateFormat(
+                                    'yyyy',
+                                  ).format(DateTime.parse(items.release_date!)),
+                                ),
                               ),
-                            ),
-                            SizedBox(width: 10),
-                            ClipRRect(
-                              borderRadius: BorderRadiusGeometry.circular(10),
-                              child: Container(
-                                height: 100,
-                                width: 80,
-                                color: Colors.grey,
-                                child: items.poster_path != null
-                                    ? Image.network(
-                                        "${TmdbConfig.img_url}original${items.poster_path}",
+                              SizedBox(width: 10),
+                              ClipRRect(
+                                borderRadius: BorderRadiusGeometry.circular(10),
+                                child: Container(
+                                  height: 100,
+                                  width: 80,
+                                  color: Colors.grey,
+                                  child: items.poster_path != null
+                                      ? Image.network(
+                                          "${TmdbConfig.img_url}original${items.poster_path}",
 
-                                        fit: BoxFit.cover,
-                                      )
-                                    : null,
+                                          fit: BoxFit.cover,
+                                        )
+                                      : null,
+                                ),
                               ),
-                            ),
-                            SizedBox(width: 10),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    items.title!,
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.bodyMedium,
-                                    maxLines: 2,
-                                  ),
-                                  Text(
-                                    "as ${items.character}",
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.bodySmall,
-                                  ),
-                                ],
+                              SizedBox(width: 10),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      items.title!,
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.bodyMedium,
+                                      maxLines: 2,
+                                    ),
+                                    Text(
+                                      "as ${items.character}",
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.bodySmall,
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                         SizedBox(height: 10),
                         Divider(
@@ -392,9 +332,14 @@ class _PersonDetailsState extends ConsumerState<PersonDetails> {
                     );
                   },
                 ),
+
                 ///
                 ///
-                  SizedBox(height: 10),
+                ///
+                ///
+                SizedBox(height: 20),
+                Text('Others', style: Theme.of(context).textTheme.bodyMedium),
+                SizedBox(height: 10),
                 ListView.builder(
                   itemCount: noDateList.length,
                   shrinkWrap: true,
@@ -405,11 +350,7 @@ class _PersonDetailsState extends ConsumerState<PersonDetails> {
                       children: [
                         Row(
                           children: [
-                            Center(
-                              child: Text(
-                                ''
-                              ),
-                            ),
+                            Center(child: Text('')),
                             SizedBox(width: 10),
                             ClipRRect(
                               borderRadius: BorderRadiusGeometry.circular(10),
