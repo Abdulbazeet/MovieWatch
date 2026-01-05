@@ -8,6 +8,7 @@ import 'package:movie_watch/config/enums.dart';
 import 'package:movie_watch/config/tmdb_config.dart';
 import 'package:movie_watch/data/notifiers/person_details-notifier.dart';
 import 'package:movie_watch/models/person/person-credits.dart';
+import 'package:shimmer/shimmer.dart';
 
 class PersonDetails extends ConsumerStatefulWidget {
   final int personId;
@@ -110,14 +111,35 @@ class _PersonDetailsState extends ConsumerState<PersonDetails> {
                                 '${TmdbConfig.img_url}original${data.personDetails.profile_path}',
                             imageBuilder: (context, imageProvider) => Container(
                               height: screensize * .22,
-                              width: MediaQuery.of(context).size.width *.3,
+                              width: MediaQuery.of(context).size.width * .3,
 
                               decoration: BoxDecoration(
                                 color: Colors.grey,
                                 borderRadius: BorderRadius.circular(10),
-                                image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
+                                image: DecorationImage(
+                                  image: imageProvider,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                               clipBehavior: Clip.hardEdge,
+                            ),
+                            placeholder: (context, url) => Shimmer.fromColors(
+                              baseColor: Theme.of(
+                                context,
+                              ).colorScheme.onSurface.withValues(alpha: .5),
+                              highlightColor: Theme.of(
+                                context,
+                              ).colorScheme.onSurface.withValues(alpha: .3),
+                              child: Container(
+                                width: MediaQuery.of(context).size.width * .3,
+                                height: screensize * .22,
+                                decoration: BoxDecoration(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.surfaceVariant,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
                             ),
                             errorWidget: (context, url, error) =>
                                 Container(height: screensize * .22),
@@ -202,7 +224,7 @@ class _PersonDetailsState extends ConsumerState<PersonDetails> {
                 ),
                 SizedBox(height: 10),
                 SizedBox(
-                  height: 190,
+                  height: 210,
                   child: ListView.builder(
                     itemCount: orderedMovieList.length,
                     scrollDirection: Axis.horizontal,
@@ -217,19 +239,45 @@ class _PersonDetailsState extends ConsumerState<PersonDetails> {
                         margin: EdgeInsets.only(right: 10),
                         child: Column(
                           children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-
-                              child: Container(
+                            CachedNetworkImage(
+                              imageUrl: items.poster_path != null
+                                  ? "${TmdbConfig.img_url}original${items.poster_path}"
+                                  : "${TmdbConfig.img_url}original${items.backdrop_path}",
+                              imageBuilder: (context, imageProvider) =>
+                                  Container(
+                                    height: 150,
+                                    width: 100,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      image: DecorationImage(
+                                        image: imageProvider,
+                                      ),
+                                    ),
+                                  ),
+                              placeholder: (context, url) => Shimmer.fromColors(
+                                baseColor: Theme.of(
+                                  context,
+                                ).colorScheme.onSurface.withValues(alpha: .5),
+                                highlightColor: Theme.of(
+                                  context,
+                                ).colorScheme.onSurface.withValues(alpha: .3),
+                                child: Container(
+                                  width: 100,
+                                  height: 150,
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.surfaceVariant,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                              ),
+                              errorWidget: (context, url, error) => Container(
                                 height: 150,
                                 width: 100,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Image.network(
-                                  "${TmdbConfig.img_url}original${items.poster_path}",
-                                  height: 150,
-                                  fit: BoxFit.cover,
+                                  color: Colors.grey,
                                 ),
                               ),
                             ),
@@ -237,6 +285,7 @@ class _PersonDetailsState extends ConsumerState<PersonDetails> {
                             Text(
                               items.title!,
                               style: Theme.of(context).textTheme.bodySmall,
+                              maxLines: 3,
                             ),
                           ],
                         ),
@@ -269,7 +318,7 @@ class _PersonDetailsState extends ConsumerState<PersonDetails> {
                                 },
                               );
                             } else if (items.media_type == 'tv') {
-                              context.go('/tvshows-details', extra: items.id);
+                              context.push('/tvshows-details', extra: items.id);
                             }
                           },
                           child: Row(
@@ -282,21 +331,58 @@ class _PersonDetailsState extends ConsumerState<PersonDetails> {
                                 ),
                               ),
                               SizedBox(width: 10),
-                              ClipRRect(
-                                borderRadius: BorderRadiusGeometry.circular(10),
-                                child: Container(
-                                  height: 100,
-                                  width: 80,
-                                  color: Colors.grey,
-                                  child: items.poster_path != null
-                                      ? Image.network(
-                                          "${TmdbConfig.img_url}original${items.poster_path}",
+                              CachedNetworkImage(
+                                imageUrl:                                     items.poster_path != null &&
+                                        items.poster_path!.isNotEmpty 
 
+                                    ? "${TmdbConfig.img_url}original${items.poster_path}"
+                                    : "${TmdbConfig.img_url}original${items.backdrop_path}",
+                                imageBuilder: (context, imageProvider) =>
+                                    Container(
+                                      height: 120,
+                                      width: 80,
+
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        image: DecorationImage(
+                                          image: imageProvider,
                                           fit: BoxFit.cover,
-                                        )
-                                      : null,
+                                        ),
+                                      ),
+                                    ),
+                                placeholder: (context, url) =>
+                                    Shimmer.fromColors(
+                                      baseColor: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface
+                                          .withValues(alpha: .5),
+                                      highlightColor: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface
+                                          .withValues(alpha: .3),
+                                      child: Container(
+                                        width: 80,
+                                        height: 120,
+                                        decoration: BoxDecoration(
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.surfaceVariant,
+                                          borderRadius: BorderRadius.circular(
+                                            10,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                errorWidget: (context, url, error) => Container(
+                                  height: 120,
+                                  width: 80,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.grey,
+                                  ),
                                 ),
                               ),
+
                               SizedBox(width: 10),
                               Expanded(
                                 child: Column(
@@ -315,6 +401,18 @@ class _PersonDetailsState extends ConsumerState<PersonDetails> {
                                       style: Theme.of(
                                         context,
                                       ).textTheme.bodySmall,
+                                    ),
+                                    Text(
+                                      items.media_type.toUpperCase(),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall
+                                          ?.copyWith(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSecondary
+                                                .withValues(alpha: .4),
+                                          ),
                                     ),
                                   ],
                                 ),
@@ -348,48 +446,111 @@ class _PersonDetailsState extends ConsumerState<PersonDetails> {
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            Center(child: Text('')),
-                            SizedBox(width: 10),
-                            ClipRRect(
-                              borderRadius: BorderRadiusGeometry.circular(10),
-                              child: Container(
-                                height: 100,
-                                width: 80,
-                                color: Colors.grey,
-                                child: items.poster_path != null
-                                    ? Image.network(
-                                        "${TmdbConfig.img_url}original${items.poster_path}",
+                        GestureDetector(
+                          onTap: () {
+                            if (items.media_type == 'movie') {
+                              context.push(
+                                '/details',
+                                extra: {
+                                  'tableType': TableType.movies,
+                                  'id': items.id,
+                                },
+                              );
+                            } else if (items.media_type == 'tv') {
+                              context.push('/tvshows-details', extra: items.id);
+                            }
+                          },
+                          child: Row(
+                            children: [
+                              Center(child: Text('')),
+                              SizedBox(width: 10),
+                              CachedNetworkImage(
+                                imageUrl:
+                                    items.poster_path != null && items.poster_path!.isNotEmpty 
+                                    ? "${TmdbConfig.img_url}original${items.poster_path}"
+                                    : "${TmdbConfig.img_url}original${items.backdrop_path}",
+                                imageBuilder: (context, imageProvider) =>
+                                    Container(
+                                      height: 120,
+                                      width: 80,
 
-                                        fit: BoxFit.cover,
-                                      )
-                                    : null,
-                              ),
-                            ),
-                            SizedBox(width: 10),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    items.title!,
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.bodyMedium,
-                                    maxLines: 2,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        image: DecorationImage(
+                                          image: imageProvider,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                placeholder: (context, url) =>
+                                    Shimmer.fromColors(
+                                      baseColor: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface
+                                          .withValues(alpha: .5),
+                                      highlightColor: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface
+                                          .withValues(alpha: .3),
+                                      child: Container(
+                                        width: 80,
+                                        height: 120,
+                                        decoration: BoxDecoration(
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.surfaceVariant,
+                                          borderRadius: BorderRadius.circular(
+                                            10,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                errorWidget: (context, url, error) => Container(
+                                  height: 120,
+                                  width: 80,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.grey,
                                   ),
-                                  Text(
-                                    "as ${items.character ?? ''}",
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.bodySmall,
-                                  ),
-                                ],
+                                ),
                               ),
-                            ),
-                          ],
+
+                              SizedBox(width: 10),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      items.title!,
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.bodyMedium,
+                                      maxLines: 2,
+                                    ),
+                                    Text(
+                                      "as ${items.character ?? ''}",
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.bodySmall,
+                                    ),
+                                    Text(
+                                      items.media_type.toUpperCase(),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall
+                                          ?.copyWith(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSecondary
+                                                .withValues(alpha: .4),
+                                          ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                         SizedBox(height: 10),
                         Divider(

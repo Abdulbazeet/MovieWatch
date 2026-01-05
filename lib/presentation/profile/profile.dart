@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
  
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -68,14 +69,17 @@ class _ProfileState extends State<Profile> {
         padding: EdgeInsets.symmetric(horizontal: 20 , vertical: 20 ),
         child: ListView(
           children: [
-            profilesettigs(
-              subtitles: [
-                'Edit profile',
-                'Email & passord',
-                'Manage linked accounts',
-                'Language & region',
-              ],
-              title: 'Profile',
+            GestureDetector(
+              onTap: (){context.go('/onboard');},
+              child: profilesettigs(
+                subtitles: [
+                  'Edit profile',
+                  'Email & passord',
+                  'Manage linked accounts',
+                  'Language & region',
+                ],
+                title: 'Profile',
+              ),
             ),
             SizedBox(height: 20 ),
             profilesettigs(

@@ -5,45 +5,60 @@ import 'package:riverpod/riverpod.dart';
 
 class AuthNotifier extends StateNotifier<AsyncValue<User?>> {
   final AuthRepository _authRepository;
-  AuthNotifier(this._authRepository) : super(const AsyncValue.loading()) {
-    _authRepository.authStateChanges.listen(
-      (user) => state = AsyncValue.data(user),
-    );
+  AuthNotifier(this._authRepository) : super(const AsyncData(null)) {
+    _authRepository.authStateChanges.listen((user) => state = AsyncData(user));
   }
 
   Future signInWithEmail(String email, String password) async {
-    try {
-      state = const AsyncValue.loading();
+    state = const AsyncLoading();
+
+    // try {
+
+    // } catch (e, str) {
+    //   state = AsyncError(e, str);
+    // }
+    state = await AsyncValue.guard(() async {
       await _authRepository.signInWithEmail(email, password);
-    } catch (e, str) {
-      state = AsyncValue.error(e, str);
-    }
+      return _authRepository.currentUser;
+    });
   }
 
   Future signUpWithEmail(String email, String password) async {
-    try {
-      state = AsyncValue.loading();
+    state = const AsyncLoading();
+    // try {
+    // } catch (e, str) {
+    //   state = AsyncError(e, str);
+    // }
+    state = await AsyncValue.guard(() async {
       await _authRepository.signUpWithEmail(email, password);
-    } catch (e, str) {
-      state = AsyncValue.error(e, str);
-    }
+      return _authRepository.currentUser;
+    });
   }
 
   Future googleSignIn() async {
-    try {
-      state = AsyncValue.loading();
+    state = const AsyncLoading();
+    // try {
+    //   // state = AsyncData(_authRepository.)
+    // } catch (e, str) {
+    //   state = AsyncError(e, str);
+    // }
+    state = await AsyncValue.guard(() async {
       await _authRepository.googleSignIn();
-    } catch (e, str) {
-      state = AsyncValue.error(e, str);
-    }
+      return _authRepository.currentUser;
+    });
   }
 
   Future facebookSignIn() async {
-    try {
-      state = AsyncValue.loading();
+    state = const AsyncLoading();
+
+    // try {
+    // } catch (e, str) {
+    //   state = AsyncError(e, str);
+    // }
+    state = await AsyncValue.guard(() async {
       await _authRepository.signInWIthFacebook();
-    } catch (e, str) {
-      state = AsyncValue.error(e, str);
-    }
+
+      return _authRepository.currentUser;
+    });
   }
 }

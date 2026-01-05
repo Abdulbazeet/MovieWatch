@@ -69,15 +69,50 @@ class _DetailsState extends ConsumerState<Details> {
                   child: Stack(
                     children: [
                       Positioned.fill(
-                        child: Container(
-                          color: Colors.grey,
-                          child: Image.network(
-                            data.movieDetails.backdrop_path.isNotEmpty
-                                ? '${TmdbConfig.img_url}original${data.movieDetails.backdrop_path}'
-                                : '${TmdbConfig.img_url}original${data.movieDetails.poster_path}',
-                            fit: BoxFit.cover,
+                        child: CachedNetworkImage(
+                          imageUrl: data.movieDetails.backdrop_path.isNotEmpty
+                              ? '${TmdbConfig.img_url}original${data.movieDetails.backdrop_path}'
+                              : '${TmdbConfig.img_url}original${data.movieDetails.poster_path}',
+                          imageBuilder: (context, imageProvider) => Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          placeholder: (context, url) => Shimmer.fromColors(
+                            baseColor: Theme.of(
+                              context,
+                            ).colorScheme.onSurface.withValues(alpha: .5),
+                            highlightColor: Theme.of(
+                              context,
+                            ).colorScheme.onSurface.withValues(alpha: .3),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.surfaceVariant,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                          ),
+                          errorWidget: (context, url, error) => Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.grey,
+                            ),
                           ),
                         ),
+
+                        // Container(
+                        //   color: Colors.grey,
+                        //   child: Image.network(
+
+                        //     fit: BoxFit.cover,
+                        //   ),
+                        // ),
                       ),
                       Positioned.fill(
                         child: IgnorePointer(
@@ -127,7 +162,7 @@ class _DetailsState extends ConsumerState<Details> {
                                     color: Colors.white,
                                   ),
                             ),
-                            SizedBox(height: 10),
+
                             Row(
                               children: [
                                 Text(
@@ -220,12 +255,22 @@ class _DetailsState extends ConsumerState<Details> {
                                 ),
                               ],
                             ),
+                            SizedBox(height: 10),
+                            Row(
+                              children: [
+                                IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(Icons.favorite),
+                                ),
+                              ],
+                            ),
                           ],
                         ),
                       ),
                     ],
                   ),
                 ),
+
                 SizedBox(height: 30),
 
                 Padding(
@@ -240,23 +285,73 @@ class _DetailsState extends ConsumerState<Details> {
                           Stack(
                             children: [
                               Align(
-                                child: Container(
-                                  height: 150,
-                                  width: 100,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(10),
-                                      bottomRight: Radius.circular(10),
-                                      bottomLeft: Radius.circular(10),
-                                    ),
-                                    image: DecorationImage(
-                                      fit: BoxFit.cover,
-                                      image: NetworkImage(
-                                        '${TmdbConfig.img_url}w300${data.movieDetails.poster_path}',
+                                child: CachedNetworkImage(
+                                  imageUrl:
+                                      '${TmdbConfig.img_url}w300${data.movieDetails.poster_path}',
+
+                                  imageBuilder: (context, imageProvider) =>
+                                      Container(
+                                        height: 150,
+                                        width: 100,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.only(
+                                            topRight: Radius.circular(10),
+                                            bottomRight: Radius.circular(10),
+                                            bottomLeft: Radius.circular(10),
+                                          ),
+                                          image: DecorationImage(
+                                            image: imageProvider,
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
+                                  placeholder: (context, url) =>
+                                      Shimmer.fromColors(
+                                        baseColor: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface
+                                            .withValues(alpha: .5),
+                                        highlightColor: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface
+                                            .withValues(alpha: .3),
+                                        child: Container(
+                                          height: 150,
+                                          width: 100,
+                                          decoration: BoxDecoration(
+                                            color: Theme.of(
+                                              context,
+                                            ).colorScheme.surfaceVariant,
+                                            borderRadius: BorderRadius.circular(
+                                              10,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                  errorWidget: (context, url, error) =>
+                                      Container(
+                                        height: 150,
+                                        width: 100,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(
+                                            10,
+                                          ),
+                                          color: Colors.grey,
+                                        ),
+                                      ),
                                 ),
+
+                                // Container(
+
+                                //   decoration: BoxDecoration(
+
+                                //     ),
+                                //     image: DecorationImage(
+                                //       fit: BoxFit.cover,
+                                //       image: NetworkImage(
+                                //       ),
+                                //     ),
+                                //   ),
+                                // ),
                               ),
                               Positioned(
                                 top: 0,
@@ -432,203 +527,161 @@ class _DetailsState extends ConsumerState<Details> {
 
                         Divider(color: Theme.of(context).colorScheme.onSurface),
                       ],
-                      SizedBox(height: 30),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Top Cast',
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
-                          Text(
-                            'See all',
-                            style: Theme.of(context).textTheme.labelSmall,
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 10),
-                      SizedBox(
-                        height: 260,
-                        child: ListView.builder(
-                          physics: const BouncingScrollPhysics(),
-                          shrinkWrap: true,
-                          clipBehavior: Clip.none,
-                          itemCount: casts.length,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) {
-                            return Container(
-                              width: 130,
-                              padding: EdgeInsets.symmetric(
-                                vertical: 20,
-                                //  horizontal: 10,
-                              ).copyWith(top: 0),
-                              margin: EdgeInsets.only(right: 20),
-                              decoration: BoxDecoration(
-                                // color: Colors.grey
-                                color: Theme.of(context).colorScheme.surface,
-                                borderRadius: BorderRadius.circular(10),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black,
-                                    offset: Offset(3, 3),
-                                    blurRadius: 3,
-                                    spreadRadius: 0,
+                      if (casts.isNotEmpty) ...[
+                        SizedBox(height: 30),
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Top Cast',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                            Text(
+                              'See all',
+                              style: Theme.of(context).textTheme.labelSmall,
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 10),
+                        SizedBox(
+                          height: 260,
+                          child: ListView.builder(
+                            physics: const BouncingScrollPhysics(),
+                            shrinkWrap: true,
+                            clipBehavior: Clip.none,
+                            itemCount: casts.length,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              return GestureDetector(
+                                onTap: () {
+                                  context.push(
+                                    '/person-details',
+                                    extra: {
+                                      'id': casts[index].id,
+                                      'name': casts[index].name,
+                                    },
+                                  );
+                                },
+                                child: Container(
+                                  width: 130,
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 20,
+                                    //  horizontal: 10,
+                                  ).copyWith(top: 0),
+                                  margin: EdgeInsets.only(right: 20),
+                                  decoration: BoxDecoration(
+                                    // color: Colors.grey
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.surface,
+                                    borderRadius: BorderRadius.circular(10),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black,
+                                        offset: Offset(3, 3),
+                                        blurRadius: 3,
+                                        spreadRadius: 0,
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
 
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(10),
-                                      topRight: Radius.circular(10),
-                                    ),
-                                    child: Container(
-                                      width: 130, // = radius * 2
-                                      height: 150,
-                                      color: Colors.grey,
-
-                                      child: Image.network(
-                                        casts[index].profilePath!.isNotEmpty
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      CachedNetworkImage(
+                                        imageUrl:
+                                            casts[index].profilePath!.isNotEmpty
                                             ? '${TmdbConfig.img_url}original${casts[index].profilePath}'
                                             : casts[index].gender == 1
                                             ? 'assets/images/female.jpeg'
                                             : casts[index].gender == 2
                                             ? 'assets/images/male.png'
                                             : 'assets/images/unknown.png',
-                                        fit: BoxFit.cover,
+                                        imageBuilder:
+                                            (
+                                              context,
+                                              imageProvider,
+                                            ) => Container(
+                                              width: 130, // = radius * 2
+                                              height: 150,
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.only(
+                                                  topLeft: Radius.circular(10),
+                                                  topRight: Radius.circular(10),
+                                                ),
+                                                image: DecorationImage(
+                                                  image: imageProvider,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                            ),
+                                        errorWidget: (context, url, error) {
+                                          return Container(
+                                            width: 130, // = radius * 2
+                                            height: 150,
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(10),
+                                                bottomLeft: Radius.circular(10),
+                                              ),
+                                              color: Colors.grey,
+                                            ),
+                                          );
+                                        },
+                                        placeholder: (context, url) =>
+                                            Shimmer.fromColors(
+                                              baseColor: Theme.of(context)
+                                                  .colorScheme
+                                                  .onSurface
+                                                  .withValues(alpha: .5),
+                                              highlightColor: Theme.of(context)
+                                                  .colorScheme
+                                                  .onSurface
+                                                  .withValues(alpha: .3),
+                                              child: Container(
+                                                width: 130, // = radius * 2
+                                                height: 150,
+                                                decoration: BoxDecoration(
+                                                  color: Theme.of(
+                                                    context,
+                                                  ).colorScheme.surfaceVariant,
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                              ),
+                                            ),
                                       ),
-                                    ),
+
+                                      SizedBox(height: 5),
+                                      Text(
+                                        casts[index].originalName,
+                                        textAlign: TextAlign.center,
+                                        maxLines: 4,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall
+                                            ?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                      ),
+                                      Text(
+                                        casts[index].character,
+                                        textAlign: TextAlign.center,
+                                        maxLines: 4,
+                                        style: Theme.of(
+                                          context,
+                                        ).textTheme.bodySmall,
+                                      ),
+                                    ],
                                   ),
-                                  SizedBox(height: 5),
-                                  Text(
-                                    casts[index].originalName,
-                                    textAlign: TextAlign.center,
-                                    maxLines: 4,
-                                    style: Theme.of(context).textTheme.bodySmall
-                                        ?.copyWith(fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                    casts[index].character,
-                                    textAlign: TextAlign.center,
-                                    maxLines: 4,
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.bodySmall,
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
+                                ),
+                              );
+                            },
+                          ),
                         ),
-                      ),
-                      // SizedBox(height: 30),
-                      // Row(
-                      //   children: [
-                      //     Text(
-                      //       'Trailers',
-                      //       style: Theme.of(context).textTheme.bodyMedium,
-                      //     ),
-                      //   ],
-                      // ),
-                      // SizedBox(height: 10),
-                      // SizedBox(
-                      //   height: 150,
-                      //   child: ListView.builder(
-                      //     // physics: const NeverScrollableScrollPhysics(),
-                      //     shrinkWrap: true,
-                      //     itemCount: data.video.results.length,
-                      //     scrollDirection: Axis.horizontal,
-                      //     itemBuilder: (context, index) {
-                      //       final video = data.video.results[index];
+                      ],
 
-                      //       // Only YouTube videos are supported
-                      //       if (video.site != 'YouTube') {
-                      //         return const SizedBox.shrink();
-                      //       }
-
-                      //       final videoId = YoutubePlayer.convertUrlToId(
-                      //         'https://www.youtube.com/watch?v=${video.key}',
-                      //       );
-
-                      //       // Thumbnail URL from YouTube
-                      //       final thumbnailUrl =
-                      //           'https://img.youtube.com/vi/$videoId/hqdefault.jpg';
-
-                      //       // Local state to control when player loads
-                      //       bool showPlayer = false;
-
-                      //       return StatefulBuilder(
-                      //         builder: (context, setInnerState) {
-                      //           return Container(
-                      //             margin: EdgeInsets.only(right: 10),
-                      //             width: 240,
-                      //             child: GestureDetector(
-                      //               onTap: () {
-                      //                 setInnerState(() {
-                      //                   showPlayer = true;
-                      //                 });
-                      //               },
-                      //               child: AnimatedSwitcher(
-                      //                 duration: const Duration(
-                      //                   milliseconds: 400,
-                      //                 ),
-                      //                 child: showPlayer
-                      //                     ? YoutubePlayer(
-                      //                         key: ValueKey(videoId),
-                      //                         controller:
-                      //                             YoutubePlayerController(
-                      //                               initialVideoId:
-                      //                                   videoId ?? '',
-                      //                               flags:
-                      //                                   const YoutubePlayerFlags(
-                      //                                     autoPlay: true,
-                      //                                     mute: false,
-                      //                                     enableCaption: false,
-                      //                                   ),
-                      //                             ),
-                      //                         showVideoProgressIndicator: true,
-                      //                         progressIndicatorColor: Theme.of(
-                      //                           context,
-                      //                         ).colorScheme.primary,
-                      //                       )
-                      //                     : Stack(
-                      //                         alignment: Alignment.center,
-                      //                         children: [
-                      //                           ClipRRect(
-                      //                             borderRadius:
-                      //                                 BorderRadius.circular(10),
-                      //                             child: Image.network(
-                      //                               thumbnailUrl,
-                      //                               width: double.infinity,
-                      //                               height: 200,
-                      //                               fit: BoxFit.cover,
-                      //                             ),
-                      //                           ),
-                      //                           Container(
-                      //                             decoration: BoxDecoration(
-                      //                               shape: BoxShape.circle,
-                      //                               color: Colors.black
-                      //                                   .withOpacity(0.5),
-                      //                             ),
-                      //                             child: const Icon(
-                      //                               Icons.play_arrow_rounded,
-                      //                               size: 60,
-                      //                               color: Colors.white,
-                      //                             ),
-                      //                           ),
-                      //                         ],
-                      //                       ),
-                      //               ),
-                      //             ),
-                      //           );
-                      //         },
-                      //       );
-                      //     },
-                      //   ),
-                      // ),
                       SizedBox(height: 30),
                       if (data.recommendations.isNotEmpty)
                         Row(

@@ -1,21 +1,38 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:movie_watch/presentation/authentication/auth_provider/auth_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SignUp extends StatefulWidget {
+class SignUp extends ConsumerStatefulWidget {
   const SignUp({super.key});
 
   @override
-  State<SignUp> createState() => _SignUpState();
+  ConsumerState<SignUp> createState() => _SignUpState();
 }
 
-class _SignUpState extends State<SignUp> {
+class _SignUpState extends ConsumerState<SignUp> {
   final _email = TextEditingController();
   final _password = TextEditingController();
   bool _visible = true;
   @override
   Widget build(BuildContext context) {
+    final authProvider = ref.watch(authControllerProvider);
+    final authNotifier = ref.watch(authControllerProvider.notifier);
+    ref.listen(authControllerProvider, (previous, next) {
+      if (next is AsyncError) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(next.error.toString()),
+            duration: const Duration(seconds: 4),
+          ),
+        );
+      } else if (next is AsyncData && next.value != null) {
+        context.go('/sign-in');
+      }
+    });
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -147,7 +164,25 @@ class _SignUpState extends State<SignUp> {
                   ],
                 ),
                 SizedBox(height: 20),
-                ElevatedButton(onPressed: () {}, child: Text('Sign up')),
+                ElevatedButton(
+                  onPressed: authProvider.isLoading
+                      ? null
+                      : () {
+                          authNotifier.signUpWithEmail(
+                            _email.text,
+                            _password.text,
+                          );
+                        },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: authProvider.isLoading
+                        ? Theme.of(context).colorScheme.onSecondary
+                        : Theme.of(context).colorScheme.primary,
+                  ),
+                  child: authProvider.isLoading
+                      ? CircularProgressIndicator.adaptive()
+                      : Text('Sign up'),
+                ),
+
                 SizedBox(height: 20),
                 RichText(
                   text: TextSpan(
@@ -192,7 +227,13 @@ class _SignUpState extends State<SignUp> {
                             context,
                           ).colorScheme.surface,
                         ),
-                        onPressed: () {},
+                        onPressed: 
+                        // authProvider.isLoading
+                        //     ? null
+                        //     : 
+                            () {
+                                authNotifier.facebookSignIn();
+                              },
                         child: Image.asset('assets/icons/facebook (1).png'),
                       ),
                     ),
@@ -209,7 +250,12 @@ class _SignUpState extends State<SignUp> {
                             context,
                           ).colorScheme.surface,
                         ),
-                        onPressed: () {},
+                        onPressed:
+                        
+                        //  authProvider.isLoading ? null :  
+                         () {
+                          authNotifier.googleSignIn();
+                        },
                         child: Image.asset('assets/icons/gmail.png'),
                       ),
                     ),

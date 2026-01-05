@@ -8,14 +8,14 @@ final authRepositoryProvider = Provider<AuthRepository>(
   (ref) => AuthRepository(),
 );
 
-final authControlerProvider =
+final authControllerProvider =
     StateNotifierProvider<AuthNotifier, AsyncValue<User?>>((ref) {
       final _authRepository = ref.watch(authRepositoryProvider);
 
       return AuthNotifier(_authRepository);
     });
 
-final authStaterovider = StreamProvider<User?>((ref) {
+final authStateprovider = StreamProvider<User?>((ref) {
   final repo = ref.watch(authRepositoryProvider);
   return repo.authStateChanges;
 });

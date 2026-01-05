@@ -29,7 +29,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final userState = ref.watch(authStaterovider);
+    final userState = ref.watch(authStateprovider);
 
     return userState.when(
       data: (user) {

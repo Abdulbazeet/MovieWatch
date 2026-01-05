@@ -8,12 +8,19 @@ enum MovieType {
   upcoming,
   airingToday,
 }
-enum bottomType{
-  trailers,
-  recommendations
-}
-enum mediaTYpe{
+
+enum bottomType { trailers, recommendations }
+
+enum MediaType {
   person,
   movie,
-  tv
+  tv;
+
+  String get value => name;
+  static MediaType fromString(String value) {
+    return MediaType.values.firstWhere(
+      (e) => e.name == value,
+      orElse: () => MediaType.movie, // safe fallback
+    );
+  }
 }

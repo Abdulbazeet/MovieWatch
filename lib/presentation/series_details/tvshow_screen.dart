@@ -30,9 +30,7 @@ class _TvshowScreenState extends ConsumerState<TvshowScreen> {
   // final size = MediaQuery.of(context).size
   @override
   Widget build(BuildContext context) {
-    final details = ref.watch(
-      tvseriesDetailsNotifierProvider(widget.id),
-    );
+    final details = ref.watch(tvseriesDetailsNotifierProvider(widget.id));
     // final t = ref.watch(test(widget.currentMovie!.id));
     //  print(t.value![0].name);
     final screensize = MediaQuery.of(context).size.height;
@@ -368,7 +366,6 @@ class _TvshowScreenState extends ConsumerState<TvshowScreen> {
             // final date = DateFormat(
             //   'yyyy',
             // ).format(DateTime.parse(data.tvshwDetails.lastAirDate));
-           
 
             final firstAir = data.tvshwDetails.firstAirDate.isNotEmpty
                 ? DateFormat(
@@ -404,7 +401,6 @@ class _TvshowScreenState extends ConsumerState<TvshowScreen> {
             final List<Season> seasons = data.tvshwDetails.seasons
                 // .where((element) => element.knownForDepartment == 'Acting')
                 .toList();
-           
 
             final episodeDate = lastEpisode != null
                 ? DateFormat(
@@ -419,16 +415,40 @@ class _TvshowScreenState extends ConsumerState<TvshowScreen> {
                   child: Stack(
                     children: [
                       Positioned.fill(
-                        child: Container(
-                          color: Colors.grey,
-                          child: Image.network(
-                            data.tvshwDetails.backdropPath != null &&
-                                    data.tvshwDetails.backdropPath!.isNotEmpty
-                                ? '${TmdbConfig.img_url}original${data.tvshwDetails.backdropPath}'
-                                : '${TmdbConfig.img_url}original${data.tvshwDetails.posterPath }',
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) =>
-                                Container(color: Colors.grey),
+                        child: CachedNetworkImage(
+                          imageUrl:
+                              data.tvshwDetails.backdropPath != null &&
+                                  data.tvshwDetails.backdropPath!.isNotEmpty
+                              ? '${TmdbConfig.img_url}original${data.tvshwDetails.backdropPath}'
+                              : '${TmdbConfig.img_url}original${data.tvshwDetails.posterPath}',
+
+                          imageBuilder: (context, imageProvider) => Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
+                            ),
+                          ),
+                          placeholder: (context, url) => Shimmer.fromColors(
+                            baseColor: Theme.of(
+                              context,
+                            ).colorScheme.onSurface.withValues(alpha: .5),
+                            highlightColor: Theme.of(
+                              context,
+                            ).colorScheme.onSurface.withValues(alpha: .3),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.surfaceVariant,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                          ),
+                          errorWidget: (context, url, error) => Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.grey,
+                            ),
                           ),
                         ),
                       ),
@@ -480,6 +500,15 @@ class _TvshowScreenState extends ConsumerState<TvshowScreen> {
                                     fontWeight: FontWeight.bold,
                                   ),
                             ),
+                            // SizedBox(hei)
+                            //  Text(
+                            //   data.tvshwDetails.name,
+                            //   style: Theme.of(context).textTheme.bodyLarge
+                            //       ?.copyWith(
+                            //         color: Colors.white,
+                            //         fontWeight: FontWeight.bold,
+                            //       ),
+                            // ),
 
                             Row(
                               children: [
@@ -903,83 +932,96 @@ class _TvshowScreenState extends ConsumerState<TvshowScreen> {
                                   clipBehavior: Clip.none,
 
                                   itemBuilder: (context, index) {
-                                    return Container(
-                                      width: 130,
-                                      padding: EdgeInsets.symmetric(
-                                        vertical: 0,
-                                        //  horizontal: 10,
-                                      ).copyWith(top: 0),
-                                      margin: EdgeInsets.only(right: 20),
-                                      decoration: BoxDecoration(
-                                        // color: Colors.grey
-                                        color: Theme.of(
-                                          context,
-                                        ).colorScheme.surface,
-                                        borderRadius: BorderRadius.circular(10),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.black,
-                                            offset: Offset(3, 3),
-                                            blurRadius: 3,
-                                            spreadRadius: 0,
+                                    return GestureDetector(
+                                      onTap: () {
+                                        context.push(
+                                          '/person-details',
+                                          extra: {
+                                            'id': casts[index].id,
+                                            'name': casts[index].name,
+                                          },
+                                        );
+                                      },
+                                      child: Container(
+                                        width: 130,
+                                        padding: EdgeInsets.symmetric(
+                                          vertical: 0,
+                                          //  horizontal: 10,
+                                        ).copyWith(top: 0),
+                                        margin: EdgeInsets.only(right: 20),
+                                        decoration: BoxDecoration(
+                                          // color: Colors.grey
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.surface,
+                                          borderRadius: BorderRadius.circular(
+                                            10,
                                           ),
-                                        ],
-                                      ),
-
-                                      child: Column(
-                                        children: [
-                                          ClipRRect(
-                                            borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(10),
-                                              topRight: Radius.circular(10),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black,
+                                              offset: Offset(3, 3),
+                                              blurRadius: 3,
+                                              spreadRadius: 0,
                                             ),
-                                            child: Container(
-                                              width: 130, // = radius * 2
-                                              height: 150,
-                                              color: Colors.grey,
-                                              child: Image.network(
-                                                casts[index]
-                                                        .profilePath!
-                                                        .isNotEmpty
-                                                    ? '${TmdbConfig.img_url}original${casts[index].profilePath}'
-                                                    : casts[index].gender == 1
-                                                    ? 'assets/images/female.jpeg'
-                                                    : casts[index].gender == 2
-                                                    ? 'assets/images/male.png'
-                                                    : 'assets/images/unknown.png',
-                                                fit: BoxFit.cover,
+                                          ],
+                                        ),
+
+                                        child: Column(
+                                          children: [
+                                            ClipRRect(
+                                              borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(10),
+                                                topRight: Radius.circular(10),
+                                              ),
+                                              child: Container(
+                                                width: 130, // = radius * 2
+                                                height: 150,
+                                                color: Colors.grey,
+                                                child: Image.network(
+                                                  casts[index]
+                                                          .profilePath!
+                                                          .isNotEmpty
+                                                      ? '${TmdbConfig.img_url}original${casts[index].profilePath}'
+                                                      : casts[index].gender == 1
+                                                      ? 'assets/images/female.jpeg'
+                                                      : casts[index].gender == 2
+                                                      ? 'assets/images/male.png'
+                                                      : 'assets/images/unknown.png',
+                                                  fit: BoxFit.cover,
+                                                ),
                                               ),
                                             ),
-                                          ),
 
-                                          Text(
-                                            casts[index].originalName,
-                                            textAlign: TextAlign.center,
-                                            maxLines: 4,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodySmall
-                                                ?.copyWith(
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                          ),
-                                          Text(
-                                            casts[index].roles[0].character,
-                                            textAlign: TextAlign.center,
-                                            maxLines: 4,
-                                            style: Theme.of(
-                                              context,
-                                            ).textTheme.bodySmall,
-                                          ),
-                                          Text(
-                                            "${casts[index].roles[0].episodeCount} episodes",
-                                            textAlign: TextAlign.center,
-                                            maxLines: 4,
-                                            style: Theme.of(
-                                              context,
-                                            ).textTheme.bodySmall,
-                                          ),
-                                        ],
+                                            Text(
+                                              casts[index].originalName,
+                                              textAlign: TextAlign.center,
+                                              maxLines: 4,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodySmall
+                                                  ?.copyWith(
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                            ),
+                                            Text(
+                                              casts[index].roles[0].character,
+                                              textAlign: TextAlign.center,
+                                              maxLines: 4,
+                                              style: Theme.of(
+                                                context,
+                                              ).textTheme.bodySmall,
+                                            ),
+                                            Text(
+                                              "${casts[index].roles[0].episodeCount} episodes",
+                                              textAlign: TextAlign.center,
+                                              maxLines: 4,
+                                              style: Theme.of(
+                                                context,
+                                              ).textTheme.bodySmall,
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     );
                                   },
@@ -1015,21 +1057,72 @@ class _TvshowScreenState extends ConsumerState<TvshowScreen> {
                                     onTap: () => showEpisodeDetails(),
                                     child: Row(
                                       children: [
-                                        ClipRRect(
-                                          borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(10),
-                                            bottomLeft: Radius.circular(10),
-                                          ),
-                                          child: Container(
-                                            width: 120,
-                                            height: 200,
-                                            decoration: BoxDecoration(),
-                                            child: Image.network(
+                                        CachedNetworkImage(
+                                          imageUrl:
                                               "${TmdbConfig.img_url}original${lastEpisode.stillPath}",
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
+                                          imageBuilder:
+                                              (
+                                                context,
+                                                imageProvider,
+                                              ) => Container(
+                                                width: 120,
+                                                height: 200,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.only(
+                                                        topLeft:
+                                                            Radius.circular(10),
+                                                        bottomLeft:
+                                                            Radius.circular(10),
+                                                      ),
+                                                  image: DecorationImage(
+                                                    image: imageProvider,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                ),
+                                              ),
+                                          errorWidget: (context, url, error) {
+                                            return Container(
+                                              width: 120,
+                                              height: 200,
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.only(
+                                                  topLeft: Radius.circular(10),
+                                                  bottomLeft: Radius.circular(
+                                                    10,
+                                                  ),
+                                                ),
+                                                color: Colors.grey,
+                                              ),
+                                            );
+                                          },
+                                          placeholder: (context, url) =>
+                                              Shimmer.fromColors(
+                                                baseColor: Theme.of(context)
+                                                    .colorScheme
+                                                    .onSurface
+                                                    .withValues(alpha: .5),
+                                                highlightColor:
+                                                    Theme.of(context)
+                                                        .colorScheme
+                                                        .onSurface
+                                                        .withValues(alpha: .3),
+                                                child: Container(
+                                                  width: 120,
+                                                  height: 200,
+                                                  decoration: BoxDecoration(
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .surfaceVariant,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          10,
+                                                        ),
+                                                  ),
+                                                ),
+                                              ),
                                         ),
+
                                         Expanded(
                                           child: Padding(
                                             padding: EdgeInsets.symmetric(

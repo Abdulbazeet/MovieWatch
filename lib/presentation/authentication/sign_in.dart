@@ -1,22 +1,38 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:movie_watch/presentation/authentication/auth_provider/auth_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SignIn extends StatefulWidget {
+class SignIn extends ConsumerStatefulWidget {
   const SignIn({super.key});
 
   @override
-  State<SignIn> createState() => _SignInState();
+  ConsumerState<SignIn> createState() => _SignInState();
 }
 
-class _SignInState extends State<SignIn> {
+class _SignInState extends ConsumerState<SignIn> {
   final _email = TextEditingController();
   final _password = TextEditingController();
   bool _visible = true;
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = ref.watch(authControllerProvider);
+    final authNotifier = ref.watch(authControllerProvider.notifier);
+    ref.listen(authControllerProvider, (previous, next) {
+      if (next is AsyncError) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(next.error.toString()),
+            duration: const Duration(seconds: 4),
+          ),
+        );
+      } else if (next is AsyncData && next.value != null) {
+        context.go('/bottom-bar');
+      }
+    });
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -129,7 +145,24 @@ class _SignInState extends State<SignIn> {
                 ),
 
                 SizedBox(height: 20),
-                ElevatedButton(onPressed: () {}, child: Text('Sign in')),
+                ElevatedButton(
+                  onPressed: authProvider.isLoading
+                      ? null
+                      : () {
+                          authNotifier.signInWithEmail(
+                            _email.text,
+                            _password.text,
+                          );
+                        },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: authProvider.isLoading
+                        ? Theme.of(context).colorScheme.onSecondary
+                        : Theme.of(context).colorScheme.primary,
+                  ),
+                  child: authProvider.isLoading
+                      ? CircularProgressIndicator.adaptive()
+                      : Text('Sign in'),
+                ),
                 SizedBox(height: 20),
                 Row(
                   children: [
@@ -144,18 +177,26 @@ class _SignInState extends State<SignIn> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Expanded(
+                     Expanded(
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           minimumSize: Size.fromHeight(50),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(12),
                           ),
                           backgroundColor: Theme.of(
                             context,
                           ).colorScheme.surface,
                         ),
-                        onPressed: () {},
+                        onPressed:
+                        
+                        //  authProvider.isLoading
+                        //     ? null
+                        //     : 
+                            
+                            () {
+                                authNotifier.facebookSignIn();
+                              },
                         child: Image.asset('assets/icons/facebook (1).png'),
                       ),
                     ),
@@ -166,13 +207,19 @@ class _SignInState extends State<SignIn> {
                         style: ElevatedButton.styleFrom(
                           minimumSize: Size.fromHeight(50),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(12),
                           ),
                           backgroundColor: Theme.of(
                             context,
                           ).colorScheme.surface,
                         ),
-                        onPressed: () {},
+                        onPressed:
+                        //  authProvider.isLoading
+                        //     ? null
+                        //     : 
+                            () {
+                                authNotifier.googleSignIn();
+                              },
                         child: Image.asset('assets/icons/gmail.png'),
                       ),
                     ),
