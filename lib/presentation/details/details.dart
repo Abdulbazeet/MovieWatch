@@ -545,7 +545,7 @@ class _DetailsState extends ConsumerState<Details> {
                         ),
                         SizedBox(height: 10),
                         SizedBox(
-                          height: 260,
+                          height: 240,
                           child: ListView.builder(
                             physics: const BouncingScrollPhysics(),
                             shrinkWrap: true,
@@ -647,7 +647,14 @@ class _DetailsState extends ConsumerState<Details> {
                                                     context,
                                                   ).colorScheme.surfaceVariant,
                                                   borderRadius:
-                                                      BorderRadius.circular(10),
+                                                      BorderRadius.horizontal(
+                                                        left: Radius.circular(
+                                                          10,
+                                                        ),
+                                                        right: Radius.circular(
+                                                          10,
+                                                        ),
+                                                      ),
                                                 ),
                                               ),
                                             ),

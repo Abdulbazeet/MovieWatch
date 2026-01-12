@@ -8,9 +8,9 @@ class Usermodel {
   String uid;
   String? email;
   String? password;
-  final List<MediaRef> favourite;
-  final List<MediaRef> seenList;
-  final List<MediaRef> watchList;
+  final List<MediaRef>? favourite;
+  final List<MediaRef>? seenList;
+  final List<MediaRef>? watchList;
   Usermodel({
     required this.uid,
     this.email,
@@ -25,9 +25,9 @@ class Usermodel {
       'uid': uid,
       'email': email,
       'password': password,
-      'favourite': favourite.map((x) => x.toMap()).toList(),
-      'seenList': seenList.map((x) => x.toMap()).toList(),
-      'watchList': watchList.map((x) => x.toMap()).toList(),
+      'favourite': favourite?.map((x) => x.toMap()).toList(),
+      'seenList': seenList?.map((x) => x.toMap()).toList(),
+      'watchList': watchList?.map((x) => x.toMap()).toList(),
     };
   }
 
@@ -36,20 +36,29 @@ class Usermodel {
       uid: map['uid'] as String,
       email: map['email'] != null ? map['email'] as String : null,
       password: map['password'] != null ? map['password'] as String : null,
-      favourite: List<MediaRef>.from((map['favourite'] as List<int>).map<MediaRef>((x) => MediaRef.fromMap(x as Map<String,dynamic>),),),
-      seenList: List<MediaRef>.from((map['seenList'] as List<int>).map<MediaRef>((x) => MediaRef.fromMap(x as Map<String,dynamic>),),),
-      watchList: List<MediaRef>.from((map['watchList'] as List<int>).map<MediaRef>((x) => MediaRef.fromMap(x as Map<String,dynamic>),),),
+      favourite: map['favourite'] != null
+          ? List<MediaRef>.from(
+              (map['favourite']).map<MediaRef>((x) => MediaRef.fromMap(x)),
+            )
+          : null,
+      seenList: map['seenList'] != null
+          ? List<MediaRef>.from(
+              (map['seenList']).map<MediaRef>((x) => MediaRef.fromMap(x)),
+            )
+          : null,
+      watchList: map['watchList']
+          ? List<MediaRef>.from(
+              (map['watchList']).map<MediaRef>((x) => MediaRef.fromMap(x)),
+            )
+          : null,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory Usermodel.fromJson(String source) => Usermodel.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Usermodel.fromJson(String source) =>
+      Usermodel.fromMap(json.decode(source) as Map<String, dynamic>);
 }
-
-
-
-
 
 class MediaRef {
   int id;
@@ -60,7 +69,7 @@ class MediaRef {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,
-      'mediaTYpe': mediaType.value,
+      'mediaType': mediaType.value,
       'addedAt': addedAt.toIso8601String(),
     };
   }

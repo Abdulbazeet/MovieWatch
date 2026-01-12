@@ -390,7 +390,7 @@ class _ShowAllState extends ConsumerState<ShowAll> {
                                 maxCrossAxisExtent: 100, // max width per tile
                                 mainAxisSpacing: 20,
                                 crossAxisSpacing: 20,
-                                childAspectRatio: .40,
+                                childAspectRatio: .36,
                               ),
                           itemCount: data.length,
                           itemBuilder: (context, index) {
@@ -404,7 +404,7 @@ class _ShowAllState extends ConsumerState<ShowAll> {
                                 context.push(
                                   '/details',
                                   extra: {
-                                    'movie': data[index],
+                                    'id': data[index].id,
                                     'tableType': widget.tableType,
                                   },
                                 );
@@ -490,6 +490,7 @@ class _ShowAllState extends ConsumerState<ShowAll> {
                                       style: Theme.of(
                                         context,
                                       ).textTheme.bodySmall,
+                                      maxLines: 1,
                                     ),
                                     const Spacer(),
                                   ],

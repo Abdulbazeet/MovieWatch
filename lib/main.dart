@@ -20,14 +20,14 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   runApp(
-    DevicePreview(
-      enabled: !kReleaseMode,
-      defaultDevice: Devices.ios.iPhone16ProMax,
-      isToolbarVisible: true,
-      builder: (context) => const ProviderScope(child: MyApp()),
-    ),
+    // DevicePreview(
+    //   enabled: !kReleaseMode,
+    //   defaultDevice: Devices.ios.iPhone16ProMax,
+    //   isToolbarVisible: true,
+    //   builder: (context) => const ProviderScope(child: MyApp()),
+    // ),
 
-    // const ProviderScope(child: MyApp())
+    const ProviderScope(child: MyApp())
   );
 }
 
