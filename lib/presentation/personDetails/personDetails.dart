@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -97,6 +96,9 @@ class _PersonDetailsState extends ConsumerState<PersonDetails> {
             );
 
             return ListView(
+              physics: AlwaysScrollableScrollPhysics(
+                parent: BouncingScrollPhysics(),
+              ),
               children: [
                 SizedBox(
                   width: double.infinity,
@@ -227,6 +229,7 @@ class _PersonDetailsState extends ConsumerState<PersonDetails> {
                   height: 210,
                   child: ListView.builder(
                     itemCount: orderedMovieList.length,
+                    physics: BouncingScrollPhysics(),
                     scrollDirection: Axis.horizontal,
                     clipBehavior: Clip.none,
                     shrinkWrap: true,
@@ -302,6 +305,9 @@ class _PersonDetailsState extends ConsumerState<PersonDetails> {
                 ListView.builder(
                   itemCount: datedList.length,
                   shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics()
+                  
+                  ,
                   itemBuilder: (context, index) {
                     var items = datedList[index];
                     return Column(
@@ -332,9 +338,9 @@ class _PersonDetailsState extends ConsumerState<PersonDetails> {
                               ),
                               SizedBox(width: 10),
                               CachedNetworkImage(
-                                imageUrl:                                     items.poster_path != null &&
-                                        items.poster_path!.isNotEmpty 
-
+                                imageUrl:
+                                    items.poster_path != null &&
+                                        items.poster_path!.isNotEmpty
                                     ? "${TmdbConfig.img_url}original${items.poster_path}"
                                     : "${TmdbConfig.img_url}original${items.backdrop_path}",
                                 imageBuilder: (context, imageProvider) =>
@@ -440,6 +446,7 @@ class _PersonDetailsState extends ConsumerState<PersonDetails> {
                 SizedBox(height: 10),
                 ListView.builder(
                   itemCount: noDateList.length,
+                  physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
                     var items = noDateList[index];
@@ -466,7 +473,8 @@ class _PersonDetailsState extends ConsumerState<PersonDetails> {
                               SizedBox(width: 10),
                               CachedNetworkImage(
                                 imageUrl:
-                                    items.poster_path != null && items.poster_path!.isNotEmpty 
+                                    items.poster_path != null &&
+                                        items.poster_path!.isNotEmpty
                                     ? "${TmdbConfig.img_url}original${items.poster_path}"
                                     : "${TmdbConfig.img_url}original${items.backdrop_path}",
                                 imageBuilder: (context, imageProvider) =>

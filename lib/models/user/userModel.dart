@@ -6,15 +6,15 @@ import 'package:movie_watch/models/movies.dart';
 
 class Usermodel {
   String uid;
-  String? email;
-  String? password;
+  // String? email;
+  // String? password;
   final List<MediaRef>? favourite;
   final List<MediaRef>? seenList;
   final List<MediaRef>? watchList;
   Usermodel({
     required this.uid,
-    this.email,
-    this.password,
+    // this.email,
+    // this.password,
     required this.favourite,
     required this.seenList,
     required this.watchList,
@@ -23,8 +23,8 @@ class Usermodel {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'uid': uid,
-      'email': email,
-      'password': password,
+      // 'email': email,
+      // 'password': password,
       'favourite': favourite?.map((x) => x.toMap()).toList(),
       'seenList': seenList?.map((x) => x.toMap()).toList(),
       'watchList': watchList?.map((x) => x.toMap()).toList(),
@@ -34,8 +34,8 @@ class Usermodel {
   factory Usermodel.fromMap(Map<String, dynamic> map) {
     return Usermodel(
       uid: map['uid'] as String,
-      email: map['email'] != null ? map['email'] as String : null,
-      password: map['password'] != null ? map['password'] as String : null,
+      // email: map['email'] != null ? map['email'] as String : null,
+      // password: map['password'] != null ? map['password'] as String : null,
       favourite: map['favourite'] != null
           ? List<MediaRef>.from(
               (map['favourite']).map<MediaRef>((x) => MediaRef.fromMap(x)),

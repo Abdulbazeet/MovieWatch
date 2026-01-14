@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:movie_watch/presentation/authentication/auth_controller/auth_notifier.dart';
 import 'package:movie_watch/presentation/authentication/auth_provider/auth_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -214,7 +215,6 @@ class _SignUpState extends ConsumerState<SignUp> {
                 ),
                 SizedBox(height: 20),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
                       child: ElevatedButton(
@@ -223,57 +223,14 @@ class _SignUpState extends ConsumerState<SignUp> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          backgroundColor: Theme.of(
-                            context,
-                          ).colorScheme.surface,
-                        ),
-                        onPressed: 
-                        // authProvider.isLoading
-                        //     ? null
-                        //     : 
-                            () {
-                                authNotifier.facebookSignIn();
-                              },
-                        child: Image.asset('assets/icons/facebook (1).png'),
-                      ),
-                    ),
-
-                    SizedBox(width: 20),
-                    Expanded(
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: Size.fromHeight(50),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          backgroundColor: Theme.of(
-                            context,
-                          ).colorScheme.surface,
+                          backgroundColor: Theme.of(context).colorScheme.surface,
                         ),
                         onPressed:
-                        
-                        //  authProvider.isLoading ? null :  
-                         () {
-                          authNotifier.googleSignIn();
-                        },
+                            //  authProvider.isLoading ? null :
+                            () {
+                              authNotifier.googleSignIn();
+                            },
                         child: Image.asset('assets/icons/gmail.png'),
-                      ),
-                    ),
-                    SizedBox(width: 20),
-
-                    Expanded(
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: Size.fromHeight(50),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          backgroundColor: Theme.of(
-                            context,
-                          ).colorScheme.surface,
-                        ),
-                        onPressed: () {},
-                        child: Image.asset('assets/icons/apple-logo.png'),
                       ),
                     ),
                   ],

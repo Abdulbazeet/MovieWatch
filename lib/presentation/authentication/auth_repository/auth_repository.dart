@@ -1,20 +1,49 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:movie_watch/models/user/userModel.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthRepository {
-  final FirebaseAuth _auth;
-  AuthRepository({FirebaseAuth? auth}) : _auth = auth ?? FirebaseAuth.instance;
+  final supabase = Supabase.instance.client;
 
-  Stream<User?> get authStateChanges => _auth.authStateChanges();
-  User? get currentUser => _auth.currentUser;
+  // AuthRepository({FirebaseAuth? auth}) : _auth = auth ?? FirebaseAuth.instance;
+
+  Stream<AuthState> get authStateChanges => supabase.auth.onAuthStateChange;
+  User? get currentUser => supabase.auth.currentUser;
+
+  Future<void> _ensureUserProfile() async {
+    try {
+      final user = currentUser;
+      if (user == null) {
+        return;
+      }
+      final existingProfile = await supabase
+          .from('userModel')
+          .select()
+          .eq('uid', currentUser!.id)
+          .maybeSingle();
+      if (existingProfile == null) {
+        final userModel = Usermodel(
+          uid: currentUser!.id,
+          favourite: null,
+          seenList: null,
+          watchList: null,
+        );
+        await supabase.from('userModel').insert(userModel.toMap());
+      }
+    } catch (e, str) {
+      throw Exception(" $e - $str");
+    }
+  }
+
   Future signUpWithEmail(String email, String password) async {
     try {
-      await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      await supabase.auth.signUp(email: email, password: password);
+      await _ensureUserProfile();
+
       return;
     } catch (e, str) {
       throw Exception(" $e - $str");
@@ -23,7 +52,8 @@ class AuthRepository {
 
   Future signInWithEmail(String email, String password) async {
     try {
-      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      await supabase.auth.signInWithPassword(email: email, password: password);
+      await _ensureUserProfile();
       return;
     } catch (e, str) {
       throw Exception(" $e - $str");
@@ -33,37 +63,35 @@ class AuthRepository {
   Future googleSignIn() async {
     try {
       // Trigger the authentication flow
-      final GoogleSignInAccount? googleUser = await GoogleSignIn.instance
-          .authenticate();
+      final scopes = ['email', 'profile'];
+      final clientId = dotenv.env['CLIENT_ID']!;
+      final googleSignIn = GoogleSignIn.instance;
 
-      // Obtain the auth details from the request
-      final GoogleSignInAuthentication googleAuth = googleUser!.authentication;
-
-      // Create a new credential
-      final credential = GoogleAuthProvider.credential(
-        idToken: googleAuth.idToken,
+      await googleSignIn.initialize(clientId: clientId);
+      final googleUser = await googleSignIn.attemptLightweightAuthentication();
+      if (googleUser == null) {
+        throw Exception("Google sign-in aborted");
+      }
+      final authorization =
+          await googleUser.authorizationClient.authorizationForScopes(scopes) ??
+          await googleUser.authorizationClient.authorizeScopes(scopes);
+      final token = googleUser.authentication.idToken;
+      if (token == null) {
+        throw Exception('Id Token is null');
+      }
+      await supabase.auth.signInWithIdToken(
+        idToken: token,
+        provider: OAuthProvider.google,
+        accessToken: authorization.accessToken,
       );
-
-      // Once signed in, return the UserCredential
-      return await _auth.signInWithCredential(credential);
-    } catch (e, str) {
-      throw Exception("$e - $str");
-    }
-  }
-
-  Future signInWIthFacebook() async {
-    try {
-      // Trigger the sign-in flow
-      final LoginResult loginResult = await FacebookAuth.instance.login();
-
-      // Create a credential from the access token
-      final OAuthCredential facebookAuthCredential =
-          FacebookAuthProvider.credential(loginResult.accessToken!.tokenString);
-
-      // Once signed in, return the UserCredential
-      return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+      await _ensureUserProfile();
+      return;
     } catch (e, str) {
       throw Exception("$e - $str");
     }
   }
 }
+
+final authRepositoryProvider = Provider<AuthRepository>(
+  (ref) => AuthRepository(),
+);
