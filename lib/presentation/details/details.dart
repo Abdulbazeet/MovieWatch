@@ -6,11 +6,10 @@ import 'package:intl/intl.dart';
 import 'package:movie_watch/config/enums.dart';
 import 'package:movie_watch/config/tmdb_config.dart';
 import 'package:movie_watch/config/utils.dart';
+import 'package:movie_watch/data/notifiers/favourite_notifier.dart';
 import 'package:movie_watch/data/notifiers/movie-details_notifiers.dart';
 import 'package:movie_watch/models/movie/credits.dart';
-import 'package:movie_watch/models/movie/movies.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class Details extends ConsumerStatefulWidget {
   final int movieId;
@@ -41,6 +40,7 @@ class _DetailsState extends ConsumerState<Details> {
       movieDetailsNotifierProvider(widget.movieId),
     );
     final screensize = MediaQuery.of(context).size.height;
+    final fav = ref.watch(favouriteNotifierProvider.notifier);
 
     return Scaffold(
       body: Center(
@@ -214,10 +214,6 @@ class _DetailsState extends ConsumerState<Details> {
                                   style: Theme.of(context).textTheme.bodySmall
                                       ?.copyWith(color: Colors.white),
                                 ),
-                                // SizedBox(width: 30),
-                                // Expanded(
-                                //   child:
-                                // ),
                               ],
                             ),
                             SizedBox(height: 10),

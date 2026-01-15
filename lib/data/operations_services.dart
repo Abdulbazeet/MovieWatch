@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movie_watch/config/enums.dart';
 import 'package:movie_watch/models/user/userModel.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -40,11 +41,17 @@ class OperationsServices {
         .eq('mediaType', favourite.mediaType.toString());
   }
 
-  Future<bool> isFavourite(MediaRef favourite) async {
+  Future<bool> isFavourite(int id, MediaType mediaType) async {
     final user = currentUser;
     if (user == null) {
       return false;
     }
+    MediaRef favourite = MediaRef(
+      addedAt: DateTime.now(),
+      id: id,
+      mediaType: mediaType,
+      user_id: user.id,
+    );
     final check = await supabase
         .from('favourite')
         .select()
@@ -56,19 +63,32 @@ class OperationsServices {
 
   /// seen list operations;
 
-  Future<void> addSeenList(MediaRef seen) async {
+  Future<void> addSeenList(int id, MediaType mediaType) async {
     final user = currentUser;
     if (user == null) {
       return;
     }
-    await supabase.from('seen_list').insert(seen.toMap());
+    MediaRef seen = MediaRef(
+      addedAt: DateTime.now(),
+      id: id,
+      mediaType: mediaType,
+      user_id: user.id,
+    );
+    await supabase.from('seenList').insert(seen.toMap());
   }
 
-  Future<void> removeSeenList(MediaRef seen) async {
+  Future<void> removeSeenList(int id, MediaType mediaType) async {
     final user = currentUser;
     if (user == null) {
       return;
     }
+
+    MediaRef seen = MediaRef(
+      addedAt: DateTime.now(),
+      id: id,
+      mediaType: mediaType,
+      user_id: user.id,
+    );
     await supabase
         .from('seenList')
         .delete()
@@ -77,11 +97,17 @@ class OperationsServices {
         .eq('mediaType', seen.mediaType.toString());
   }
 
-  Future<bool> isSeenYet(MediaRef seen) async {
+  Future<bool> isSeenYet(int id, MediaType mediaType) async {
     final user = currentUser;
     if (user == null) {
       return false;
     }
+    MediaRef seen = MediaRef(
+      addedAt: DateTime.now(),
+      id: id,
+      mediaType: mediaType,
+      user_id: user.id,
+    );
     final check = await supabase
         .from('seenList')
         .select()
@@ -92,19 +118,31 @@ class OperationsServices {
   }
 
   /// watch list operations;
-  Future<void> addWatchList(MediaRef watch) async {
+  Future<void> addWatchList(int id, MediaType mediaType) async {
     final user = currentUser;
     if (user == null) {
       return;
     }
+    MediaRef watch = MediaRef(
+      addedAt: DateTime.now(),
+      id: id,
+      mediaType: mediaType,
+      user_id: user.id,
+    );
     await supabase.from('watchList').insert(watch.toMap());
   }
 
-  Future<void> removeWatchList(MediaRef watch) async {
+  Future<void> removeWatchList(int id, MediaType mediaType) async {
     final user = currentUser;
     if (user == null) {
       return;
     }
+    MediaRef watch = MediaRef(
+      addedAt: DateTime.now(),
+      id: id,
+      mediaType: mediaType,
+      user_id: user.id,
+    );
     await supabase
         .from('watchList')
         .delete()
@@ -113,11 +151,17 @@ class OperationsServices {
         .eq('mediaType', watch.mediaType.toString());
   }
 
-  Future<bool> isInWatchList(MediaRef watch) async {
+  Future<bool> isInWatchList(int id, MediaType mediaType) async {
     final user = currentUser;
     if (user == null) {
       return false;
     }
+    MediaRef watch = MediaRef(
+      addedAt: DateTime.now(),
+      id: id,
+      mediaType: mediaType,
+      user_id: user.id,
+    );
     final check = await supabase
         .from('watchList')
         .select()
@@ -127,3 +171,7 @@ class OperationsServices {
     return check != null;
   }
 }
+
+final operationsServicesProvider = Provider<OperationsServices>((ref) {
+  return OperationsServices();
+});
