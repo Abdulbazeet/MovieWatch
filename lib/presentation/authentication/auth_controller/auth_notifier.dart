@@ -7,7 +7,7 @@ class AuthNotifier extends StateNotifier<AsyncValue<User?>> {
   final AuthRepository _authRepository;
   AuthNotifier(this._authRepository) : super( AsyncData(_authRepository.currentUser)) {
     _authRepository.authStateChanges.listen(
-      (AuthState state) => this.state = AsyncData(state.session!.user),
+      (AuthState state) => this.state = AsyncData(state.session?.user),
     );
     setInitialState();
   }

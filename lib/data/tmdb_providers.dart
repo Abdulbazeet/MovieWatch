@@ -53,11 +53,6 @@ final topRatedMovies = FutureProvider((ref) {
   return service.fetchTopRated();
 });
 
-// final test = FutureProvider.family<List<Recommendations>, int>((ref, movieId) {
-//   final api = ref.watch(tmdbserviceProvider).fetchMovieRecommendations(movieId);
-//   return api;
-// });
-
 final popularSeriesProvider = FutureProvider<List<Movie>>((ref) {
   final services = ref.watch(tmdbserviceProvider);
 

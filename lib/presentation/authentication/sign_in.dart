@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:movie_watch/presentation/authentication/auth_controller/auth_notifier.dart';
 import 'package:movie_watch/presentation/authentication/auth_provider/auth_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SignIn extends ConsumerStatefulWidget {
   const SignIn({super.key});
@@ -23,16 +24,44 @@ class _SignInState extends ConsumerState<SignIn> {
     final authProvider = ref.watch(authControllerProvider);
     final authNotifier = ref.watch(authControllerProvider.notifier);
     ref.listen(authControllerProvider, (previous, next) {
-      if (next is AsyncError) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(next.error.toString()),
-            duration: const Duration(seconds: 4),
-          ),
-        );
-      } else if (next is AsyncData && next.value != null) {
-        context.go('/bottom-bar');
-      }
+    
+      next.whenOrNull(
+        error: (error, stackTrace) {
+          String userMessage = 'Something went wrong. Please try again.';
+
+          if (error is AuthException) {
+            // Most common Supabase auth error messages
+            userMessage = error.message;
+
+            // Optional: make some very common ones even friendlier
+            if (userMessage.contains('invalid login credentials') ||
+                userMessage.contains('invalid_credentials')) {
+              userMessage = 'Incorrect email or password.';
+            } else if (userMessage.contains('User not found') ||
+                userMessage.contains('user_not_found')) {
+              userMessage = 'No account found with this email.';
+            } else if (userMessage.contains('Email not confirmed')) {
+              userMessage = 'Please confirm your email first.';
+            }
+          } else if (error is Exception) {
+            // Strip "Exception: " prefix if present
+            userMessage = error.toString().replaceFirst('Exception: ', '');
+          }
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(userMessage),
+              // backgroundColor: Colors.redAccent,
+              duration: const Duration(seconds: 4),
+            ),
+          );
+        },
+        data: (user) {
+          if (user != null) {
+            context.go('/bottom-bar');
+          }
+        },
+      );
     });
     return Scaffold(
       body: SafeArea(
@@ -189,12 +218,12 @@ class _SignInState extends ConsumerState<SignIn> {
                           ).colorScheme.surface,
                         ),
                         onPressed:
-                        //  authProvider.isLoading
-                        //     ? null
-                        //     : 
+                            //  authProvider.isLoading
+                            //     ? null
+                            //     :
                             () {
-                                authNotifier.googleSignIn();
-                              },
+                              authNotifier.googleSignIn();
+                            },
                         child: Image.asset('assets/icons/gmail.png'),
                       ),
                     ),

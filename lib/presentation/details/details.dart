@@ -105,14 +105,6 @@ class _DetailsState extends ConsumerState<Details> {
                             ),
                           ),
                         ),
-
-                        // Container(
-                        //   color: Colors.grey,
-                        //   child: Image.network(
-
-                        //     fit: BoxFit.cover,
-                        //   ),
-                        // ),
                       ),
                       Positioned.fill(
                         child: IgnorePointer(
@@ -222,48 +214,13 @@ class _DetailsState extends ConsumerState<Details> {
                                   style: Theme.of(context).textTheme.bodySmall
                                       ?.copyWith(color: Colors.white),
                                 ),
-                                SizedBox(width: 30),
-                                Expanded(
-                                  child: ElevatedButton(
-                                    onPressed: () {},
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Theme.of(
-                                        context,
-                                      ).colorScheme.primary,
-                                      foregroundColor: Theme.of(
-                                        context,
-                                      ).colorScheme.onPrimary,
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 15,
-                                        vertical: 8,
-                                      ),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                    ),
-                                    child: Text(
-                                      'Watch Trailer',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodySmall
-                                          ?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white,
-                                          ),
-                                    ),
-                                  ),
-                                ),
+                                // SizedBox(width: 30),
+                                // Expanded(
+                                //   child:
+                                // ),
                               ],
                             ),
                             SizedBox(height: 10),
-                            Row(
-                              children: [
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(Icons.favorite),
-                                ),
-                              ],
-                            ),
                           ],
                         ),
                       ),
@@ -271,7 +228,7 @@ class _DetailsState extends ConsumerState<Details> {
                   ),
                 ),
 
-                SizedBox(height: 30),
+                SizedBox(height: 20),
 
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20),
@@ -279,6 +236,62 @@ class _DetailsState extends ConsumerState<Details> {
                     crossAxisAlignment: CrossAxisAlignment.start,
 
                     children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () {},
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Theme.of(
+                                  context,
+                                ).colorScheme.primary,
+                                foregroundColor: Theme.of(
+                                  context,
+                                ).colorScheme.onPrimary,
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 15,
+                                  vertical: 8,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                // minimumSize: Size(70, 40),
+                              ),
+                              child: Text(
+                                'Watch Trailer',
+                                style: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 20),
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(
+                              Icons.visibility_sharp,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(
+                              Icons.favorite_border,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(
+                              Icons.bookmark_add_outlined,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 20),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -339,19 +352,6 @@ class _DetailsState extends ConsumerState<Details> {
                                         ),
                                       ),
                                 ),
-
-                                // Container(
-
-                                //   decoration: BoxDecoration(
-
-                                //     ),
-                                //     image: DecorationImage(
-                                //       fit: BoxFit.cover,
-                                //       image: NetworkImage(
-                                //       ),
-                                //     ),
-                                //   ),
-                                // ),
                               ),
                               Positioned(
                                 top: 0,

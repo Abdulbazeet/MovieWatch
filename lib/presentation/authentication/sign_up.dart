@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:movie_watch/presentation/authentication/auth_controller/auth_notifier.dart';
 import 'package:movie_watch/presentation/authentication/auth_provider/auth_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SignUp extends ConsumerStatefulWidget {
   const SignUp({super.key});
@@ -22,16 +23,47 @@ class _SignUpState extends ConsumerState<SignUp> {
     final authProvider = ref.watch(authControllerProvider);
     final authNotifier = ref.watch(authControllerProvider.notifier);
     ref.listen(authControllerProvider, (previous, next) {
-      if (next is AsyncError) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(next.error.toString()),
-            duration: const Duration(seconds: 4),
-          ),
-        );
-      } else if (next is AsyncData && next.value != null) {
-        context.go('/sign-in');
-      }
+
+      next.whenOrNull(
+        error: (error, stackTrace) {
+          String userMessage = 'Something went wrong. Please try again.';
+
+          if (error is AuthException) {
+            userMessage = error.message;
+
+            if (userMessage.contains(
+                  'Password should be at least 6 characters',
+                ) ||
+                userMessage.contains('weak_password')) {
+              userMessage = 'Password must be at least 6 characters long.';
+            } else if (userMessage.contains('Email already registered') ||
+                userMessage.contains('duplicate key value')) {
+              userMessage = 'This email is already in use.';
+            } else if (userMessage.contains('Invalid email')) {
+              userMessage = 'Please enter a valid email.';
+            }
+          } else if (error != null) {
+            userMessage = error
+                .toString()
+                .replaceFirst(RegExp(r'Exception: '), '')
+                .trim();
+          }
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(userMessage),
+              duration: const Duration(seconds: 4),
+            ),
+          );
+        },
+        data: (user) {
+          if (user != null) {
+            context.go(
+              '/bottom-bar',
+            ); // or show confirmation message + go to sign-in
+          }
+        },
+      );
     });
 
     return Scaffold(
@@ -223,7 +255,9 @@ class _SignUpState extends ConsumerState<SignUp> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          backgroundColor: Theme.of(context).colorScheme.surface,
+                          backgroundColor: Theme.of(
+                            context,
+                          ).colorScheme.surface,
                         ),
                         onPressed:
                             //  authProvider.isLoading ? null :
