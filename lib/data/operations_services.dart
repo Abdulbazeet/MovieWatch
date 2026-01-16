@@ -28,7 +28,6 @@ class OperationsServices {
       return;
     }
     MediaRef favourite = MediaRef(
-      addedAt: DateTime.now(),
       id: id,
       mediaType: mediaType,
       user_id: user.id,
@@ -38,7 +37,9 @@ class OperationsServices {
         .delete()
         .eq('user_id', favourite.user_id)
         .eq('id', favourite.id)
-        .eq('mediaType', favourite.mediaType.toString());
+        .eq('mediaType', favourite.mediaType.name)
+        .select();
+    // .maybeSingle();
   }
 
   Future<bool> isFavourite(int id, MediaType mediaType) async {
@@ -55,7 +56,7 @@ class OperationsServices {
     final check = await supabase
         .from('favourite')
         .select()
-        .eq('user_id', favourite.user_id)
+        .eq('user_id', user.id)
         .eq('id', favourite.id)
         .maybeSingle();
     return check != null;
@@ -94,7 +95,7 @@ class OperationsServices {
         .delete()
         .eq('user_id', seen.user_id)
         .eq('id', seen.id)
-        .eq('mediaType', seen.mediaType.toString());
+        .eq('mediaType', seen.mediaType.value);
   }
 
   Future<bool> isSeenYet(int id, MediaType mediaType) async {
@@ -148,7 +149,7 @@ class OperationsServices {
         .delete()
         .eq('user_id', watch.user_id)
         .eq('id', watch.id)
-        .eq('mediaType', watch.mediaType.toString());
+        .eq('mediaType', watch.mediaType.value);
   }
 
   Future<bool> isInWatchList(int id, MediaType mediaType) async {

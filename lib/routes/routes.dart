@@ -43,10 +43,10 @@ class AppRoutes {
         path: '/details',
         builder: (context, state) {
           final extras = state.extra as Map<String, dynamic>;
-          final tableType = extras['tableType'] as TableType;
+          // final tableType = extras['tableType'] as TableType;
           final movieId = extras['id']; // could be Movie OR Recommendations
 
-          return Details(movieId: movieId, tableType: tableType);
+          return Details(movieId: movieId);
         },
       ),
       GoRoute(

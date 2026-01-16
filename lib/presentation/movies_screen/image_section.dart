@@ -53,7 +53,7 @@ class ImageSection extends ConsumerWidget {
                                 context.push(
                                   '/details',
                                   extra: {
-                                    'movie': data[index],
+                                    'id': data[index].id,
                                     'tableType': tableType,
                                   },
                                 );

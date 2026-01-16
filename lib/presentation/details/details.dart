@@ -8,14 +8,16 @@ import 'package:movie_watch/config/tmdb_config.dart';
 import 'package:movie_watch/config/utils.dart';
 import 'package:movie_watch/data/notifiers/favourite_notifier.dart';
 import 'package:movie_watch/data/notifiers/movie-details_notifiers.dart';
+import 'package:movie_watch/data/notifiers/seen_notifier.dart';
+import 'package:movie_watch/data/notifiers/watch_notifier.dart';
 import 'package:movie_watch/models/movie/credits.dart';
 import 'package:shimmer/shimmer.dart';
 
 class Details extends ConsumerStatefulWidget {
   final int movieId;
-  final TableType tableType;
+  // final MovieType tableType;
 
-  const Details({super.key, required this.movieId, required this.tableType});
+  const Details({super.key, required this.movieId});
 
   @override
   ConsumerState<Details> createState() => _DetailsState();
@@ -41,6 +43,80 @@ class _DetailsState extends ConsumerState<Details> {
     );
     final screensize = MediaQuery.of(context).size.height;
     final fav = ref.watch(favouriteNotifierProvider.notifier);
+    final isFav = ref.watch(
+      isFavouriteProvider((widget.movieId, MediaType.movie)),
+    );
+    final seenNotifier = ref.watch(seenNotifierProvider.notifier);
+    final isSeen = ref.watch(isSeenProvider((widget.movieId, MediaType.movie)));
+    final watch = ref.watch(watchNotifierProvider.notifier);
+    final isWatch = ref.watch(
+      isInWatchListProvider((widget.movieId, MediaType.movie)),
+    );
+    ref.listen(favouriteNotifierProvider, (previous, next) {
+      next.whenOrNull(
+        data: (data) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(data.toString()),
+              duration: Duration(seconds: 1),
+            ),
+          );
+        },
+        error: (error, stackTrace) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('An error occurred: $error'),
+              backgroundColor: Colors.red,
+              duration: Duration(seconds: 1),
+            ),
+          );
+        },
+      );
+    });
+    ref.listen(seenNotifierProvider, (previous, next) {
+      next.whenOrNull(
+        data: (data) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(data.toString()),
+              // backgroundColor: Colors.green,
+              duration: Duration(seconds: 1),
+            ),
+          );
+        },
+        error: (error, stackTrace) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('An error occurred: $error'),
+              backgroundColor: Colors.red,
+              duration: Duration(seconds: 1),
+            ),
+          );
+        },
+      );
+    });
+    ref.listen(watchNotifierProvider, (previous, next) {
+      next.whenOrNull(
+        data: (data) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(data.toString()),
+              // backgroundColor: Colors.green,
+              duration: Duration(seconds: 1),
+            ),
+          );
+        },
+        error: (error, stackTrace) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('An error occurred: $error'),
+              backgroundColor: Colors.red,
+              duration: Duration(seconds: 1),
+            ),
+          );
+        },
+      );
+    });
 
     return Scaffold(
       body: Center(
@@ -265,23 +341,69 @@ class _DetailsState extends ConsumerState<Details> {
                           ),
                           SizedBox(width: 20),
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              if (isSeen.value == true) {
+                                seenNotifier.removeSeen(
+                                  widget.movieId,
+                                  MediaType.movie,
+                                );
+                              } else {
+                                seenNotifier.addSeen(
+                                  widget.movieId,
+                                  MediaType.movie,
+                                );
+                              }
+                            },
                             icon: Icon(
-                              Icons.visibility_sharp,
+                              isSeen.whenOrNull(
+                                data: (data) => data
+                                    ? Icons.visibility_sharp
+                                    : Icons.visibility_off_outlined,
+                              ),
+
                               color: Theme.of(context).colorScheme.primary,
                             ),
                           ),
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              if (isFav.value == true) {
+                                fav.removeFavourite(
+                                  widget.movieId,
+                                  MediaType.movie,
+                                );
+                              } else {
+                                fav.addFavourite(
+                                  widget.movieId,
+                                  MediaType.movie,
+                                );
+                              }
+                            },
                             icon: Icon(
-                              Icons.favorite_border,
+                              isFav.whenOrNull(
+                                data: (data) => data
+                                    ? Icons.favorite
+                                    : Icons.favorite_border,
+                              ),
                               color: Theme.of(context).colorScheme.primary,
                             ),
                           ),
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              if (isWatch.value == true) {
+                                watch.removeWatch(
+                                  widget.movieId,
+                                  MediaType.movie,
+                                );
+                              } else {
+                                watch.addWatch(widget.movieId, MediaType.movie);
+                              }
+                            },
                             icon: Icon(
-                              Icons.bookmark_add_outlined,
+                              isWatch.whenOrNull(
+                                data: (data) => data
+                                    ? Icons.bookmark
+                                    : Icons.bookmark_add_outlined,
+                              ),
                               color: Theme.of(context).colorScheme.primary,
                             ),
                           ),
@@ -347,25 +469,6 @@ class _DetailsState extends ConsumerState<Details> {
                                           color: Colors.grey,
                                         ),
                                       ),
-                                ),
-                              ),
-                              Positioned(
-                                top: 0,
-
-                                left: 0,
-
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: 4,
-                                    horizontal: 6,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.black.withValues(alpha: .7),
-                                    borderRadius: BorderRadius.only(
-                                      bottomRight: Radius.circular(10),
-                                    ),
-                                  ),
-                                  child: Icon(Icons.add, color: Colors.white),
                                 ),
                               ),
                             ],
@@ -717,8 +820,6 @@ class _DetailsState extends ConsumerState<Details> {
                                     '/details',
                                     extra: {
                                       'id': data.recommendations[index].id,
-
-                                      'tableType': widget.tableType,
                                     },
                                   );
                                 },

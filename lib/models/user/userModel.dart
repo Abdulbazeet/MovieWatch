@@ -64,12 +64,12 @@ class MediaRef {
   String user_id;
   int id;
   final MediaType mediaType;
-  final DateTime addedAt;
+   DateTime? addedAt;
   MediaRef({
     required this.user_id,
     required this.id,
     required this.mediaType,
-    required this.addedAt,
+    this.addedAt,
   });
 
   Map<String, dynamic> toMap() {
@@ -77,7 +77,7 @@ class MediaRef {
       'user_id': user_id,
       'id': id,
       'mediaType': mediaType.value,
-      'addedAt': addedAt.toIso8601String(),
+      'addedAt': addedAt?.toIso8601String(),
     };
   }
 
@@ -86,7 +86,7 @@ class MediaRef {
       user_id: map['user_id'] as String,
       id: map['id'] as int,
       mediaType: MediaType.fromString(map['mediaType']),
-      addedAt: DateTime.parse(map['addedAt']),
+      addedAt: DateTime.parse(map['addedAt']) ,
     );
   }
 
