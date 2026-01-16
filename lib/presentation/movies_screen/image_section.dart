@@ -61,7 +61,7 @@ class ImageSection extends ConsumerWidget {
                               case TableType.tvshows:
                                 context.push(
                                   '/tvshows-details',
-                                  extra: {'series': data[index]},
+                                  extra: data[index].id,
                                 );
 
                                 break;

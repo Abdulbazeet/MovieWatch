@@ -19,6 +19,8 @@ class PersonDetails extends ConsumerStatefulWidget {
 }
 
 class _PersonDetailsState extends ConsumerState<PersonDetails> {
+  int maxLine = 20;
+  bool expand = false;
   @override
   Widget build(BuildContext context) {
     final screensize = MediaQuery.of(context).size.height;
@@ -47,15 +49,6 @@ class _PersonDetailsState extends ConsumerState<PersonDetails> {
         padding: const EdgeInsets.all(20.0).copyWith(top: 0),
         child: personDetails.when(
           data: (data) {
-            // final List<PersonCredits> orderedKnownForList =
-            // // List<PersonCredits>.from(data.personCredits)..sort(
-            //   (a, b) => (b.popularity ?? 0).compareTo(a.popularity ?? 0),
-            // );
-
-            // movieCreditsOnly.sort(
-            //   (a, b) => (b.vote_average ?? 0).compareTo(a.vote_average ?? 0),
-            // ); // Sort descending
-
             final List<PersonCredits> movieCreditsOnly = data.personCredits
                 .where(
                   (credit) => credit.media_type == 'movie',
@@ -70,15 +63,6 @@ class _PersonDetailsState extends ConsumerState<PersonDetails> {
                 movieCreditsOnly.length > 7
                 ? movieCreditsOnly.sublist(0, 7)
                 : movieCreditsOnly;
-            //   final d = data.personCredits.where((element) { return element.release_date!;}).toList();
-            //  final date = DateFormat('yyyy').format(DateTime.parse(data.personCredits))
-            // final sortByDate = data.personCredits;
-            // sortByDate.sort(
-            //   (a, b) {
-
-            //     return b.release_date!.compareTo(a.release_date!);
-            //   },
-            // );
 
             List<PersonCredits> noDateList = [];
             List<PersonCredits> datedList = [];
@@ -102,112 +86,152 @@ class _PersonDetailsState extends ConsumerState<PersonDetails> {
               children: [
                 SizedBox(
                   width: double.infinity,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  //  height: height.toDouble(),
+                  child: Column(
                     children: [
-                      Column(
+                      Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          CachedNetworkImage(
-                            imageUrl:
-                                '${TmdbConfig.img_url}original${data.personDetails.profile_path}',
-                            imageBuilder: (context, imageProvider) => Container(
-                              height: screensize * .22,
-                              width: MediaQuery.of(context).size.width * .3,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CachedNetworkImage(
+                                imageUrl:
+                                    '${TmdbConfig.img_url}original${data.personDetails.profile_path}',
+                                imageBuilder: (context, imageProvider) =>
+                                    Container(
+                                      height: screensize * .22,
+                                      width:
+                                          MediaQuery.of(context).size.width *
+                                          .3,
 
-                              decoration: BoxDecoration(
-                                color: Colors.grey,
-                                borderRadius: BorderRadius.circular(10),
-                                image: DecorationImage(
-                                  image: imageProvider,
-                                  fit: BoxFit.cover,
-                                ),
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey,
+                                        borderRadius: BorderRadius.circular(10),
+                                        image: DecorationImage(
+                                          image: imageProvider,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                      clipBehavior: Clip.hardEdge,
+                                    ),
+                                placeholder: (context, url) =>
+                                    Shimmer.fromColors(
+                                      baseColor: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface
+                                          .withValues(alpha: .5),
+                                      highlightColor: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface
+                                          .withValues(alpha: .3),
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                            .3,
+                                        height: screensize * .22,
+                                        decoration: BoxDecoration(
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.surfaceVariant,
+                                          borderRadius: BorderRadius.circular(
+                                            10,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                errorWidget: (context, url, error) =>
+                                    Container(height: screensize * .22),
                               ),
-                              clipBehavior: Clip.hardEdge,
-                            ),
-                            placeholder: (context, url) => Shimmer.fromColors(
-                              baseColor: Theme.of(
-                                context,
-                              ).colorScheme.onSurface.withValues(alpha: .5),
-                              highlightColor: Theme.of(
-                                context,
-                              ).colorScheme.onSurface.withValues(alpha: .3),
-                              child: Container(
-                                width: MediaQuery.of(context).size.width * .3,
-                                height: screensize * .22,
-                                decoration: BoxDecoration(
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.surfaceVariant,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
+                              SizedBox(height: 15),
+                              Text(
+                                'Known For',
+                                style: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(fontWeight: FontWeight.bold),
                               ),
-                            ),
-                            errorWidget: (context, url, error) =>
-                                Container(height: screensize * .22),
-                          ),
-                          SizedBox(height: 15),
-                          Text(
-                            'Known For',
-                            style: Theme.of(context).textTheme.bodySmall
-                                ?.copyWith(fontWeight: FontWeight.bold),
-                          ),
 
-                          if (data.personDetails.known_for_department != null &&
-                              data
-                                  .personDetails
-                                  .known_for_department!
-                                  .isNotEmpty) ...[
-                            SizedBox(width: 10),
-                            Text(
-                              data.personDetails.known_for_department!,
-                              style: Theme.of(context).textTheme.bodySmall,
+                              if (data.personDetails.known_for_department !=
+                                      null &&
+                                  data
+                                      .personDetails
+                                      .known_for_department!
+                                      .isNotEmpty) ...[
+                                SizedBox(width: 10),
+                                Text(
+                                  data.personDetails.known_for_department!,
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                ),
+                              ],
+                              if (data.personDetails.birthday != null &&
+                                  data.personDetails.birthday!.isNotEmpty) ...[
+                                SizedBox(height: 15),
+                                Text(
+                                  'Date of Birth',
+                                  style: Theme.of(context).textTheme.bodySmall
+                                      ?.copyWith(fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(width: 10),
+                                Text(
+                                  DateFormat('MMMM d, yyy').format(
+                                    DateTime.parse(
+                                      data.personDetails.birthday!,
+                                    ),
+                                  ),
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                ),
+                              ],
+                              if (data.personDetails.deathday != null &&
+                                  data.personDetails.deathday!.isNotEmpty) ...[
+                                SizedBox(height: 15),
+                                Text(
+                                  'Date of Death',
+                                  style: Theme.of(context).textTheme.bodySmall
+                                      ?.copyWith(fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(width: 10),
+                                Text(
+                                  DateFormat('MMMM d, yyy').format(
+                                    DateTime.parse(
+                                      data.personDetails.deathday!,
+                                    ),
+                                  ),
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                ),
+                              ],
+                            ],
+                          ),
+                          SizedBox(width: 20),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  data.personDetails.biography!,
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                  maxLines: expand == true ? null : maxLine,
+                                  overflow: expand == true
+                                      ? null
+                                      : TextOverflow.ellipsis,
+                                ),
+                              ],
                             ),
-                          ],
-                          if (data.personDetails.birthday != null &&
-                              data.personDetails.birthday!.isNotEmpty) ...[
-                            SizedBox(height: 15),
-                            Text(
-                              'Date of Birth',
-                              style: Theme.of(context).textTheme.bodySmall
-                                  ?.copyWith(fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(width: 10),
-                            Text(
-                              DateFormat('MMMM d, yyy').format(
-                                DateTime.parse(data.personDetails.birthday!),
-                              ),
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ],
-                          if (data.personDetails.deathday != null &&
-                              data.personDetails.deathday!.isNotEmpty) ...[
-                            SizedBox(height: 15),
-                            Text(
-                              'Date of Death',
-                              style: Theme.of(context).textTheme.bodySmall
-                                  ?.copyWith(fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(width: 10),
-                            Text(
-                              DateFormat('MMMM d, yyy').format(
-                                DateTime.parse(data.personDetails.deathday!),
-                              ),
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ],
+                          ),
                         ],
                       ),
-                      SizedBox(width: 20),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              data.personDetails.biography!,
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ],
+                      SizedBox(height: 5),
+                      Center(
+                        child: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              expand = !expand;
+                            });
+                          },
+                          icon: Icon(
+                            expand == true
+                                ? Icons.keyboard_arrow_up_rounded
+                                : Icons.keyboard_arrow_down_rounded,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
                         ),
                       ),
                     ],
@@ -305,9 +329,7 @@ class _PersonDetailsState extends ConsumerState<PersonDetails> {
                 ListView.builder(
                   itemCount: datedList.length,
                   shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics()
-                  
-                  ,
+                  physics: NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
                     var items = datedList[index];
                     return Column(
