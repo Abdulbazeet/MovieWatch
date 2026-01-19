@@ -14,7 +14,7 @@ class Bottombar extends StatefulWidget {
 }
 
 class _BottombarState extends State<Bottombar> {
-  int _index = 0;
+  int _index = 2;
   void _onTap(int index) {
     setState(() {
       _index = index;

@@ -37,7 +37,7 @@ class OperationsServices {
         .delete()
         .eq('user_id', favourite.user_id)
         .eq('id', favourite.id)
-        .eq('mediaType', favourite.mediaType.name)
+        .eq('mediaType', favourite.mediaType.value)
         .select();
     // .maybeSingle();
   }
