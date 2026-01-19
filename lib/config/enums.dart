@@ -14,7 +14,8 @@ enum bottomType { trailers, recommendations }
 enum MediaType {
   person,
   movie,
-  tv;
+  tv,
+  kdrama;
 
   String get value => name;
   static MediaType fromString(String value) {

@@ -161,6 +161,7 @@ class _SearchState extends ConsumerState<Search> {
                                     media_type: 'Tv Show',
                                     child: ListView.builder(
                                       shrinkWrap: true,
+                                      physics: NeverScrollableScrollPhysics(),
 
                                       // separatorBuilder: (context, index) =>
                                       itemCount: tvshows.length,
@@ -300,6 +301,7 @@ class _SearchState extends ConsumerState<Search> {
                                       shrinkWrap: true,
 
                                       itemCount: movies.length,
+                                      physics: NeverScrollableScrollPhysics(),
                                       itemBuilder: (context, index) {
                                         final date =
                                             (movies[index].first_air_date !=
@@ -446,6 +448,7 @@ class _SearchState extends ConsumerState<Search> {
                                     media_type: 'Person',
                                     child: ListView.builder(
                                       shrinkWrap: true,
+                                      physics: NeverScrollableScrollPhysics(),
 
                                       itemCount: persons.length,
                                       itemBuilder: (context, index) {

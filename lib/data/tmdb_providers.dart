@@ -1,4 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:movie_watch/config/enums.dart';
+import 'package:movie_watch/data/operations_services.dart';
 import 'package:movie_watch/data/tmdb_services.dart';
 import 'package:movie_watch/models/movie/credits.dart';
 import 'package:movie_watch/models/series/episodes.dart';
@@ -100,11 +102,18 @@ typedef episoeDetailsParams = ({
 });
 final episodeDetailsProvider =
     FutureProvider.family<Episodes, episoeDetailsParams>((ref, param) {
-      return ref
-          .watch(tmdbserviceProvider)
-          .fetchEpisodeDetails(
-            seriesId: param.seriesId,
-            episode_number: param.episodeNumber,
-            season_number: param.seasonNumber,
-          );
-    });
+    return ref
+        .watch(tmdbserviceProvider)
+        .fetchEpisodeDetails(
+          seriesId: param.seriesId,
+          episode_number: param.episodeNumber,
+          season_number: param.seasonNumber,
+        );
+  });
+final seenProvider = FutureProvider.family<List<Movie>, MediaType>((
+  ref,
+  mediaType,
+) {
+  final service =  ref.watch(operationsServicesProvider);
+  return service.seenList(mediaType);
+});

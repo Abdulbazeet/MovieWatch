@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:movie_watch/config/tmdb_config.dart';
 import 'package:movie_watch/models/movie/credits.dart';
@@ -17,6 +18,7 @@ import 'package:movie_watch/models/series/series_trailer.dart';
 import 'package:movie_watch/models/series/show_details.dart';
 import 'package:movie_watch/models/series/tvseries_credit.dart';
 import 'package:movie_watch/models/videos.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class TmdbServices {
   var formattedDate = DateTime.now().toIso8601String().split('T')[0];
@@ -41,8 +43,7 @@ class TmdbServices {
       .split('T')[0];
 
   final _apikey = TmdbConfig.apiKey;
-  final header =
-      'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiMjczZjAwODhkZWFhZWJiNTM2ZDYwZDk3ZGUyNjJlNyIsIm5iZiI6MTc1OTczNzk4NC4yNjQ5OTk5LCJzdWIiOiI2OGUzNzg4MGNkMzcyYTRjZGRjMjI4ZTYiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.kPDBwcifpbou680XP1fFktUaFj-Z3ZmlkmPMUKcvqJ0';
+  final header = dotenv.env['HEADER'];
   String buildDiscoverUrl({
     int page = 1,
     String sortBy = 'popularity.desc',
@@ -875,4 +876,31 @@ class TmdbServices {
       throw Exception("$e - $str");
     }
   }
+
+  // Future<List<Movie>> fetchSeenList(int movieId) async {
+  //   try {
+
+  //     var supabse = Supabase.instance.client;
+  // User? get currentUser => supabase.auth.currentUser;
+  //     final url =
+  //         'https://api.themoviedb.org/3/movie/$movieId/similar?language=en-US&page=1';
+
+  //     http.Response response = await http.get(
+  //       Uri.parse(url),
+  //       headers: <String, String>{
+  //         'accept': 'application/json',
+  //         'Authorization': 'Bearer $header',
+  //       },
+  //     );
+  //     if (response.statusCode == 200) {
+  //       List data = jsonDecode(response.body)['results'];
+  //       return data.map((e) => Movie.fromMap(e)).toList();
+  //     } else {
+  //       throw Exception('Error is ${response.body}, similar movies');
+  //     }
+  //   } catch (e) {
+  //     print(e);
+  //     throw Exception('Error fetching similar movies: $e');
+  //   }
+  // }
 }

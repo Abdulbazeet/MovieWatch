@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movie_watch/config/enums.dart';
 import 'package:movie_watch/data/operations_services.dart';
+import 'package:movie_watch/models/user/userModel.dart';
 
 class SeenNotifier extends AsyncNotifier {
   @override
@@ -50,3 +51,8 @@ final isSeenProvider = FutureProvider.family<bool, (int, MediaType)>((
 
   return service.isSeenYet(id, mediaType);
 });
+
+// final seenListProvider = FutureProvider<List<MediaRef>>((ref) async {
+//   final service = ref.watch(operationsServicesProvider);
+//   return service.getSeenList();
+// });

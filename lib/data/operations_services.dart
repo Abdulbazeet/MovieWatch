@@ -1,5 +1,10 @@
+import 'dart:convert';
+
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http/http.dart';
 import 'package:movie_watch/config/enums.dart';
+import 'package:movie_watch/models/movie/movies.dart';
 import 'package:movie_watch/models/user/userModel.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -118,6 +123,19 @@ class OperationsServices {
     return check != null;
   }
 
+  Future<List<MediaRef>> getSeenList() async {
+    final user = currentUser;
+    if (user == null) {
+      return [];
+    }
+    final data = await supabase
+        .from('seenList')
+        .select()
+        .eq('user_id', user.id)
+        .order('addedAt', ascending: false);
+    return data.map<MediaRef>((e) => MediaRef.fromMap(e)).toList();
+  }
+
   /// watch list operations;
   Future<void> addWatchList(int id, MediaType mediaType) async {
     final user = currentUser;
@@ -170,6 +188,45 @@ class OperationsServices {
         .eq('id', watch.id)
         .maybeSingle();
     return check != null;
+  }
+
+  Future<List<Movie>> seenList(MediaType mediaType) async {
+    final header = dotenv.env['HEADER'];
+    if (header == null || header.isEmpty) {
+      throw Exception('Missing TMDB auth header');
+    }
+    final user = currentUser;
+    if (user == null) {
+      return [];
+    }
+    final data = await supabase
+        .from('seenList')
+        .select()
+        .eq('user_id', user.id)
+        .eq('mediaType', mediaType.value)
+        .order('addedAt', ascending: false);
+    final refs = data.map<MediaRef>((e) => MediaRef.fromMap(e)).toList();
+    final futures = refs.map((ref) async {
+      final typePath = ref.mediaType == MediaType.tv ? 'tv' : 'movie';
+      final url =
+          'https://api.themoviedb.org/3/$typePath/${ref.id}?language=en-US';
+      final response = await get(
+        Uri.parse(url),
+        headers: <String, String>{
+          'accept': 'application/json',
+          'Authorization': 'Bearer $header',
+        },
+      );
+      if (response.statusCode != 200) {
+        throw Exception(
+          'Failed to load details for ${ref.id} (${ref.mediaType.value})',
+        );
+      }
+      final raw = jsonDecode(response.body) as Map<String, dynamic>;
+      return Movie.fromJson(raw);
+    }).toList();
+
+    return Future.wait(futures);
   }
 }
 
