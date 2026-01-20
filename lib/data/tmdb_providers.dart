@@ -102,18 +102,26 @@ typedef episoeDetailsParams = ({
 });
 final episodeDetailsProvider =
     FutureProvider.family<Episodes, episoeDetailsParams>((ref, param) {
-    return ref
-        .watch(tmdbserviceProvider)
-        .fetchEpisodeDetails(
-          seriesId: param.seriesId,
-          episode_number: param.episodeNumber,
-          season_number: param.seasonNumber,
-        );
-  });
+      return ref
+          .watch(tmdbserviceProvider)
+          .fetchEpisodeDetails(
+            seriesId: param.seriesId,
+            episode_number: param.episodeNumber,
+            season_number: param.seasonNumber,
+          );
+    });
 final seenProvider = FutureProvider.family<List<Movie>, MediaType>((
   ref,
   mediaType,
 ) {
-  final service =  ref.watch(operationsServicesProvider);
+  final service = ref.watch(operationsServicesProvider);
   return service.seenList(mediaType);
+});
+final favListProvider = FutureProvider.family<List<Movie>, MediaType>((
+  ref,
+  param,
+) {
+  final service = ref.watch(operationsServicesProvider);
+
+  return service.favList(param);
 });

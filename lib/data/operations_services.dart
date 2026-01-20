@@ -223,14 +223,52 @@ class OperationsServices {
         );
       }
       final raw = jsonDecode(response.body) as Map<String, dynamic>;
-     
 
       return Movie.fromJson(raw);
-
     }).toList();
 
-   return Future.wait(futures);
+    return Future.wait(futures);
   }
+
+  Future<List<Movie>> favList(MediaType mediaType) async {
+    final user = currentUser;
+    if (user == null) {
+      return [];
+    }
+    final header = dotenv.env['HEADER'];
+    if (header == null || header.isEmpty) {
+      throw Exception('Missing TMDB auth header');
+    }
+    final data = await supabase
+        .from('favourite')
+        .select()
+        .eq('user_id', user.id)
+        .eq('mediaType', mediaType.value)
+        .order('addedAt', ascending: false);
+    final parsedData = data.map((e) => MediaRef.fromMap(e)).toList();
+    final favDataList = parsedData.map((e) async {
+      final typePath = e.mediaType == MediaType.tv ? 'tv' : 'movie';
+      final url =
+          'https://api.themoviedb.org/3/$typePath/${e.id}?language=en-US';
+      final response = await get(
+        Uri.parse(url),
+        headers: <String, String>{
+          'accept': 'application/json',
+          'Authorization': 'Bearer $header',
+        },
+      );
+      if (response.statusCode != 200) {
+        throw Exception(
+          'Failed to load details for ${e.id} (${e.mediaType.value})',
+        );
+      }
+      final data = jsonDecode(response.body);
+      return Movie.fromJson(data);
+    }).toList();
+
+    return Future.wait(favDataList);
+  }
+  // Future<List>
 }
 
 final operationsServicesProvider = Provider<OperationsServices>((ref) {
