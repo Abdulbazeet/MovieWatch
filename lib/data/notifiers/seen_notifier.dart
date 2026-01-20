@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movie_watch/config/enums.dart';
 import 'package:movie_watch/data/operations_services.dart';
+import 'package:movie_watch/data/tmdb_providers.dart';
 import 'package:movie_watch/models/user/userModel.dart';
 
 class SeenNotifier extends AsyncNotifier {
@@ -17,6 +18,7 @@ class SeenNotifier extends AsyncNotifier {
       final operationService = ref.read(operationsServicesProvider);
       await operationService.addSeenList(id, medaiType);
       ref.invalidate(isSeenProvider((id, medaiType)));
+      ref.invalidate(seenProvider(medaiType));
       state = const AsyncData('Added to seen list');
     } catch (e, str) {
       print(e);
@@ -30,7 +32,10 @@ class SeenNotifier extends AsyncNotifier {
       final operationService = ref.read(operationsServicesProvider);
       await operationService.removeSeenList(id, mediaType);
       ref.invalidate(isSeenProvider((id, mediaType)));
+            ref.invalidate(seenProvider(mediaType));
+
       state = const AsyncData('Removed from seen list');
+
     } catch (e, str) {
       print(e);
       state = AsyncError(e, str);
@@ -52,7 +57,3 @@ final isSeenProvider = FutureProvider.family<bool, (int, MediaType)>((
   return service.isSeenYet(id, mediaType);
 });
 
-// final seenListProvider = FutureProvider<List<MediaRef>>((ref) async {
-//   final service = ref.watch(operationsServicesProvider);
-//   return service.getSeenList();
-// });

@@ -31,6 +31,10 @@ class Movie {
   });
 
   factory Movie.fromJson(Map<String, dynamic> json) {
+    final rawGenreIds =
+        json['genre_ids'] ??
+        (json['genres'] as List<dynamic>?)?.map((g) => g['id']).toList() ??
+        <int>[];
     return Movie(
       id: json['id'],
       title: json['title'] ?? json['name'], // handle TV/trending too
@@ -39,7 +43,7 @@ class Movie {
       backdropPath: json['backdrop_path'],
       releaseDate: json['release_date'] ?? json['first_air_date'],
       originalLanguage: json['original_language'] ?? '',
-      genreIds: List<int>.from(json['genre_ids'] as List),
+      genreIds: List<int>.from(rawGenreIds as List),
       voteAverage: (json['vote_average'] ?? 0).toDouble(),
       voteCount: json['vote_count'] ?? 0,
       popularity: (json['popularity'] ?? 0).toDouble(),

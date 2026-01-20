@@ -223,10 +223,13 @@ class OperationsServices {
         );
       }
       final raw = jsonDecode(response.body) as Map<String, dynamic>;
+     
+
       return Movie.fromJson(raw);
+
     }).toList();
 
-    return Future.wait(futures);
+   return Future.wait(futures);
   }
 }
 
