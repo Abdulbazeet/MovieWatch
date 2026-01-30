@@ -381,6 +381,28 @@ class _ShowAllState extends ConsumerState<ShowAll> {
               Expanded(
                 child: movie.when(
                   data: (data) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      if (!_scrollController.hasClients) return;
+                      final position = _scrollController.position;
+                      final needsMore =
+                          position.maxScrollExtent == 0 ||
+                          position.extentAfter < 200;
+                      if (needsMore) {
+                        ref
+                            .read(
+                              movieListNotifier((
+                                selectedGenre,
+                                widget.movieType,
+                                widget.tableType,
+                              )).notifier,
+                            )
+                            .loadMore(
+                              selectedGenre,
+                              widget.movieType,
+                              widget.tableType,
+                            );
+                      }
+                    });
                     return LayoutBuilder(
                       builder: (context, constraints) {
                         return GridView.builder(

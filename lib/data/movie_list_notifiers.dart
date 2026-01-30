@@ -9,6 +9,7 @@ import 'package:movie_watch/models/movie/movies.dart';
 class MovieListNotifier extends AsyncNotifier<List<Movie>> {
   int _page = 1;
   bool _hasMore = true;
+  bool _isLoadingMore = false;
   late String? genreId;
   late MovieType movieType;
   late TableType tableType;
@@ -99,7 +100,8 @@ class MovieListNotifier extends AsyncNotifier<List<Movie>> {
     MovieType movieType,
     TableType tableType,
   ) async {
-    if (!_hasMore) return;
+    if (_isLoadingMore || !_hasMore) return;
+    _isLoadingMore = true;
     _page++;
     final newMovies = await _fetchPage(
       genreId: genreId,
@@ -108,6 +110,7 @@ class MovieListNotifier extends AsyncNotifier<List<Movie>> {
     );
     if (newMovies.isEmpty) _hasMore = false;
     state = AsyncData([...state.value ?? [], ...newMovies]);
+    _isLoadingMore = false;
   }
 
   void refreshUI(
@@ -118,6 +121,7 @@ class MovieListNotifier extends AsyncNotifier<List<Movie>> {
     state = const AsyncLoading();
     _page = 1;
     _hasMore = true;
+    _isLoadingMore = false;
     // state = const AsyncLoading()
     final movies = await _fetchPage(
       reset: true,
