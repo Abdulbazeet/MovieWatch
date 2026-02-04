@@ -4,8 +4,7 @@
 
 - [ ] Build Watchlist screen UI (list of saved items) in `lib/presentation/watchlist/watchlist.dart`.
 - [ ] Wire Watchlist screen to Supabase watch list data using existing operations + notifier.
-- [ ] Implement Anime tab content (API + UI) in `lib/presentation/anime/anime.dart`.
-- [ ] Implement Kdrama tab content (API + UI) in `lib/presentation/kdrama/kdama.dart`.
+- [ ] Remove Anime/Kdrama tabs and screens; keep only Movies + TV Shows in the main navigation.
 - [ ] Add "My Lists" section for Favourites / Seen / Watchlist with filters (Movie/TV).
 
 ## Details Pages
@@ -25,7 +24,7 @@
 ## Profile & Settings
 
 - [ ] Make Profile menu items functional in `lib/presentation/profile/profile.dart`.
-- [ ] Add theme toggle (light/dark) and language/region settings.
+- [ ] Add theme toggle (light/dark).
 - [ ] Add notification preferences (new releases, episodes).
 
 ## Offline & Performance

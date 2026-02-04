@@ -75,8 +75,6 @@ class _ShowAllState extends ConsumerState<ShowAll> {
     final genre = switch (widget.tableType) {
       TableType.movies => ref.watch(movieGenreProvider),
       TableType.tvshows => ref.watch(seriesGenreProvider),
-      TableType.anime => ref.watch(seriesGenreProvider),
-      TableType.kdramas => ref.watch(seriesGenreProvider),
     };
     final movie = ref.watch(
       movieListNotifier((selectedGenre, widget.movieType, widget.tableType)),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
- import 'package:go_router/go_router.dart';
+import 'package:go_router/go_router.dart';
 import 'package:movie_watch/common/widgets/movie_section.dart';
 import 'package:movie_watch/config/enums.dart';
 import 'package:movie_watch/data/tmdb_providers.dart';
@@ -14,8 +14,7 @@ class TvShows extends ConsumerStatefulWidget {
   ConsumerState<TvShows> createState() => _TvShowsState();
 }
 
-class _TvShowsState extends ConsumerState<TvShows>
-    with AutomaticKeepAliveClientMixin {
+class _TvShowsState extends ConsumerState<TvShows> {
   final RefreshController _refreshController = RefreshController(
     initialRefresh: false,
   );
@@ -36,7 +35,7 @@ class _TvShowsState extends ConsumerState<TvShows>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context); // important for keepAlive
+    // super.build(context); // important for keepAlive
 
     final popularSeries = ref.watch(popularSeriesProvider);
     final genreId = ref.watch(seriesGenreProvider);

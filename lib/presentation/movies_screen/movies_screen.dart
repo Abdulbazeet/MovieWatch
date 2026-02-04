@@ -17,7 +17,7 @@ class MovieScreen extends ConsumerStatefulWidget {
 }
 
 class _MovieScreenState extends ConsumerState<MovieScreen>
-    with AutomaticKeepAliveClientMixin {
+     {
   String dropdownvalue = 'One';
   Timer? timer;
   int _currentPage = 0;
@@ -26,7 +26,7 @@ class _MovieScreenState extends ConsumerState<MovieScreen>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
+    // super.build(context);
     final populaMovies = ref.watch(popularMoviesProvider);
     final genreId = ref.watch(movieGenreProvider);
     final trendingMovies = ref.watch(trendingMoviesProvider);

@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:movie_watch/config/enums.dart';
 import 'package:movie_watch/config/tmdb_config.dart';
+import 'package:movie_watch/data/notifiers/favourite_notifier.dart';
 import 'package:movie_watch/data/notifiers/person_details-notifier.dart';
 import 'package:movie_watch/models/person/person-credits.dart';
 import 'package:shimmer/shimmer.dart';
@@ -27,6 +28,32 @@ class _PersonDetailsState extends ConsumerState<PersonDetails> {
     final personDetails = ref.watch(
       personDetailsNotifierProvider(widget.personId),
     );
+    final fav = ref.watch(favouriteNotifierProvider.notifier);
+    final isFav = ref.watch(
+      isFavouriteProvider((widget.personId, MediaType.person)),
+    );
+    ref.listen(favouriteNotifierProvider, (previous, next) {
+      next.whenOrNull(
+        data: (data) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(data.toString()),
+              duration: Duration(seconds: 1),
+            ),
+          );
+        },
+        error: (error, stackTrace) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('An error occurred: $error'),
+              backgroundColor: Colors.red,
+              duration: Duration(seconds: 1),
+            ),
+          );
+        },
+      );
+    });
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -95,53 +122,92 @@ class _PersonDetailsState extends ConsumerState<PersonDetails> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              CachedNetworkImage(
-                                imageUrl:
-                                    '${TmdbConfig.img_url}original${data.personDetails.profile_path}',
-                                imageBuilder: (context, imageProvider) =>
-                                    Container(
-                                      height: screensize * .22,
-                                      width:
-                                          MediaQuery.of(context).size.width *
-                                          .3,
+                              Stack(
+                                children: [
+                                  CachedNetworkImage(
+                                    imageUrl:
+                                        '${TmdbConfig.img_url}original${data.personDetails.profile_path}',
+                                    imageBuilder: (context, imageProvider) =>
+                                        Container(
+                                          height: screensize * .22,
+                                          width:
+                                              MediaQuery.of(
+                                                context,
+                                              ).size.width *
+                                              .3,
 
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey,
-                                        borderRadius: BorderRadius.circular(10),
-                                        image: DecorationImage(
-                                          image: imageProvider,
-                                          fit: BoxFit.cover,
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey,
+                                            borderRadius: BorderRadius.circular(
+                                              10,
+                                            ),
+                                            image: DecorationImage(
+                                              image: imageProvider,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                          clipBehavior: Clip.hardEdge,
                                         ),
-                                      ),
-                                      clipBehavior: Clip.hardEdge,
-                                    ),
-                                placeholder: (context, url) =>
-                                    Shimmer.fromColors(
-                                      baseColor: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface
-                                          .withValues(alpha: .5),
-                                      highlightColor: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface
-                                          .withValues(alpha: .3),
-                                      child: Container(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                            .3,
-                                        height: screensize * .22,
-                                        decoration: BoxDecoration(
-                                          color: Theme.of(
-                                            context,
-                                          ).colorScheme.surfaceVariant,
-                                          borderRadius: BorderRadius.circular(
-                                            10,
+                                    placeholder: (context, url) =>
+                                        Shimmer.fromColors(
+                                          baseColor: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface
+                                              .withValues(alpha: .5),
+                                          highlightColor: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface
+                                              .withValues(alpha: .3),
+                                          child: Container(
+                                            width:
+                                                MediaQuery.of(
+                                                  context,
+                                                ).size.width *
+                                                .3,
+                                            height: screensize * .22,
+                                            decoration: BoxDecoration(
+                                              color: Theme.of(
+                                                context,
+                                              ).colorScheme.surfaceVariant,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
                                           ),
                                         ),
+                                    errorWidget: (context, url, error) =>
+                                        Container(height: screensize * .22),
+                                  ),
+                                  Positioned(
+                                    right: -10,
+                                    top: 0,
+                                    child: IconButton(
+                                      icon: Icon(
+                                        isFav.whenOrNull(
+                                          data: (data) => data
+                                              ? Icons.favorite
+                                              : Icons.favorite_border,
+                                        ),
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.primary,
+                                        size: 34,
                                       ),
+                                      onPressed: () {
+                                        if (isFav.value == true) {
+                                          fav.removeFavourite(
+                                            widget.personId,
+                                            MediaType.person,
+                                          );
+                                        } else {
+                                          fav.addFavourite(
+                                            widget.personId,
+                                            MediaType.person,
+                                          );
+                                        }
+                                      },
                                     ),
-                                errorWidget: (context, url, error) =>
-                                    Container(height: screensize * .22),
+                                  ),
+                                ],
                               ),
                               SizedBox(height: 15),
                               Text(

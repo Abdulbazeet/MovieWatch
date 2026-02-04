@@ -1,4 +1,4 @@
-enum TableType { movies, tvshows, kdramas, anime }
+enum TableType { movies, tvshows }
 
 enum MovieType {
   nowPlaying,
@@ -14,8 +14,7 @@ enum bottomType { trailers, recommendations }
 enum MediaType {
   person,
   movie,
-  tv,
-  kdrama;
+  tv;
 
   String get value => name;
   static MediaType fromString(String value) {

@@ -13,14 +13,38 @@ class TabScreen extends ConsumerStatefulWidget {
   ConsumerState<TabScreen> createState() => _TabScreenState();
 }
 
-class _TabScreenState extends ConsumerState<TabScreen>
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
+class _TabScreenState extends ConsumerState<TabScreen> {
+  late final PageController _pageController;
+
+  int page = 0;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _tabController = TabController(length: 4, vsync: this, );
+    _pageController = PageController(keepPage: true);
+  }
+
+  void changePage(int _page) {
+    if (page == _page) {
+      return;
+    }
+    setState(() {
+      page = _page;
+    });
+  }
+
+  void animateToPage(int _page) {
+    _pageController.animateToPage(
+      _page,
+      duration: const Duration(milliseconds: 250),
+      curve: Curves.easeInOutCubic,
+    );
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
 
   @override
@@ -29,56 +53,75 @@ class _TabScreenState extends ConsumerState<TabScreen>
       body: SafeArea(
         child: Column(
           children: [
-            TabBar(
-              controller: _tabController,
-              dividerColor: Colors.transparent,
-              isScrollable: false,
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        animateToPage(0);
+                      },
+                      child: Container(
+                        alignment: Alignment.center,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: page == 0
+                              ? Theme.of(context).colorScheme.primary
+                              : null,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
 
-              physics: NeverScrollableScrollPhysics(),
-              tabs: [
-                Tab(
-                  child: Text(
-                    'Movies',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      fontWeight: FontWeight.bold,
+                        child: Text(
+                          'Movies',
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(
+                                color: page == 0 ? Colors.white : Colors.black,
+                              ),
+                        ),
+                      ),
                     ),
                   ),
-                ),
-                Tab(
-                  child: Text(
-                    'Tv Shows',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      fontWeight: FontWeight.bold,
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        animateToPage(1);
+                      },
+                      child: Container(
+                        alignment: Alignment.center,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: page == 1
+                              ? Theme.of(context).colorScheme.primary
+                              : null,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+
+                        child: Text(
+                          'Tv Shows',
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(
+                                color: page == 1 ? Colors.white : Colors.black,
+                              ),
+                        ),
+                      ),
                     ),
                   ),
-                ),
-                Tab(
-                  child: Text(
-                    'K dramas',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                Tab(
-                  child: Text(
-                    'Anime',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
             Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                children: [
-                  const MovieScreen(),
-                  const TvShows(),
-                  const Kdrama(),
-                  const Anime(),
-                ],
+              child: PageView(
+                key: const PageStorageKey('tab_page_view'),
+                controller: _pageController,
+                onPageChanged: (value) {
+                  changePage(value);
+                },
+                children: [MovieScreen(), TvShows()],
               ),
             ),
           ],
