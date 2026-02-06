@@ -30,7 +30,7 @@ class ImageSection extends ConsumerWidget {
         data: (data) {
           return SizedBox(
             width: double.infinity,
-            height: 200,
+            height: 350,
 
             child: Stack(
               children: [
@@ -38,7 +38,7 @@ class ImageSection extends ConsumerWidget {
                   options: CarouselOptions(
                     autoPlay: true,
                     enableInfiniteScroll: true,
-                    height: 200,
+                    height: 350,
                     viewportFraction: 1,
                   ),
                   itemCount: data.length,
@@ -65,7 +65,6 @@ class ImageSection extends ConsumerWidget {
                                 );
 
                                 break;
-                              default:
                             }
                           },
                           child: Container(

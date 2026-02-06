@@ -12,7 +12,20 @@
           "package_name": "com.example.movie_watch"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "642353294475-ero0a8e60n79ce1fh7drdilgp8gum1us.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.movie_watch",
+            "certificate_hash": "2a9eb5e3ba53d7c6288236102ca9a1efa1c958ba"
+          }
+        },
+        {
+          "client_id": "642353294475-htnb4ngp4gbdc8qlbi25ke1eil373kvh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBQ3XvzEgkHdi1iB7uUrjXvxPwrYwg1Lvs"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "642353294475-htnb4ngp4gbdc8qlbi25ke1eil373kvh.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "642353294475-eikh06sc0qfnemfmibfl739rmrg7sq70.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.movieWatch"
+              }
+            }
+          ]
         }
       }
     }

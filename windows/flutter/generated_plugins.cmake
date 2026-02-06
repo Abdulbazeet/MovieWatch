@@ -5,6 +5,8 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   app_links
   connectivity_plus
+  firebase_auth
+  firebase_core
   flutter_inappwebview_windows
   flutter_secure_storage_windows
   url_launcher_windows

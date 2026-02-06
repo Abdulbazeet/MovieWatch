@@ -13,24 +13,17 @@ class TabScreen extends ConsumerStatefulWidget {
   ConsumerState<TabScreen> createState() => _TabScreenState();
 }
 
-class _TabScreenState extends ConsumerState<TabScreen> {
+class _TabScreenState extends ConsumerState<TabScreen>
+    with SingleTickerProviderStateMixin {
   late final PageController _pageController;
+  late final TabController _tabController;
 
-  int page = 0;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _pageController = PageController(keepPage: true);
-  }
-
-  void changePage(int _page) {
-    if (page == _page) {
-      return;
-    }
-    setState(() {
-      page = _page;
-    });
+    _tabController = TabController(length: 2, vsync: this);
   }
 
   void animateToPage(int _page) {
@@ -44,6 +37,7 @@ class _TabScreenState extends ConsumerState<TabScreen> {
   @override
   void dispose() {
     _pageController.dispose();
+    _tabController.dispose();
     super.dispose();
   }
 
@@ -53,73 +47,38 @@ class _TabScreenState extends ConsumerState<TabScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        animateToPage(0);
-                      },
-                      child: Container(
-                        alignment: Alignment.center,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: page == 0
-                              ? Theme.of(context).colorScheme.primary
-                              : null,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-
-                        child: Text(
-                          'Movies',
-                          style: Theme.of(context).textTheme.bodyMedium
-                              ?.copyWith(
-                                color: page == 0 ? Colors.white : Colors.black,
-                              ),
-                        ),
-                      ),
-                    ),
+            TabBar(
+              controller: _tabController,
+              onTap: animateToPage,
+              // indicator: BoxDecoration(
+              //   color: Theme.of(context).colorScheme.primary,
+              //   borderRadius: BorderRadius.circular(18),
+              // ),
+              indicatorPadding: const EdgeInsets.all(4),
+              labelColor: Colors.black87,
+              unselectedLabelColor: Colors.black87,
+              labelStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.2,
                   ),
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        animateToPage(1);
-                      },
-                      child: Container(
-                        alignment: Alignment.center,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: page == 1
-                              ? Theme.of(context).colorScheme.primary
-                              : null,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
+              unselectedLabelStyle:
+                  Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w500,
 
-                        child: Text(
-                          'Tv Shows',
-                          style: Theme.of(context).textTheme.bodyMedium
-                              ?.copyWith(
-                                color: page == 1 ? Colors.white : Colors.black,
-                              ),
-                        ),
                       ),
-                    ),
-                  ),
-                ],
-              ),
+                      dividerColor: Colors.transparent,
+                    
+              tabs: const [
+                Tab(text: 'Movies'),
+                Tab(text: 'TV Shows'),
+              ],
             ),
             Expanded(
               child: PageView(
                 key: const PageStorageKey('tab_page_view'),
                 controller: _pageController,
                 onPageChanged: (value) {
-                  changePage(value);
+                  _tabController.animateTo(value);
                 },
                 children: [MovieScreen(), TvShows()],
               ),

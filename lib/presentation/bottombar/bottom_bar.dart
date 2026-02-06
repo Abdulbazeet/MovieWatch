@@ -6,7 +6,7 @@ import 'package:movie_watch/config/utils.dart';
 import 'package:movie_watch/presentation/profile/profile.dart';
 import 'package:movie_watch/presentation/search/search.dart';
 import 'package:movie_watch/presentation/tab_bar/tab_bar.dart';
-import 'package:movie_watch/presentation/watchlist/watchlist.dart';
+import 'package:movie_watch/presentation/watchlist/screen/watchlist.dart';
 
 final bottomNavIndexProvider = StateProvider<int>((ref) => 0);
 

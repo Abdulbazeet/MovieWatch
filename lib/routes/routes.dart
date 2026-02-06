@@ -18,7 +18,7 @@ import 'package:movie_watch/presentation/search/search.dart';
 import 'package:movie_watch/presentation/series_details/tvshow_screen.dart';
 import 'package:movie_watch/presentation/show_all/show_all.dart';
 import 'package:movie_watch/presentation/tab_bar/tab_bar.dart';
-import 'package:movie_watch/presentation/watchlist/watchlist.dart';
+import 'package:movie_watch/presentation/watchlist/screen/watchlist.dart';
 
 class AppRoutes {
   static final GoRouter goRoute = GoRouter(
