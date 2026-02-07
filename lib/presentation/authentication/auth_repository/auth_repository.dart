@@ -1,125 +1,93 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:movie_watch/models/user/userModel.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthRepository {
-  final supabase = Supabase.instance.client;
+  final _auth = FirebaseAuth.instance;
+  final _firestore = FirebaseFirestore.instance;
 
-  // AuthRepository({FirebaseAuth? auth}) : _auth = auth ?? FirebaseAuth.instance;
-
-  Stream<AuthState> get authStateChanges => supabase.auth.onAuthStateChange;
-  User? get currentUser => supabase.auth.currentUser;
+  Stream<User?> get authStateChanges => _auth.authStateChanges();
+  User? get currentUser => _auth.currentUser;
 
   Future<void> _ensureUserProfile() async {
     final user = currentUser;
     if (user == null) {
       return;
     }
-    final existingProfile = await supabase
-        .from('userModel')
-        .select()
-        .eq('uid', currentUser!.id)
-        .maybeSingle();
-    if (existingProfile == null) {
+    final existingProfile = await _firestore
+        .collection('userModel')
+        .where('uid', isEqualTo: user.uid)
+        .get();
+    if (existingProfile.docs.isEmpty) {
       final userModel = Usermodel(
-        uid: currentUser!.id,
+        uid: user.uid,
         favourite: null,
         seenList: null,
         watchList: null,
       );
-      await supabase.from('userModel').insert(userModel.toMap());
+      await _firestore.collection('userModel').add(userModel.toMap());
     }
   }
 
   Future signUpWithEmail(String email, String password) async {
-    await supabase.auth.signUp(email: email, password: password);
+    await _auth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
     await _ensureUserProfile();
 
     return;
   }
 
   Future signInWithEmail(String email, String password) async {
-    await supabase.auth.signInWithPassword(email: email, password: password);
+    await _auth.signInWithEmailAndPassword(email: email, password: password);
     await _ensureUserProfile();
     return;
   }
 
-  Future googleSignIn() async {
-    final scopes = ['email', 'profile'];
-    final clientId = dotenv.env['CLIENT_ID']!;
-    final googleSignIn = GoogleSignIn.instance;
+  Future<UserCredential?> signInWithGoogle() async {
+    try {
+      // 1. Initialize GoogleSignIn with desired scopes
+      final GoogleSignIn googleSignIn = GoogleSignIn(
+        scopes: ['email', 'profile'],
+      );
 
-    await googleSignIn.initialize(clientId: clientId);
-    final googleUser = await googleSignIn.attemptLightweightAuthentication();
-    if (googleUser == null) {
-      throw Exception("Google sign-in aborted");
+      // 2. Trigger the authentication flow
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+
+      if (googleUser == null) {
+        // User canceled the sign-in
+        return null;
+      }
+
+      // 3. Obtain the auth details from the request
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      // 4. Create a new credential
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      // 5. Sign in to Firebase with the credential
+      final UserCredential userCredential = await _auth.signInWithCredential(
+        credential,
+      );
+
+      // 6. Ensure user profile exists in your database
+      await _ensureUserProfile();
+
+      return userCredential;
+    } catch (e) {
+      // print("Google Sign-In Error: $e");
+      rethrow;
     }
-    final authorization =
-        await googleUser.authorizationClient.authorizationForScopes(scopes) ??
-        await googleUser.authorizationClient.authorizeScopes(scopes);
-    final token = googleUser.authentication.idToken;
-    if (token == null) {
-      throw Exception('Id Token is null');
-    }
-    await supabase.auth.signInWithIdToken(
-      idToken: token,
-      provider: OAuthProvider.google,
-      accessToken: authorization.accessToken,
-    );
-    await _ensureUserProfile();
-    return;
   }
-  // Future<void> googleSignIn() async {
-  //   try {
-  //     // Use your WEB client ID here (from Google Cloud → OAuth 2.0 Client IDs → Web application)
-  //     // This is REQUIRED for Android in google_sign_in 7.x+
-  //     const serverClientId =
-  //         'your-web-client-id.apps.googleusercontent.com'; // ← from .env or hardcode for test
-
-  //     // For iOS (if you support it later): add clientId
-  //     // const iosClientId = 'your-ios-client-id.apps.googleusercontent.com';
-
-  //     final GoogleSignIn googleSignIn = GoogleSignIn(
-  //       // serverClientId is mandatory for Android
-  //       serverClientId: serverClientId,
-  //       // clientId: iosClientId, // only if iOS, otherwise omit or null
-  //       scopes: ['email', 'profile'],
-  //     );
-
-  //     // Standard signIn() call — no initialize(), no attemptLightweight, no manual scopes
-  //     final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
-
-  //     if (googleUser == null) {
-  //       throw Exception('Google sign-in canceled by user');
-  //     }
-
-  //     final GoogleSignInAuthentication googleAuth =
-  //         await googleUser.authentication;
-
-  //     final String? idToken = googleAuth.idToken;
-  //     final String? accessToken = googleAuth.accessToken;
-
-  //     if (idToken == null) {
-  //       throw Exception('No ID Token received from Google');
-  //     }
-
-  //     // Send to Supabase
-  //     await supabase.auth.signInWithIdToken(
-  //       provider: OAuthProvider.google,
-  //       idToken: idToken,
-  //       accessToken: accessToken,
-  //     );
-
-  //     await _ensureUserProfile();
-  //   } catch (e) {
-  //     print('Google sign-in error: $e'); // for debugging
-  //     rethrow; // let the caller handle (show snackbar etc.)
-  //   }
-  // }
 }
 
 final authRepositoryProvider = Provider<AuthRepository>(

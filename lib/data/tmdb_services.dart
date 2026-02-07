@@ -18,7 +18,6 @@ import 'package:movie_watch/models/series/series_trailer.dart';
 import 'package:movie_watch/models/series/show_details.dart';
 import 'package:movie_watch/models/series/tvseries_credit.dart';
 import 'package:movie_watch/models/videos.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class TmdbServices {
   var formattedDate = DateTime.now().toIso8601String().split('T')[0];

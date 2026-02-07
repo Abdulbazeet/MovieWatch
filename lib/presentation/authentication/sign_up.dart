@@ -1,11 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:movie_watch/presentation/authentication/auth_controller/auth_notifier.dart';
-import 'package:movie_watch/presentation/authentication/auth_provider/auth_provider.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SignUp extends ConsumerStatefulWidget {
   const SignUp({super.key});
@@ -23,26 +23,21 @@ class _SignUpState extends ConsumerState<SignUp> {
     final authProvider = ref.watch(authControllerProvider);
     final authNotifier = ref.watch(authControllerProvider.notifier);
     ref.listen(authControllerProvider, (previous, next) {
-
       next.whenOrNull(
         error: (error, stackTrace) {
           String userMessage = 'Something went wrong. Please try again.';
 
-          if (error is AuthException) {
-            userMessage = error.message;
+          if (error is FirebaseAuthException) {
+            userMessage = error.message ?? userMessage;
 
-            if (userMessage.contains(
-                  'Password should be at least 6 characters',
-                ) ||
-                userMessage.contains('weak_password')) {
-              userMessage = 'Password must be at least 6 characters long.';
-            } else if (userMessage.contains('Email already registered') ||
-                userMessage.contains('duplicate key value')) {
+            if (error.code == 'weak-password') {
+              userMessage = 'Password should be at least 6 characters.';
+            } else if (error.code == 'email-already-in-use') {
               userMessage = 'This email is already in use.';
-            } else if (userMessage.contains('Invalid email')) {
+            } else if (error.code == 'invalid-email') {
               userMessage = 'Please enter a valid email.';
             }
-          } else if (error != null) {
+          } else {
             userMessage = error
                 .toString()
                 .replaceFirst(RegExp(r'Exception: '), '')
@@ -262,7 +257,7 @@ class _SignUpState extends ConsumerState<SignUp> {
                         onPressed:
                             //  authProvider.isLoading ? null :
                             () {
-                              authNotifier.googleSignIn();
+                              authNotifier.signInWithGoogle();
                             },
                         child: Image.asset('assets/icons/gmail.png'),
                       ),

@@ -1,11 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:movie_watch/presentation/authentication/auth_controller/auth_notifier.dart';
-import 'package:movie_watch/presentation/authentication/auth_provider/auth_provider.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SignIn extends ConsumerStatefulWidget {
   const SignIn({super.key});
@@ -24,26 +24,24 @@ class _SignInState extends ConsumerState<SignIn> {
     final authProvider = ref.watch(authControllerProvider);
     final authNotifier = ref.watch(authControllerProvider.notifier);
     ref.listen(authControllerProvider, (previous, next) {
-    
       next.whenOrNull(
         error: (error, stackTrace) {
           String userMessage = 'Something went wrong. Please try again.';
 
-          if (error is AuthException) {
-            // Most common Supabase auth error messages
-            userMessage = error.message;
+          if (error is FirebaseAuthException) {
+            userMessage = error.message ?? userMessage;
 
             // Optional: make some very common ones even friendlier
-            if (userMessage.contains('invalid login credentials') ||
-                userMessage.contains('invalid_credentials')) {
+            if (error.code == 'invalid-credential' ||
+                error.code == 'wrong-password' ||
+                error.code == 'user-not-found') {
               userMessage = 'Incorrect email or password.';
-            } else if (userMessage.contains('User not found') ||
-                userMessage.contains('user_not_found')) {
-              userMessage = 'No account found with this email.';
-            } else if (userMessage.contains('Email not confirmed')) {
-              userMessage = 'Please confirm your email first.';
+            } else if (error.code == 'invalid-email') {
+              userMessage = 'The email address is invalid.';
+            } else if (error.code == 'user-disabled') {
+              userMessage = 'This user account has been disabled.';
             }
-          } else if (error is Exception) {
+          } else {
             // Strip "Exception: " prefix if present
             userMessage = error.toString().replaceFirst('Exception: ', '');
           }
@@ -222,7 +220,7 @@ class _SignInState extends ConsumerState<SignIn> {
                             //     ? null
                             //     :
                             () {
-                              authNotifier.googleSignIn();
+                              authNotifier.signInWithGoogle();
                             },
                         child: Image.asset('assets/icons/gmail.png'),
                       ),

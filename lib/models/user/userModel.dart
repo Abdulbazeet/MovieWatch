@@ -2,7 +2,6 @@
 import 'dart:convert';
 
 import 'package:movie_watch/config/enums.dart';
-import 'package:movie_watch/models/movies.dart';
 
 class Usermodel {
   String uid;
@@ -64,7 +63,7 @@ class MediaRef {
   String user_id;
   int id;
   final MediaType mediaType;
-   DateTime? addedAt;
+  DateTime? addedAt;
   MediaRef({
     required this.user_id,
     required this.id,
@@ -86,7 +85,7 @@ class MediaRef {
       user_id: map['user_id'] as String,
       id: map['id'] as int,
       mediaType: MediaType.fromString(map['mediaType']),
-      addedAt: DateTime.parse(map['addedAt']) ,
+      addedAt: DateTime.parse(map['addedAt']),
     );
   }
 

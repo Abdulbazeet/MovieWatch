@@ -1,57 +1,52 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movie_watch/presentation/authentication/auth_repository/auth_repository.dart';
-import 'package:riverpod/legacy.dart';
-import 'package:riverpod/riverpod.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
-class AuthNotifier extends StateNotifier<AsyncValue<User?>> {
-  final AuthRepository _authRepository;
-  AuthNotifier(this._authRepository) : super( AsyncData(_authRepository.currentUser)) {
-    _authRepository.authStateChanges.listen(
-      (AuthState state) => this.state = AsyncData(state.session?.user),
-    );
-    setInitialState();
-  }
-  Future<void> setInitialState() async {
-    final user = _authRepository.currentUser;
-    state = AsyncData(user);
+class AuthNotifier extends AsyncNotifier<User?> {
+  late final AuthRepository _authRepository;
+
+  @override
+  Future<User?> build() async {
+    _authRepository = ref.watch(authRepositoryProvider);
+
+    // Listen to verification changes
+    _authRepository.authStateChanges.listen((user) {
+      state = AsyncData(user);
+    });
+
+    return _authRepository.currentUser;
   }
 
-  Future signInWithEmail(String email, String password) async {
+  Future<void> signInWithEmail(String email, String password) async {
     state = const AsyncLoading();
-
     state = await AsyncValue.guard(() async {
       await _authRepository.signInWithEmail(email, password);
       return _authRepository.currentUser;
     });
   }
 
-  Future signUpWithEmail(String email, String password) async {
+  Future<void> signUpWithEmail(String email, String password) async {
     state = const AsyncLoading();
-
     state = await AsyncValue.guard(() async {
       await _authRepository.signUpWithEmail(email, password);
       return _authRepository.currentUser;
     });
   }
 
-  Future googleSignIn() async {
+  Future<void> signInWithGoogle() async {
     state = const AsyncLoading();
-
     state = await AsyncValue.guard(() async {
-      await _authRepository.googleSignIn();
+      await _authRepository.signInWithGoogle();
       return _authRepository.currentUser;
     });
   }
 }
 
-final authControllerProvider =
-    StateNotifierProvider<AuthNotifier, AsyncValue<User?>>((ref) {
-      final _authRepository = ref.watch(authRepositoryProvider);
+final authControllerProvider = AsyncNotifierProvider<AuthNotifier, User?>(() {
+  return AuthNotifier();
+});
 
-      return AuthNotifier(_authRepository);
-    });
-
-final authStateprovider = StreamProvider<AuthState?>((ref) {
+final authStateprovider = StreamProvider<User?>((ref) {
   final repo = ref.watch(authRepositoryProvider);
   return repo.authStateChanges;
 });
